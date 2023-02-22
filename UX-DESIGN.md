@@ -48,6 +48,8 @@ This wireframe represents the screen where a user can view more information abou
 ### Saved Recipes
 <img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/SavedRecipes.png">
 
+This wireframe represents the screen where a user can view their saved recipes.
+
 ### View and Unsave Recipe
 <img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/ViewAndUnsaveRecipe.png">
 
