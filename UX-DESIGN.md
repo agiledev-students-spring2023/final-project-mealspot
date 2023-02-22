@@ -6,7 +6,7 @@ Our prototype can be accessed by clicking on this [link](https://www.figma.com/p
 ## Wireframes 
 
 ### Register
-<img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/Register.png">
+<img alt="Home" style="border: 1px solid;" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/Register.png">
 
 This wireframe represents the register screen, allowing a new user to create an account. 
 
