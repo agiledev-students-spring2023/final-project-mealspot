@@ -6,7 +6,7 @@ Our prototype can be accessed by clicking on this [link](https://www.figma.com/p
 ## Wireframes 
 
 ### Register
-<img alt="Home" style="border: 1px solid;" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/Register.png">
+<img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/Register.png">
 
 This wireframe represents the register screen, allowing a new user to create an account. 
 
@@ -41,13 +41,17 @@ This wireframe represents the screen where a user can choose to swap a meal in t
 This wireframe represents the screen where a user can search for recipes. A user can click on a specific recipe to display more information about it.
 
 ### View and Save Recipe
+<img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/ViewAndSaveRecipe.png">
 
+This wireframe represents the screen where a user can view more information about a recipe and save it. 
 
 ### Saved Recipes
 <img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/SavedRecipes.png">
 
 ### View and Unsave Recipe
+<img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/ViewAndUnsaveRecipe.png">
 
+This wireframe represents the screen where a user can view more information about a recipe from their saved recipes and unsave it.
 
 ### My Fridge
 <img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/MyFridge.png">
