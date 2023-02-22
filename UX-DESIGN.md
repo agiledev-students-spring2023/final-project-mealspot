@@ -43,7 +43,7 @@ This wireframe represents the screen where a user can search for recipes. A user
 ### View and Save Recipe
 <img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/ViewAndSaveRecipe.png">
 
-This wireframe represents the screen where a user can view more information about a recipe and save it. 
+This wireframe represents the screen where a user can view more information about a recipe discovered through recipe search and save it. 
 
 ### Saved Recipes
 <img alt="Home" width="200px" src="https://github.com/agiledev-students-spring-2023/final-project-mealspot/blob/master/ux-design/SavedRecipes.png">
