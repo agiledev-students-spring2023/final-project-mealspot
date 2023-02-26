@@ -46,7 +46,7 @@
 - Upon completion of a task or spike, a pull request should be issued containing changes that include the completed task or spike.
 
 ## Setting Up Local Development Environment Instructions
-- To set up a local development environment for this project, navigate to the desired final project directory in the terminal and run the command "https://github.com/agiledev-students-spring-2023/final-project-mealspot.git" (without quotes).
+- To set up a local development environment for this project, navigate to the desired final project directory in the terminal and run the command **git clone https://github.com/agiledev-students-spring-2023/final-project-mealspot.git**.
 - Then open up the final project using any IDE of your choice.
 
 ## Building and Testing Instructions
