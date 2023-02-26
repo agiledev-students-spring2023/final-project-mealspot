@@ -1,5 +1,35 @@
 # Project Repository
 
+## About Mealspot
+
+Mealspot is an application for planning and budgeting meals for the frugally-minded individual. By tracking costs of each individual meal and grocery item in a single convenient location, Mealspot provides a fast and easy way for people to budget efficiently. Not only does it allow for budget tracking, it also provides a place for users to store grocery lists as a reminder, and it also provides a place to discover and explore new meals in the Mealspot database.
+
+## Core Team Members
+
+- [Kevin Gong](https://github.com/kxg202)
+
+- [Stan Gao](https://github.com/pancakedrone)
+
+- [Charlotte Lin](https://github.com/cxl229)
+
+- [Aleeza Wolff](https://github.com/aleezaw)
+
+- [Jeffrey Li](https://github.com/jjl9824)
+
+## History
+
+Mealspot was built by college students to deal with one of their primary issues - a lack of money. Since many students face the task of budgeting for the first time in their lives, we had the idea to create an app targeted at solving and simplifying the problem for people like us. Besides budgeting, the task of cooking - one that many college students have to take on first the first time on their own, also came to the forefront, and so we had the idea to focus the budgeting app on food primarily.
+
+## Building and Testing
+
+todo
+
+## Relevant Reading
+
+todo
+
+
+
 This repository will be used for team projects.
 
 Several sets of instructions are included in this repository. They should each be treated as separate assignments with their own due dates and sets of requirements.
