@@ -1,5 +1,8 @@
 # Project Repository
 
+## Product Vision Statement
+Mealspot looks to simplify meal planning, making it easy and cost-effective for users to plan meals. With a weekly planner, grocery list, and recipe index, users will have all of the necessary resources in one easy to use app, allowing for a stress-free, budget friendly meal planner for all.
+
 This repository will be used for team projects.
 
 Several sets of instructions are included in this repository. They should each be treated as separate assignments with their own due dates and sets of requirements.
