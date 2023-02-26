@@ -36,6 +36,7 @@
 - Avoid hard-coding values for permanent fixes, always write flexible code that can handle change.
 
 ## Git Workflow
+- The team will follow the Feature Branch Workflow.
 - All members of the team must work on their parts of the project in separate branches and issue a pull request that must be approved by another team member to have their changes added to the main branch. 
 - Pushing directly to main is prohibited.
 - Before pushing, a team member must pull in order to get the latest version of the main branch and resolve any conflicts between their branch and main before pushing.
