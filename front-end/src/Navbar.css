@@ -1,0 +1,15 @@
+.navbar {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    background-color: blue;
+    width: 390px; /* TO DO */
+}
+
+.link {
+    list-style: none;
+    color: white;
+    margin-left: 1em;
+    margin-right: 1em;
+}
