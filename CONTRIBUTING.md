@@ -14,7 +14,7 @@
 - Each sprint will last two weeks.
 
 ### Daily Standups 
-- Daily Standups will occur at times when every team member is available. The time for a standup will be determined at the end of the previous standup and will vary based on team members' availbilities on that specific day. Daily Standups will last about 30 minutes but can be longer or shorter if needed. 
+- Daily Standups will occur every Tuesday, Thursday, and Sunday at 5:30 pm. Daily Standups will last about 15 minutes but can be longer or shorter if needed. 
 - Team members are expected to be present synchronously at every daily standup
 - During Daily Standups, every member will discuss what they have been working on, what they plan to work on in the future, and what roadblocks prevent them from completing their task.
 - If a team member cannot make the Daily Standup, they should notify the other members in advance and type what they have been working on, what they plan to work on, and any roadblocks preventing them from completing their task in the team-mealspot text channel on Discord.
