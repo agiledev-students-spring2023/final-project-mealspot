@@ -6,11 +6,13 @@ import RecipeSearch from './RecipeSearch.js';
 import SavedRecipes from './SavedRecipes.js';
 import Fridge from './Fridge.js';
 import GroceryList from './GroceryList.js';
+import Account from './Account.js';
 
 function App() {
   return (
     <div className="App">
       <h1>WELCOME TO MEALSPOT~~~</h1>
+      <a href={'/account'}>Profile Account</a>
       <Router>
         <Navbar />
         <Routes>
