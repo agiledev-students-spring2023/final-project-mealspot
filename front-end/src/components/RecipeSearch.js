@@ -4,13 +4,14 @@ import './RecipeSearch.css';
 import RecipeCard from './RecipeCard.js';
 
 const RecipeSearch = () => {
+    // State to store the recipes fetched from the database
     const [recipes, setRecipes] = useState([]);
 
-    useEffect(()=>{
+    // On the first render, make an API call to the backend, to fetch the recipe data from the database
+    useEffect(() => {
         async function getRecipes(url) {
             try {
                 const response = await axios(url);
-                console.log(response.data);
                 setRecipes(response.data);
             } catch (err) {
                 console.log(err);
@@ -18,20 +19,21 @@ const RecipeSearch = () => {
         }
 
         getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
-        console.log("recipes:", recipes);
-    }, [recipes]);
+    }, []);
 
-    const recipesList = recipes.map(recipe => {
+    // Make the fetched array of recipes into an array of recipe cards
+    const recipeCards = recipes.map(recipe => {
         return (
-            <RecipeCard key={recipe.id} details={recipe} />
+            <RecipeCard key={recipe.id} recipeDetails={recipe} />
         );
     })
 
+    // Return the final component, consisting of page header and the array of recipe cards
     return (
         <>
-        <h1>recipe search page</h1>
+        <h1>Recipe Search</h1>
         <div className="recipes">
-            {recipesList}
+            {recipeCards}
         </div>
         </>
     );
