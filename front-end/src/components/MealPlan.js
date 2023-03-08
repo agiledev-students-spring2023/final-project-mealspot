@@ -6,7 +6,7 @@ import './MealPlan.css';
 
 //later change <Progress done="70"/> change to 
 const Progress = ({done}) => {
-    let budget = "$70/$100" //$ spent/budgeta
+    let budget = "$70/$100" //$ spent/budget
     return (
         <div className="progress">
             <div className="progress-done" style={{
