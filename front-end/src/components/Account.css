@@ -1,4 +1,5 @@
 .profilepic {
+    font-size: 2em;
     text-align: center;
     border-style: none;
     background-color: lightgray;
@@ -7,17 +8,32 @@
     height: auto;
     display: block;
     margin:20px auto;
-    padding-top: 2%;
-    padding-bottom: 2%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
-.Account {
+.account {
     border-style: solid;
+    font-size: 2em;
     text-align: left;
     max-width: 480px;
 	width: 100%;
 	height: auto;
     display: block;
-    margin:20px auto;
-    padding-left: 2%;
+    margin:50px auto;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 10px;
     
+}
+.button {
+    text-decoration: underline;
+    text-align: center;
+    border-style: solid;
+    max-width: 480px;
+	width: 100%;
+	height: auto;
+    display: block;
+    margin:20px auto;
 }
