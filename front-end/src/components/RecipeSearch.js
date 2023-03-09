@@ -50,7 +50,7 @@ const RecipeSearch = () => {
             <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         </div>
         <div className="recipes">
-            {filterData(recipeCards)}
+            {filterData(searchQuery, recipeCards)}
         </div>
         </>
     );

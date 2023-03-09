@@ -4,7 +4,7 @@ import './RecipeCard.css';
 const RecipeCard = (props) => {
     // Return the final component, consisting of the recipe name, image, and the list of ingredients
     return (
-        <div className="recipe">
+        <div className="recipeCard">
           <h2>{props.recipeDetails.recipeName}</h2>
           <img src={props.recipeDetails.image} alt={props.recipeDetails.recipeName} />
           <IngredientsList ingredients = {props.recipeDetails.ingredients}/>
