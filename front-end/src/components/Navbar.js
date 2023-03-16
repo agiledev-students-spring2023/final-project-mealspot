@@ -8,47 +8,49 @@ import './Navbar.css';
 
 const Navbar = () => {
   return (
-  <div className="navbar">
-    <Link to="/" className="link">
-      <li>
-        <IconContext.Provider value={{ className: "navbar-icon" }}>
-          <div><AiOutlineHome /></div>
-        </IconContext.Provider>
-        Meal plan
-      </li>
-    </Link>
-    <Link to="/recipesearch" className="link">
-      <li>
-        <IconContext.Provider value={{ className: "navbar-icon" }}>
-          <div><AiOutlineSearch /></div>
-        </IconContext.Provider>
-        Search
-      </li>
-    </Link>
-    <Link to="/savedrecipes" className="link">
-      <li>
-        <IconContext.Provider value={{ className: "navbar-icon" }}>
-          <div><AiOutlineStar /></div>
-        </IconContext.Provider>
-        Saved
-      </li>
-    </Link>
-    <Link to="/fridge" className="link">
-      <li>
-        <IconContext.Provider value={{ className: "navbar-icon" }}>
-          <div><BiFridge /></div>
-        </IconContext.Provider>
-        Fridge
-      </li>
-    </Link>
-    <Link to="/grocerylist" className="link">
-      <li>
-        <IconContext.Provider value={{ className: "navbar-icon" }}>
-          <div><HiOutlineClipboardList /></div>
-        </IconContext.Provider>
-        Grocery list
-      </li>
-    </Link>
+  <div className = "fixed">
+    <div className="navbar">
+      <Link to="/" className="link">
+        <li>
+          <IconContext.Provider value={{ className: "navbar-icon" }}>
+            <div><AiOutlineHome /></div>
+          </IconContext.Provider>
+          Meal plan
+        </li>
+      </Link>
+      <Link to="/recipesearch" className="link">
+        <li>
+          <IconContext.Provider value={{ className: "navbar-icon" }}>
+            <div><AiOutlineSearch /></div>
+          </IconContext.Provider>
+          Search
+        </li>
+      </Link>
+      <Link to="/savedrecipes" className="link">
+        <li>
+          <IconContext.Provider value={{ className: "navbar-icon" }}>
+            <div><AiOutlineStar /></div>
+          </IconContext.Provider>
+          Saved
+        </li>
+      </Link>
+      <Link to="/fridge" className="link">
+        <li>
+          <IconContext.Provider value={{ className: "navbar-icon" }}>
+            <div><BiFridge /></div>
+          </IconContext.Provider>
+          Fridge
+        </li>
+      </Link>
+      <Link to="/grocerylist" className="link">
+        <li>
+          <IconContext.Provider value={{ className: "navbar-icon" }}>
+            <div><HiOutlineClipboardList /></div>
+          </IconContext.Provider>
+          Grocery list
+        </li>
+      </Link>
+    </div>
   </div>
   );
 }

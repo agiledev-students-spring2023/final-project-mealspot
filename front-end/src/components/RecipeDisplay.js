@@ -24,6 +24,7 @@ const RecipeDisplay = (props) => {
 
         getRecipes(props.apiLink);
     }, [props.apiLink]);
+    // TODO: the page should update whenever the data in the database is changed
 
     // Make the fetched array of recipes into an array of recipe cards
     const recipeCards = recipes.map(recipe => {

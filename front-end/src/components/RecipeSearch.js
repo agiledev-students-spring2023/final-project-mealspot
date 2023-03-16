@@ -7,7 +7,7 @@ const RecipeSearch = () => {
         <>
         <h1>Recipe Search</h1>
         <div>
-            <RecipeDisplay apiLink = 'https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
+            <RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
         </div>
         </>
     );
