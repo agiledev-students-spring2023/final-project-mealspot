@@ -1,0 +1,31 @@
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    background-color: blue;
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.link1 {
+    list-style: none;
+    text-decoration: none;
+    color: white;
+    font-size: 12px;
+    width: 25%;
+}  
+
+.link2 {
+    position: relative;
+    left: 50%;
+    list-style: none;
+    text-decoration: none;
+    color: white;
+    font-size: 12px;
+    width: 25%;
+}
+
+.navbar-icon {
+    font-size: 28px;
+}

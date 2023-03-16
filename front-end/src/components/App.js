@@ -7,13 +7,14 @@ import SavedRecipes from './SavedRecipes.js';
 import Fridge from './Fridge.js';
 import GroceryList from './GroceryList.js';
 import Account from './Account.js';
+import Header from './Header.js';
 
 function App() {
   return (
     <div className="App">
       <h1>WELCOME TO MEALSPOT~~~</h1>
-      <a href={'/account'}>Profile Account</a>
       <Router>
+        <Header />
         <Navbar />
         <Routes>
           <Route path='/' exact element={<MealPlan />} />
