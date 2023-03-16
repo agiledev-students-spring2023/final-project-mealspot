@@ -1,32 +1,25 @@
 import React from 'react';
+import { IconContext } from "react-icons";
+import { AiOutlineStar } from "react-icons/ai";
 import './RecipeCard.css';
 
 const RecipeCard = (props) => {
+    // Calculate the total price of this recipe, based on the ingredients
+    const totalPrice = props.recipeDetails.ingredients.reduce((price, curr) => {
+        console.log(price);
+        return price + (curr.ppu * curr.units);
+    }, 0).toFixed(2);
+
     // Return the final component, consisting of the recipe name, image, and the list of ingredients
     return (
         <div className="recipeCard">
-          <h2>{props.recipeDetails.recipeName}</h2>
-          <img src={props.recipeDetails.image} alt={props.recipeDetails.recipeName} />
-          <IngredientsList ingredients = {props.recipeDetails.ingredients}/>
+            <IconContext.Provider value={{ className: "star" }}>
+                <div className="relative"><AiOutlineStar /></div>
+            </IconContext.Provider>
+            <img src={props.recipeDetails.image} alt={props.recipeDetails.recipeName} className="recipeImg" />
+            <h1 className="recipeName">{props.recipeDetails.recipeName}</h1>
+            <h2 className="totalPrice">${totalPrice}</h2>
         </div>
-    );
-}
-
-// Component for the list of ingredients that will be displayed on a recipe card
-const IngredientsList = (props) => {
-    // Turn the fetched JSON array of ingredients into an array of components, each component representing a single ingredient
-    const ingredientsList = props.ingredients.map((ingredient, k) => {
-        return (<div key={k} className="ingredient">
-            <li>{ingredient.ingredientName}</li>
-            <li>{ingredient.ppu}</li>
-        </div>);
-    });
-
-    // Return the array of ingredients
-    return (
-        <>
-            {ingredientsList}
-        </>
     );
 }
 

@@ -4,6 +4,7 @@ import { IconButton, TextField } from '@mui/material';
 import { AiOutlineSearch } from "react-icons/ai";
 
 // Citation - code is based off this tutorial by Marianna: https://dev.to/mar1anna/create-a-search-bar-with-react-and-material-ui-4he
+// TODO: refine what should actually happen on submit
 const SearchBar = ({setSearchQuery}) => {
     return (
         <form>
@@ -17,7 +18,7 @@ const SearchBar = ({setSearchQuery}) => {
                 variant="outlined"
                 size="small"
             />
-            <IconButton aria-label="search">
+            <IconButton type="submit" aria-label="search">
                 <AiOutlineSearch />
             </IconButton>
         </form>

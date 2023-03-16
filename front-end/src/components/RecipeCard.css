@@ -1,0 +1,37 @@
+.recipeCard {
+    display: inline-block;
+    width: 175px;
+    height: 250px;
+    margin: 6px;
+    background-color: lightgray;
+}
+
+.recipeImg {
+    width: 175px;
+}
+
+.recipeName {
+    font-size: 1em;
+    margin-left: 0.5em;
+    margin-top: 0.5em;
+    text-align: left;
+}
+
+.totalPrice {
+    font-size: 1em;
+    margin-right: 0.5em;
+    text-align: right;
+}
+
+.relative {
+    position: relative;
+}
+
+.star {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 5px;
+    margin-right: 3px;
+    font-size: 35px;
+}
