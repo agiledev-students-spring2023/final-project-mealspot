@@ -12,6 +12,7 @@ function App() {
     <div className="App">
       <h1>WELCOME TO MEALSPOT~~~</h1>
       <Router>
+        <Navbar />
         <Routes>
           <Route path='/' exact element={<MealPlan />} />
           <Route path='/recipesearch' element={<RecipeSearch />} />
@@ -19,7 +20,6 @@ function App() {
           <Route path='/fridge' element={<Fridge />} />
           <Route path='/grocerylist' element={<GroceryList />} />
         </Routes>
-        <Navbar />
       </Router>
     </div>
   );

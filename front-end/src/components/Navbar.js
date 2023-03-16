@@ -8,7 +8,6 @@ import './Navbar.css';
 
 const Navbar = () => {
   return (
-  <div className = "fixed">
     <div className="navbar">
       <Link to="/" className="link">
         <li>
@@ -51,7 +50,6 @@ const Navbar = () => {
         </li>
       </Link>
     </div>
-  </div>
   );
 }
 
