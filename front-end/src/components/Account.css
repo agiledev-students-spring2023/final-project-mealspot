@@ -1,3 +1,23 @@
-.Account {
+.profilepic {
     text-align: center;
+    border-style: none;
+    background-color: lightgray;
+    max-width: 480px;
+    width: 20%;
+    height: auto;
+    display: block;
+    margin:20px auto;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+.Account {
+    border-style: solid;
+    text-align: left;
+    max-width: 480px;
+	width: 100%;
+	height: auto;
+    display: block;
+    margin:20px auto;
+    padding-left: 2%;
+    
 }
