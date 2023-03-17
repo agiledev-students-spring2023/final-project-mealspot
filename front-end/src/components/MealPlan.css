@@ -35,3 +35,19 @@
     opacity: 0;
     transition: 1s ease 0.3s;
 }
+
+.link-edit {
+    display: block;
+    position: relative;
+    left: 70%;
+    list-style: none;
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
+    width: 25%;
+}  
+
+.navbar-icon-edit {
+    font-size: 28px;
+    color: black;
+}

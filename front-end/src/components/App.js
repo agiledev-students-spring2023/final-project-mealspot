@@ -2,6 +2,9 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar.js';
 import MealPlan from './MealPlan.js';
+import ChoosePage from './ChoosePage.js';
+import ChooseSavedRecipes from './ChooseSavedRecipes.js';
+import AddPage from './AddPage.js'
 import RecipeSearch from './RecipeSearch.js';
 import SavedRecipes from './SavedRecipes.js';
 import Fridge from './Fridge.js';
@@ -18,6 +21,9 @@ function App() {
         <Navbar />
         <Routes>
           <Route path='/' exact element={<MealPlan />} />
+          <Route path='/choosepage' element={<ChoosePage />} />
+          <Route path='/choosesavedrecipes' element={<ChooseSavedRecipes />} />
+          <Route path='/addpage' element={<AddPage />} />
           <Route path='/recipesearch' element={<RecipeSearch />} />
           <Route path='/savedrecipes' element={<SavedRecipes />} />
           <Route path='/fridge' element={<Fridge />} />

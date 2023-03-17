@@ -2,6 +2,9 @@ import React from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect } from '@mui/material';
+import { IconContext } from "react-icons";
+import { AiFillEdit } from "react-icons/ai";
+import { Link } from 'react-router-dom';
 import './MealPlan.css';
 
 //later change <Progress done="70"/> change to 
@@ -50,6 +53,14 @@ const MealPlan = () => {
                 <option value={0}>Sunday</option>
             </NativeSelect>
         </FormControl>
+        <div>
+        <Link to="/choosepage" className="link-edit">
+            <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
+            <div><AiFillEdit /></div>
+            </IconContext.Provider>
+            Edit
+        </Link>
+        </div>
         </>
     );
 }
