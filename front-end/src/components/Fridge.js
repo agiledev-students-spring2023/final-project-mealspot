@@ -1,6 +1,5 @@
 import {useState, React} from 'react';
 import {Modal, Box, Button, Typography, FormControl, TextField} from '@mui/material';
-import {useStateValue} from '../StateManager.js';
 import './Fridge.css';
 import FridgeItem from './FridgeItem';
 
@@ -17,12 +16,8 @@ const boxStyle = {
     p: 4,
   };
 
-const border = {
-    border: 1
-}
-
 const Fridge = () => {
-    const [{myFridge}, dispatch] = useStateValue();
+    const [myFridge, setFridge] = useState([]);
     const [inputs, setInputs] = useState({
         id: 0,
         name: "",
@@ -32,15 +27,12 @@ const Fridge = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const addToFridge = () => {
-        // tell StateManager to add it to the cart
-        dispatch({
-            type: "ADD_TO_FRIDGE",
-            item: {
-                id: +new Date(),
-                name: inputs.name,
-                quantity: inputs.quantity
-            }
-        });
+        const item = {
+            id: +new Date(),
+            name: inputs.name,
+            quantity: inputs.quantity
+        }
+        setFridge([...myFridge, item]);
     }
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -68,7 +60,7 @@ const Fridge = () => {
             />
           ))}
            <br/>
-            <Button sx={border} onClick={handleOpen}>Add Item</Button>
+            <Button className="buttonStyle" onClick={handleOpen}>Add Item</Button>
             <Modal
             open={open}
             onClose={handleClose}
@@ -84,7 +76,7 @@ const Fridge = () => {
                 <br/>
                 <TextField required id="outlined-basic" label="Quantity" placeholder="Enter Quantity" onChange={handleChange} name="quantity" value={inputs.quantity} variant="outlined" />
                 <br/>
-                <Button sx={border} type="submit">Submit</Button>
+                <Button className="buttonStyle" type="submit">Submit</Button>
                 </FormControl>
                 </form>
             </Box>
