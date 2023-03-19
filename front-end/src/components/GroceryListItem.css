@@ -1,0 +1,15 @@
+.groceryListItemDiv {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.groceryListItemName {
+    position: absolute;
+    left: 5%;
+}
+
+.groceryListItemQuantity {
+    position: absolute;
+    left: 40%;
+}
