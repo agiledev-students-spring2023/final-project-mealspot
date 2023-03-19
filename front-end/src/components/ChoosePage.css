@@ -1,0 +1,39 @@
+.choose-saved-recipes-button {
+    position: relative;
+    flex-direction: row;
+    background-color: blue;
+    left: 30%;
+    width: 40%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.add-page-button {
+    position: relative;
+    flex-direction: row;
+    background-color: blue;
+    left: 30%;
+    width: 40%;
+    top: 50px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.link-choose-page {
+    position: relative;
+    list-style: none;
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    width: 25%;
+}  
+
+.link-back {
+    position: relative;
+    list-style: none;
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+    width: 25%;
+    text-align: left;
+}  

@@ -1,9 +1,87 @@
-import React from 'react';
+import {useState, React} from 'react';
+import {Modal, Box, Button, Typography, FormControl, TextField} from '@mui/material';
 import './Fridge.css';
+import FridgeItem from './FridgeItem';
+
+const boxStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 300,
+    textAlign: 'center',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
 const Fridge = () => {
+    const [myFridge, setFridge] = useState([]);
+    const [inputs, setInputs] = useState({
+        id: 0,
+        name: "",
+        quantity: 0
+    }); 
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const addToFridge = () => {
+        const item = {
+            id: +new Date(),
+            name: inputs.name,
+            quantity: inputs.quantity
+        }
+        setFridge([...myFridge, item]);
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        addToFridge();
+        handleClose();
+    }
+
+    const handleChange = (e) => {
+        setInputs((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+        }))
+    }
+
     return (
-        <h1>fridge page</h1>
+        <div>
+            <h1>My Fridge</h1>
+            {myFridge.length === 0 && <h3>You currently have no items in your fridge.</h3>}
+            {myFridge.map(item => (
+            <FridgeItem
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              quantity={item.quantity}
+            />
+          ))}
+           <br/>
+            <Button className="buttonStyle" onClick={handleOpen}>Add Item</Button>
+            <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            >
+            <Box sx={boxStyle}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">Add Item</Typography>
+                <br/>
+                <form onSubmit={handleSubmit}>
+                <FormControl>
+                <TextField required id="outlined-basic" label="Item Name" placeholder="Enter Name" onChange={handleChange} name="name" value={inputs.name} variant="outlined" />
+                <br/>
+                <TextField required id="outlined-basic" label="Quantity" placeholder="Enter Quantity" onChange={handleChange} name="quantity" value={inputs.quantity} variant="outlined" />
+                <br/>
+                <Button className="buttonStyle" type="submit">Submit</Button>
+                </FormControl>
+                </form>
+            </Box>
+            </Modal>
+        </div>
     );
 }
 
