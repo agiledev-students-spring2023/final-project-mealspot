@@ -1,0 +1,15 @@
+.fridgeItemDiv {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.fridgeItemName {
+    position: absolute;
+    left: 5%;
+}
+
+.fridgeItemQuantity {
+    position: absolute;
+    left: 40%;
+}
