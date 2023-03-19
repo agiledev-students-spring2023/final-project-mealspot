@@ -15,7 +15,7 @@ import Header from './Header.js';
 function App() {
   return (
     <div className="App">
-      <h1>WELCOME TO MEALSPOT~~~</h1>
+      <h1>Mealspot</h1>
       <Router>
         <Header />
         <Navbar />
