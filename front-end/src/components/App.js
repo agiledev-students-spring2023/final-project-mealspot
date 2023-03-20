@@ -11,6 +11,8 @@ import Fridge from './Fridge.js';
 import GroceryList from './GroceryList.js';
 import Account from './Account.js';
 import Header from './Header.js';
+import Login from './Login.js';
+import Register from './Register.js';
 
 function App() {
   return (
