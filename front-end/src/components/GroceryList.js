@@ -1,5 +1,6 @@
 import {useState, React} from 'react';
 import {Modal, Box, Button, Typography, FormControl, TextField} from '@mui/material';
+import {useStateValue} from '../StateManager.js';
 import './GroceryList.css';
 import GroceryListItem from './GroceryListItem';
 
@@ -21,7 +22,7 @@ const border = {
 }
 
 const GroceryList = () => {
-    const [groceryList, setGroceryList] = useState([]);
+    const [{groceryList}, dispatch] = useStateValue();
     const [inputs, setInputs] = useState({
         id: 0,
         name: "",
@@ -31,12 +32,15 @@ const GroceryList = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const addToGroceryList = () => {
-        const item = {
-            id: +new Date(),
-            name: inputs.name,
-            quantity: inputs.quantity
-        }
-        setGroceryList([...groceryList, item]);
+        // tell StateManager to add it to the cart
+        dispatch({
+            type: "ADD_TO_GROCERYLIST",
+            item: {
+                id: +new Date(),
+                name: inputs.name,
+                quantity: inputs.quantity
+            }
+        });
     }
 
     const handleSubmit = (e) => {
