@@ -17,7 +17,6 @@ import Register from './Register.js';
 function App() {
   return (
     <div className="App">
-      <h1>Mealspot</h1>
       <Router>
         <Header />
         <Navbar />
