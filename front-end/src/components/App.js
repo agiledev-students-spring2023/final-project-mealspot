@@ -11,17 +11,19 @@ import Fridge from './Fridge.js';
 import GroceryList from './GroceryList.js';
 import Account from './Account.js';
 import Header from './Header.js';
+import Login from './Login.js';
+import Register from './Register.js';
 
 function App() {
   return (
     <div className="App">
-      <h1>WELCOME TO MEALSPOT~~~</h1>
-      <a href={'/account'}>Profile Account</a>
       <Router>
         <Header />
         <Navbar />
         <Routes>
           <Route path='/' exact element={<MealPlan />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
           <Route path='/choosepage' element={<ChoosePage />} />
           <Route path='/choosesavedrecipes' element={<ChooseSavedRecipes />} />
           <Route path='/addpage' element={<AddPage />} />
