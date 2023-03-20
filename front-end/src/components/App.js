@@ -12,8 +12,6 @@ import GroceryList from './GroceryList.js';
 import Account from './Account.js';
 import Account from './Account.js';
 import Header from './Header.js';
-import AddPage from './AddPage';
-import ChooseSavedRecipes from './ChooseSavedRecipes';
 
 function App() {
   return (
