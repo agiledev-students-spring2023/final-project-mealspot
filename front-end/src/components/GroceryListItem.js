@@ -22,7 +22,7 @@ function GroceryListItem({id, name, quantity}){
     return (
         <div className="groceryListItemDiv">
             <p className="groceryListItemName">{name}</p>
-            <p className="groceryListItemQuantity">Quantity: {quantity}</p>
+            <p className="groceryListItemQuantity">{quantity}</p>
             <Button sx={buttonStyle} onClick={removeFromCart}>Remove</Button>
         </div>
     );

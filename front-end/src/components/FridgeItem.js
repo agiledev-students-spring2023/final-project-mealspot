@@ -22,7 +22,7 @@ function FridgeItem({id, name, quantity}){
     return (
         <div className="fridgeItemDiv">
             <p className="fridgeItemName">{name}</p>
-            <p className="fridgeItemQuantity">Quantity: {quantity}</p>
+            <p className="fridgeItemQuantity">{quantity}</p>
             <Button sx={buttonStyle} onClick={removeFromFridge}>Remove</Button>
         </div>
     );
