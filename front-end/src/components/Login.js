@@ -1,16 +1,43 @@
+import { TextField, Box, Button } from '@mui/material'
+
+const handleSubmit = (event) => {
+    event.preventDefault()
+    const data = event
+    console.log(data)
+}
+
 const Login = () => {
     return (
         <div className="login">
-            <div>
-                <img src="../public/logo512.png"></img>
-                Login
-            </div>
-            <form>
-            <input type="text" id="email" placeholder="enter email..."></input><br></br>
-                <input type="text" id="login" placeholder="enter username..."></input><br></br>
-            </form>
-            <button type="button">Login</button><br></br>
-            <button type="button">Register</button>
+            <h1>Login</h1>
+            <Box component="form" onSubmit={handleSubmit}>
+                <TextField
+                    required
+                    margin="normal"
+                    id="username"
+                    label="Username"
+                    name="username"
+                ></TextField><br/>
+                <TextField
+                    required
+                    margin="normal"
+                    id="password"
+                    label="Password"
+                    name="password"
+                ></TextField><br/>
+                <Button
+                    variant="contained"
+                    type="submit"
+                >
+                    Log In
+                </Button><br/><br/>
+                <Button
+                    variant="contained"
+                    href="/register"
+                >
+                    Register
+                </Button>
+            </Box>
         </div>
     )
 }
