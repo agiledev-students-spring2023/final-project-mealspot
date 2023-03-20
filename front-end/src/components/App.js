@@ -10,6 +10,7 @@ import SavedRecipes from './SavedRecipes.js';
 import Fridge from './Fridge.js';
 import GroceryList from './GroceryList.js';
 import Account from './Account.js';
+import Account from './Account.js';
 import Header from './Header.js';
 import AddPage from './AddPage';
 import ChooseSavedRecipes from './ChooseSavedRecipes';
@@ -17,8 +18,6 @@ import ChooseSavedRecipes from './ChooseSavedRecipes';
 function App() {
   return (
     <div className="App">
-      <h1>WELCOME TO MEALSPOT~~~</h1>
-      <a href={'/account'}>Profile Account</a>
       <Router>
         <Header />
         <Navbar />
