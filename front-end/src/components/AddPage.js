@@ -22,8 +22,8 @@ const AddPage = () => {
     return (
         <div class="addItemDiv">
             <h1>Edit Meal</h1>
-            <h2>Day of the Week:</h2>
-            <h2>Time of Day:</h2>
+            <p>Day of the Week: </p>
+            <p>Time of Day</p>
             <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                 Add My Own
