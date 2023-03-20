@@ -30,10 +30,4 @@
 .button {
     text-decoration: underline;
     text-align: center;
-    border-style: solid;
-    max-width: 480px;
-	width: 100%;
-	height: auto;
-    display: block;
-    margin:20px auto;
 }
