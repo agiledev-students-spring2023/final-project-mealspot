@@ -8,10 +8,10 @@ import './Navbar.css';
 
 const Navbar = () => {
   return (
-    <div className="navbar">
+    <div className="navbar blueBackground">
       <Link to="/" className="link">
         <li>
-          <IconContext.Provider value={{ className: "navbar-icon" }}>
+          <IconContext.Provider value={{ className: "navbarIcon" }}>
             <div><AiOutlineHome /></div>
           </IconContext.Provider>
           Meal plan
@@ -19,7 +19,7 @@ const Navbar = () => {
       </Link>
       <Link to="/recipesearch" className="link">
         <li>
-          <IconContext.Provider value={{ className: "navbar-icon" }}>
+          <IconContext.Provider value={{ className: "navbarIcon" }}>
             <div><AiOutlineSearch /></div>
           </IconContext.Provider>
           Search
@@ -27,7 +27,7 @@ const Navbar = () => {
       </Link>
       <Link to="/savedrecipes" className="link">
         <li>
-          <IconContext.Provider value={{ className: "navbar-icon" }}>
+          <IconContext.Provider value={{ className: "navbarIcon" }}>
             <div><AiOutlineStar /></div>
           </IconContext.Provider>
           Saved
@@ -35,7 +35,7 @@ const Navbar = () => {
       </Link>
       <Link to="/fridge" className="link">
         <li>
-          <IconContext.Provider value={{ className: "navbar-icon" }}>
+          <IconContext.Provider value={{ className: "navbarIcon" }}>
             <div><BiFridge /></div>
           </IconContext.Provider>
           Fridge
@@ -43,7 +43,7 @@ const Navbar = () => {
       </Link>
       <Link to="/grocerylist" className="link">
         <li>
-          <IconContext.Provider value={{ className: "navbar-icon" }}>
+          <IconContext.Provider value={{ className: "navbarIcon" }}>
             <div><HiOutlineClipboardList /></div>
           </IconContext.Provider>
           Grocery list
