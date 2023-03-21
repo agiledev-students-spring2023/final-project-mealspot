@@ -9,10 +9,10 @@ import './MealPlan.css';
 
 //temporary food database (later should be pulled from actual database and be
 //influenced by ChooseSavedRecipes and AddPage changes made to database)
-let tempFoodDb= [
-    {name:"Food1", ingredients: ["ingredient1, ingredient2"], cost: "$xx"},
-    {name:"Food2", ingredients: ["ingredient1, ingredient2, ingredient3"], cost: "$xx"},
-    {name:"Food3", ingredients: ["ingredient1, ingredient2"], cost: "$xx"}
+let tempFoodDb = [
+    {name:"Food1", ingredients: ["ingredient1", "ingredient2"], cost: "$xx"},
+    {name:"Food2", ingredients: ["ingredient1", "ingredient2", "ingredient3"], cost: "$xx"},
+    {name:"Food3", ingredients: ["ingredient1", "ingredient2"], cost: "$xx"}
 ]
 
 //keep track of current money spent, will be changed by user
@@ -62,6 +62,16 @@ const Form = () => {
 
 const MealPlan = () => {
     let budgetP = (currSpent/100)*100 //$ spent/budget * 100
+    //https://getbutterfly.com/generate-html-list-from-javascript-array/
+    const listIngMorn = tempFoodDb[0].ingredients.map((item) => (
+        <li key={item}>{item}</li>
+    ))
+    const listIngAft = tempFoodDb[1].ingredients.map((item) => (
+        <li key={item}>{item}</li>
+    ))
+    const listIngEve = tempFoodDb[2].ingredients.map((item) => (
+        <li key={item}>{item}</li>
+    ))
     return (
         <>
         <h1>My Meal Plan</h1>
@@ -70,13 +80,82 @@ const MealPlan = () => {
         <Progress done={budgetP.toString()}/>
         </div>
         <Form />
-        <div>
-        <Link to="/choosepage" className="link-edit">
-            <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
-            <div><AiFillEdit /></div>
-            </IconContext.Provider>
-            Edit
-        </Link>
+        <div className="meal-card">
+            <div className="card-break">
+                <div className="meal-card-col1">
+                    <div className="card-day">Breakfast</div>
+                    <div className="card-img">Image</div>
+                </div>
+                <div className="meal-card-col2">
+                    <div className="card-name">{tempFoodDb[0].name}</div>
+                    <div className="card-ing">
+                        <ul>
+                        {listIngMorn}
+                        </ul>
+                        </div>
+                </div>
+                <div className="meal-card-col3">
+                    <div className="card-edit">
+                        <Link to="/choosepage" className="link-edit">
+                            <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
+                            <div><AiFillEdit /></div>
+                            </IconContext.Provider>
+                            Edit
+                        </Link>
+                    </div>
+                    <div className="card-cost">{tempFoodDb[0].cost}</div>
+                </div>
+            </div>
+            <div className="card-lunch">
+                <div className="meal-card-col1">
+                    <div className="card-day">Lunch</div>
+                    <div className="card-img">Image</div>
+                </div>
+                <div className="meal-card-col2">
+                    <div className="card-name">{tempFoodDb[1].name}</div>
+                    <div className="card-ing">
+                        <ul>
+                        {listIngAft}
+                        </ul>
+                        </div>
+                </div>
+                <div className="meal-card-col3">
+                    <div className="card-edit">
+                        <Link to="/choosepage" className="link-edit">
+                            <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
+                            <div><AiFillEdit /></div>
+                            </IconContext.Provider>
+                            Edit
+                        </Link>
+                    </div>
+                    <div className="card-cost">{tempFoodDb[1].cost}</div>
+                </div>
+            </div>
+            <div className="card-dinner">
+                <div className="meal-card-col1">
+                    <div className="card-day">Dinner</div>
+                    <div className="card-img">Image</div>
+                </div>
+                <div className="meal-card-col2">
+                    <div className="card-name">{tempFoodDb[2].name}</div>
+                    <div className="card-ing">
+                        <ul>
+                        {listIngEve}
+                        </ul>
+                        </div>
+                </div>
+                <div className="meal-card-col3">
+                    <div className="card-edit">
+                        <Link to="/choosepage" className="link-edit">
+                            <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
+                            <div><AiFillEdit /></div>
+                            </IconContext.Provider>
+                            Edit
+                        </Link>
+                    </div>
+                    <div className="card-cost">{tempFoodDb[2].cost}</div>
+                </div>
+            </div>
         </div>
         </>
     );
