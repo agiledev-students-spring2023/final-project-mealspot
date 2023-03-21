@@ -7,6 +7,14 @@ import { AiFillEdit } from "react-icons/ai";
 import { Link } from 'react-router-dom';
 import './MealPlan.css';
 
+//temporary food database (later should be pulled from actual database and be
+//influenced by ChooseSavedRecipes and AddPage changes made to database)
+let tempFoodDatabase = [
+    {name:"Food1", ingredients: ["ingredient1, ingredient2"], cost: "$xx"},
+    {name:"Food2", ingredients: ["ingredient1, ingredient2, ingredient3"], cost: "$xx"},
+    {name:"Food3", ingredients: ["ingredient1, ingredient2"], cost: "$xx"}
+]
+
 //keep track of current money spent, will be changed by user
 let currSpent = 70;
 
