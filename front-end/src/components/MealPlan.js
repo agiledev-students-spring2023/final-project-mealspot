@@ -9,7 +9,7 @@ import './MealPlan.css';
 
 //temporary food database (later should be pulled from actual database and be
 //influenced by ChooseSavedRecipes and AddPage changes made to database)
-let tempFoodDatabase = [
+let tempFoodDb= [
     {name:"Food1", ingredients: ["ingredient1, ingredient2"], cost: "$xx"},
     {name:"Food2", ingredients: ["ingredient1, ingredient2, ingredient3"], cost: "$xx"},
     {name:"Food3", ingredients: ["ingredient1, ingredient2"], cost: "$xx"}
@@ -33,17 +33,10 @@ const Progress = ({done}) => {
     )
 }
 
-const MealPlan = () => {
-    let budgetP = (currSpent/100)*100 //$ spent/budget * 100
+const Form = () => {
     let now = new Date()
     let today = now.getDay()
     return (
-        <>
-        <h1>My Meal Plan</h1>
-        <div className="progress-area">
-        <p>Budget Tracker</p>
-        <Progress done={budgetP.toString()}/>
-        </div>
         <FormControl fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
                 Day of the Week
@@ -64,6 +57,19 @@ const MealPlan = () => {
                 <option value={0}>Sunday</option>
             </NativeSelect>
         </FormControl>
+    )
+}
+
+const MealPlan = () => {
+    let budgetP = (currSpent/100)*100 //$ spent/budget * 100
+    return (
+        <>
+        <h1>My Meal Plan</h1>
+        <div className="progress-area">
+        <p>Budget Tracker</p>
+        <Progress done={budgetP.toString()}/>
+        </div>
+        <Form />
         <div>
         <Link to="/choosepage" className="link-edit">
             <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
