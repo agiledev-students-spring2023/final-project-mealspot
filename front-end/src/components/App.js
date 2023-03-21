@@ -22,6 +22,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path='/' exact element={<MealPlan />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
           <Route path='/choosepage' element={<ChoosePage />} />
           <Route path='/choosesavedrecipes' element={<ChooseSavedRecipes />} />
           <Route path='/addpage' element={<AddPage />} />

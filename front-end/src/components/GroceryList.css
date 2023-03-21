@@ -1,0 +1,22 @@
+.groceryListHeader {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 3rem;
+}
+
+.groceryListName {
+    position: absolute;
+    left: 5%;
+    text-decoration: underline;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.groceryListQuantity {
+    position: absolute;
+    left: 40%;
+    text-decoration: underline;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
