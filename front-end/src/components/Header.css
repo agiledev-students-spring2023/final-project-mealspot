@@ -6,7 +6,7 @@
 }
 
 .logo {
-    height: 90px;
+    height: 70px;
     padding-left: 10px;
 }
 
@@ -17,5 +17,6 @@
 }
 
 .icon {
-    font-size: 42px;
+    margin-top: 16px;
+    font-size: 55px;
 }
