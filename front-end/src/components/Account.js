@@ -13,8 +13,8 @@ const Account = (props) => {
       axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0")
         .then(response => {
           // extract the data from the server response
-          console.log(response)
-          setData(response.data)
+          console.log(response.data[0])
+          setData(response.data[0])
         })
         .catch(err => {
           console.error(err) 
@@ -27,23 +27,22 @@ const Account = (props) => {
         <div className='profilepic'>
             <p>Profile Picture</p>
         </div>
-        <div className='account'>
-            {data && data.map((d) => (
-                <div>
-                    <p>Name: {d.first_name} {d.last_name}</p>
-                    <p>Email: {d.email}</p>
-                    <p>Weekly Budget: {d.weekly_budget}</p>
-                </div>
-                     
-            ))}
+        
+        {<div className='account'>
+            <div>
+                <p>Name: {data.first_name} {data.last_name}</p>
+                <p>Email: {data.email}</p>
+                <p>Weekly Budget: {data.weekly_budget}</p>
+            </div>
+            
             {/* {data.map(d => <div>Name: {d.first_name} {d.last_name}</div>)}
             {data.map(d => <div>Email: {d.email}</div>)}
             {data.map(d => <div>Weekly Budget: {d.weekly_budget}</div>)} */}
-        </div>
+        </div>}
         <button>
             Logout
         </button>
-      </div>
+      </div> 
     )
   }
 
