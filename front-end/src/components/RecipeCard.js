@@ -2,6 +2,7 @@ import React from 'react';
 import { IconContext } from "react-icons";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import './RecipeCard.css';
+import { useNavigate } from 'react-router-dom';
 
 const RecipeCard = (props) => {
     // Calculate the total price of this recipe, based on the ingredients
@@ -26,6 +27,13 @@ const RecipeCard = (props) => {
     // Star icon - fill if this recipe is favorited, outline if not
     const starIcon = props.recipeDetails.favorite ? <AiFillStar /> : <AiOutlineStar />
 
+    const navigate = useNavigate()
+
+    const detailOnClick = (e) => {
+        // adding scuffed popup implementation for details
+        navigate('/details', {state:{details:props.recipeDetails}})
+    }
+
     // Return the final component, consisting of the recipe name, image, and the list of ingredients
     return (
         <div className="recipeCard">
@@ -36,7 +44,7 @@ const RecipeCard = (props) => {
                     </IconContext.Provider>
                 </button>
             </div>
-            <img src={props.recipeDetails.image} alt={props.recipeDetails.recipeName} className="recipeImg" />
+            <img src={props.recipeDetails.image} alt={props.recipeDetails.recipeName} className="recipeImg" onClick={detailOnClick}/>
             <h1 className="recipeName">{props.recipeDetails.recipeName}</h1>
             <h2 className="totalPrice">${totalPrice}</h2>
         </div>
