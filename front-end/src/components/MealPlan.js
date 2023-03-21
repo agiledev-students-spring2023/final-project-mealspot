@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
+import axios from 'axios';
 import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect } from '@mui/material';
 import { IconContext } from "react-icons";
@@ -16,7 +17,7 @@ let tempFoodDb = [
 ]
 
 //keep track of current money spent, will be changed by user
-let currSpent = 70;
+let currSpent = 70
 
 //later change <Progress done="70"/> change to 
 const Progress = ({done}) => {
@@ -60,34 +61,58 @@ const Form = () => {
     )
 }
 
-const MealPlan = () => {
-    let budgetP = (currSpent/100)*100 //$ spent/budget * 100
+//<RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
+const Recipes = (props) => {
+    // State to store the recipes fetched from the database
+    const [recipes, setRecipes] = useState([])
+
+    // On the first render, make an API call to the backend, to fetch the recipe data from the database
+    useEffect(() => {
+        async function getRecipes(url) {
+            try {
+                const response = await axios(url)
+                setRecipes(response.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getRecipes(props.apiLink)
+    }, [props.apiLink])
+    // Only grab the first 3 recipes
+    //recipes = recipes.slice(0,3)
+    
+    // Get the list of ing for each recipe
     //https://getbutterfly.com/generate-html-list-from-javascript-array/
-    const listIngMorn = tempFoodDb[0].ingredients.map((item) => (
+    const listIngMorn = recipes[0].ingredients.map((item) => (
         <li key={item}>{item}</li>
     ))
-    const listIngAft = tempFoodDb[1].ingredients.map((item) => (
+    const listIngAft = recipes[1].ingredients.map((item) => (
         <li key={item}>{item}</li>
     ))
-    const listIngEve = tempFoodDb[2].ingredients.map((item) => (
+    const listIngEve = recipes[2].ingredients.map((item) => (
         <li key={item}>{item}</li>
     ))
+
+    // Get the price of each recipe
+    const totalPMorn = recipes[0].ingredients.reduce((price, curr) => {
+        return price + (curr.ppu * curr.units)
+    }, 0).toFixed(2)
+    const totalPAft = recipes[1].ingredients.reduce((price, curr) => {
+        return price + (curr.ppu * curr.units)
+    }, 0).toFixed(2)
+    const totalPEve = recipes[2].ingredients.reduce((price, curr) => {
+        return price + (curr.ppu * curr.units)
+    }, 0).toFixed(2)
+
     return (
-        <>
-        <h1>My Meal Plan</h1>
-        <div className="progress-area">
-        <p>Budget Tracker</p>
-        <Progress done={budgetP.toString()}/>
-        </div>
-        <Form />
         <div className="meal-card">
             <div className="card-break">
                 <div className="meal-card-col1">
                     <div className="card-day">Breakfast</div>
-                    <div className="card-img">Image</div>
+                    <div className="card-img">{recipes[0].image}</div>
                 </div>
                 <div className="meal-card-col2">
-                    <div className="card-name">{tempFoodDb[0].name}</div>
+                    <div className="card-name">{recipes[0].recipeName}</div>
                     <div className="card-ing">
                         <ul>
                         {listIngMorn}
@@ -103,16 +128,16 @@ const MealPlan = () => {
                             Edit
                         </Link>
                     </div>
-                    <div className="card-cost">{tempFoodDb[0].cost}</div>
+                    <div className="card-cost">{totalPMorn}</div>
                 </div>
             </div>
             <div className="card-lunch">
                 <div className="meal-card-col1">
                     <div className="card-day">Lunch</div>
-                    <div className="card-img">Image</div>
+                    <div className="card-img">{recipes[1].image}</div>
                 </div>
                 <div className="meal-card-col2">
-                    <div className="card-name">{tempFoodDb[1].name}</div>
+                    <div className="card-name">{recipes[1].recipeName}</div>
                     <div className="card-ing">
                         <ul>
                         {listIngAft}
@@ -128,16 +153,16 @@ const MealPlan = () => {
                             Edit
                         </Link>
                     </div>
-                    <div className="card-cost">{tempFoodDb[1].cost}</div>
+                    <div className="card-cost">{totalPAft}</div>
                 </div>
             </div>
             <div className="card-dinner">
                 <div className="meal-card-col1">
                     <div className="card-day">Dinner</div>
-                    <div className="card-img">Image</div>
+                    <div className="card-img">{recipes[2].image}</div>
                 </div>
                 <div className="meal-card-col2">
-                    <div className="card-name">{tempFoodDb[2].name}</div>
+                    <div className="card-name">{recipes[2].recipeName}</div>
                     <div className="card-ing">
                         <ul>
                         {listIngEve}
@@ -153,12 +178,27 @@ const MealPlan = () => {
                             Edit
                         </Link>
                     </div>
-                    <div className="card-cost">{tempFoodDb[2].cost}</div>
+                    <div className="card-cost">{totalPEve}</div>
                 </div>
             </div>
         </div>
+    )
+
+}
+
+const MealPlan = () => {
+    let budgetP = (currSpent/100)*100 //$ spent/budget * 100
+    return (
+        <>
+        <h1>My Meal Plan</h1>
+        <div className="progress-area">
+        <p>Budget Tracker</p>
+        <Progress done={budgetP.toString()}/>
+        </div>
+        <Form />
+        <Recipes apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0'/>
         </>
-    );
+    )
 }
 
 export default MealPlan;
