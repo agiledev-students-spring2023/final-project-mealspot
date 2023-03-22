@@ -7,13 +7,11 @@ import './ChoosePage.css';
 const ChoosePage = () => {
     return (
         <>
-        <div>
-            <Link to="/" className="link-back">
-                <IconContext.Provider value={{ className: "navbar-icon" }}>
-                    <div><AiFillCloseCircle /></div>
-                </IconContext.Provider>
-            </Link>
-        </div>
+        <Link to="/" className="link-back">
+            <IconContext.Provider value={{ className: "back-icon" }}>
+                <div><AiFillCloseCircle /></div>
+            </IconContext.Provider>
+        </Link>
         <div className="middle">
             <h1>Edit Meal</h1>
         </div>

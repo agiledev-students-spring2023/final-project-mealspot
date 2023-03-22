@@ -51,3 +51,87 @@
     font-size: 28px;
     color: black;
 }
+
+.meal-card {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 20px;
+}
+
+.card-break {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-top: 20px;
+}
+
+.card-lunch {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+
+.card-dinner {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-bottom: 120px;
+}
+
+.meal-card-col1 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.card-day {
+    font-size: 28px;
+}
+
+.card-img {
+    background-color: #fff;
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+}
+
+.meal-card-col2 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex: 0.8;
+    gap: 10px;
+}
+
+.card-name {
+    margin-right: 50px;
+    margin-top: 60px;
+}
+
+.card-ing {
+    list-style-position: outside;
+    word-break: break-word;
+}
+
+.meal-card-col3 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 100px;
+}
+
+.card-edit {
+    align-content: flex-start;
+}
+
+.card-cost {
+    position: relative;
+    left: 70%;
+    margin-bottom: auto;
+}

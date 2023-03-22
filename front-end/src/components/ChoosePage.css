@@ -1,7 +1,8 @@
 .choose-saved-recipes-button {
     position: relative;
     flex-direction: row;
-    background-color: blue;
+    background-color: #709ef2;
+    border-radius: 10px;
     left: 30%;
     width: 40%;
     padding-top: 8px;
@@ -11,12 +12,17 @@
 .add-page-button {
     position: relative;
     flex-direction: row;
-    background-color: blue;
+    background-color: #709ef2;
+    border-radius: 10px;
     left: 30%;
     width: 40%;
     top: 50px;
     padding-top: 8px;
     padding-bottom: 8px;
+}
+
+.back-icon {
+    font-size: 40px;
 }
 
 .link-choose-page {

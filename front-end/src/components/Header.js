@@ -1,8 +1,8 @@
 import React from 'react';
-import logo from "../logo.png";
 import { IconContext } from "react-icons";
 import { BsPersonCircle } from "react-icons/bs";
 import { Link } from 'react-router-dom';
+import logo from "../logo.png";
 import './Header.css';
 
 const Header = () => {
