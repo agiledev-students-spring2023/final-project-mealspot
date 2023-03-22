@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
 .App {
   text-align: center;
+}
+
+.blueBackground {
+  background-color: rgb(72, 139, 226);
+}
+
+.blueText {
+  color: rgb(72, 139, 226);
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
 }

@@ -7,9 +7,12 @@ import { AiFillEdit } from "react-icons/ai";
 import { Link } from 'react-router-dom';
 import './MealPlan.css';
 
+//keep track of current money spent, will be changed by user
+let currSpent = 70;
+
 //later change <Progress done="70"/> change to 
 const Progress = ({done}) => {
-    let budget = "$70/$100" //$ spent/budget
+    let budget = `$${currSpent}/$100` //$ spent/budget
     return (
         <div className="progress">
             <div className="progress-done" style={{
@@ -23,12 +26,12 @@ const Progress = ({done}) => {
 }
 
 const MealPlan = () => {
-    let budgetP = (70/100)*100 //$ spent/budget * 100
+    let budgetP = (currSpent/100)*100 //$ spent/budget * 100
     let now = new Date()
     let today = now.getDay()
     return (
         <>
-        <h1>Meal Plan Page</h1>
+        <h1>My Meal Plan</h1>
         <div className="progress-area">
         <p>Budget Tracker</p>
         <Progress done={budgetP.toString()}/>
