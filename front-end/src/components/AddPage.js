@@ -1,5 +1,5 @@
 import {useState, React} from 'react';
-import {Modal, Box, Button, Typography, FormControl, NativeSelect, TextField, Grid} from '@mui/material';
+import {Modal, Box, Button, Typography, FormControl, NativeSelect, TextField, Grid, autocompleteClasses} from '@mui/material';
 import { IconContext } from "react-icons";
 import { AiFillCloseCircle } from "react-icons/ai";
 import InputLabel from '@mui/material/InputLabel';
@@ -8,14 +8,14 @@ import './AddPage.css';
 
 const style = {
     position: 'absolute',
-    top: '62%',
+    top: '64%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '95%',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
-    p: 4,
+    p: 1,
   };
 
 const AddPage = () => {
@@ -66,9 +66,9 @@ const AddPage = () => {
                         id: 'uncontrolled-native',
                         }}
                     >
-                        <option value={1}>Morning</option>
-                        <option value={2}>Afternoon</option>
-                        <option value={3}>Evening</option>
+                        <option value={1}>Breakfast</option>
+                        <option value={2}>Lunch</option>
+                        <option value={3}>Dinner</option>
                     </NativeSelect>
                 </FormControl>
             <Box sx={style}>
