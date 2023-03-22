@@ -1,5 +1,6 @@
-import { useLocation } from 'react-router-dom'
-import { Box, List, ListItemText, Button } from '@mui/material'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Box, List, ListItemText, Button, IconButton, Divider } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios'
 
 const RecipeDetails = props => {
@@ -25,9 +26,18 @@ const RecipeDetails = props => {
         // todo handle saving when backend is implemented
     }
 
+    const navigate = useNavigate()
+
+    const handleClose = () => {
+        navigate('/savedrecipes')
+    }
+
     return (
         <div className="recipe-details">
         <Box>
+            <IconButton onClick={handleClose}>
+                <CloseIcon />
+            </IconButton>
             <h1>{dat.name}</h1>
             <img src={dat.image} alt="aa"></img>
             <h2>Ingredients</h2>
