@@ -3,10 +3,10 @@ import {Button} from '@mui/material';
 import './GroceryListItem.css';
 
 const buttonStyle = {
-    border: 1,
-    height: 30,
-    marginTop: '14px',
-    left: '75%'
+  border: 1,
+  height: 30,
+  marginTop: '18px',
+  left: '75%'
 }
 
 function GroceryListItem({id, name, quantity}){

@@ -17,10 +17,12 @@ const boxStyle = {
     p: 4,
   };
 
-const border = {
-    border: 1
+  const border = {
+    border: 1,
+    marginLeft: '30%',
+    marginRight: '30%',
+    marginBottom: '2vh'
 }
-
 const Fridge = () => {
     const [{myFridge}, dispatch] = useStateValue();
     const [inputs, setInputs] = useState({
@@ -56,10 +58,10 @@ const Fridge = () => {
     }
 
     return (
-        <div>
+        <div className="myFridgeDiv">
             <h1>My Fridge</h1>
             {myFridge.length === 0 && <h3>You currently have no items in your fridge.</h3>}
-            {myFridge.length > 0 && <div className="myFridgeHeader"><p className="myFridgeName">Item Name:</p><p className="myFridgeQuantity">Quantity: </p></div>}
+            {myFridge.length > 0 && <div className="myFridgeHeader"><p className="myFridgeName">Item:</p><p className="myFridgeQuantity">Quantity: </p></div>}
             {myFridge.map(item => (
             <FridgeItem
               key={item.id}

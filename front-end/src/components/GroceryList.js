@@ -18,7 +18,10 @@ const boxStyle = {
   };
 
 const border = {
-    border: 1
+    border: 1,
+    marginLeft: '30%',
+    marginRight: '30%',
+    marginBottom: '2vh'
 }
 
 const GroceryList = () => {
@@ -60,7 +63,7 @@ const GroceryList = () => {
         <div className="groceryListDiv">
             <h1>My Grocery List</h1>
             {groceryList.length === 0 && <h3>You currently have no items in your grocery list.</h3>}
-            {groceryList.length > 0 && <div className="groceryListHeader"><p className="groceryListName">Item Name:</p><p className="groceryListQuantity">Quantity: </p></div>}
+            {groceryList.length > 0 && <div className="groceryListHeader"><p className="groceryListName">Item:</p><p className="groceryListQuantity">Quantity: </p></div>}
             {groceryList.map(item => (
             <GroceryListItem
               key={item.id}
