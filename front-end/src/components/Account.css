@@ -15,13 +15,14 @@
 }
 .account {
     border-style: solid;
-    font-size: 1.8em;
+    font-size: 1.6em;
     text-align: left;
     max-width: 480px;
 	width: 95%;
 	height: auto;
     display: block;
     margin-top:50px;
+    margin-bottom: 20px;
     margin-left: 2.5%;
     margin-right: 2.5%;
     padding-top: 8px;
