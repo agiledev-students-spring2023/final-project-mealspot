@@ -68,12 +68,12 @@ const ChooseSavedRecipes = () => {
                         id: 'uncontrolled-native',
                         }}
                     >
-                        <option value={1}>Morning</option>
-                        <option value={2}>Afternoon</option>
-                        <option value={3}>Evening</option>
+                        <option value={1}>Breakfast</option>
+                        <option value={2}>Lunch</option>
+                        <option value={3}>Dinner</option>
                     </NativeSelect>
                 </FormControl>
-                <p>choose from saved</p>
+                <p className='choose'>Choose From Saved</p>
                 <div>
                     <RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
                  </div>
