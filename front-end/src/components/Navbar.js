@@ -14,7 +14,7 @@ const Navbar = () => {
           <IconContext.Provider value={{ className: "navbarIcon" }}>
             <div><AiOutlineHome /></div>
           </IconContext.Provider>
-          Meal plan
+          Meal Plan
         </li>
       </Link>
       <Link to="/recipesearch" className="link">
@@ -46,7 +46,7 @@ const Navbar = () => {
           <IconContext.Provider value={{ className: "navbarIcon" }}>
             <div><HiOutlineClipboardList /></div>
           </IconContext.Provider>
-          Grocery list
+          Grocery List
         </li>
       </Link>
     </div>
