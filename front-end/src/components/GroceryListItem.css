@@ -1,4 +1,6 @@
 .groceryListItemDiv {
+    position: relative;
+    height: auto;
     width: auto;
     display: flex;
     flex-direction: row;
@@ -6,10 +8,16 @@
 
 .groceryListItemName {
     position: absolute;
+    font-size: 1.2rem;
     left: 5%;
+    word-wrap: break-word;
+    max-width: 25%;
 }
 
 .groceryListItemQuantity {
     position: absolute;
+    font-size: 1.2rem;
     left: 40%;
+    word-wrap: break-word;
+    max-width: 25%;
 }

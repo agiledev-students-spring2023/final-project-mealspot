@@ -1,4 +1,6 @@
 .myFridgeHeader {
+    position: relative;
+    height: auto;
     width: auto;
     display: flex;
     flex-direction: row;
@@ -9,7 +11,7 @@
     position: absolute;
     left: 5%;
     text-decoration: underline;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: bold;
 }
 
@@ -17,6 +19,13 @@
     position: absolute;
     left: 40%;
     text-decoration: underline;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: bold;
+}
+
+.myFridgeDiv {
+    display: flex;
+    flex-direction: column;
+    height: 83vh;
+    overflow: scroll;
 }
