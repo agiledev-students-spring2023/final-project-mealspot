@@ -8,14 +8,6 @@ import { AiFillEdit } from "react-icons/ai";
 import { Link } from 'react-router-dom';
 import './MealPlan.css';
 
-//temporary food database (later should be pulled from actual database and be
-//influenced by ChooseSavedRecipes and AddPage changes made to database)
-let tempFoodDb = [
-    {name:"Food1", ingredients: ["ingredient1", "ingredient2"], cost: "$xx"},
-    {name:"Food2", ingredients: ["ingredient1", "ingredient2", "ingredient3"], cost: "$xx"},
-    {name:"Food3", ingredients: ["ingredient1", "ingredient2"], cost: "$xx"}
-]
-
 //keep track of current money spent, will be changed by user
 let currSpent = 70
 
@@ -62,7 +54,7 @@ const Form = () => {
 }
 
 //<RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
-const Recipes = (props) => {
+const RecipeInfo = (props) => {
     // State to store the recipes fetched from the database
     const [recipes, setRecipes] = useState([])
 
@@ -83,24 +75,30 @@ const Recipes = (props) => {
     
     // Get the list of ing for each recipe
     //https://getbutterfly.com/generate-html-list-from-javascript-array/
-    const listIngMorn = recipes[0].ingredients.map((item) => (
-        <li key={item}>{item}</li>
+    if(typeof recipes !== 'undefined' && recipes.length === 0)
+    {
+        return null
+    }
+    else
+    {
+    const listIngMorn = Object.values(recipes[0].ingredients).map((ingredient) => (
+        <li key={ingredient.ingredientName}>{ingredient.ingredientName}</li>
     ))
-    const listIngAft = recipes[1].ingredients.map((item) => (
-        <li key={item}>{item}</li>
+    const listIngAft = Object.values(recipes[1].ingredients).map((ingredient) => (
+        <li key={ingredient.ingredientName}>{ingredient.ingredientName}</li>
     ))
-    const listIngEve = recipes[2].ingredients.map((item) => (
-        <li key={item}>{item}</li>
+    const listIngEve = Object.values(recipes[2].ingredients).map((ingredient) => (
+        <li key={ingredient.ingredientName}>{ingredient.ingredientName}</li>
     ))
 
     // Get the price of each recipe
-    const totalPMorn = recipes[0].ingredients.reduce((price, curr) => {
+    const totalPMorn = Object.values(recipes[0].ingredients).reduce((price, curr) => {
         return price + (curr.ppu * curr.units)
     }, 0).toFixed(2)
-    const totalPAft = recipes[1].ingredients.reduce((price, curr) => {
+    const totalPAft = Object.values(recipes[1].ingredients).reduce((price, curr) => {
         return price + (curr.ppu * curr.units)
     }, 0).toFixed(2)
-    const totalPEve = recipes[2].ingredients.reduce((price, curr) => {
+    const totalPEve = Object.values(recipes[2].ingredients).reduce((price, curr) => {
         return price + (curr.ppu * curr.units)
     }, 0).toFixed(2)
 
@@ -109,7 +107,7 @@ const Recipes = (props) => {
             <div className="card-break">
                 <div className="meal-card-col1">
                     <div className="card-day">Breakfast</div>
-                    <div className="card-img">{recipes[0].image}</div>
+                    <div className="card-img"><img src={recipes[0].image} alt={recipes[0].recipeName}/></div>
                 </div>
                 <div className="meal-card-col2">
                     <div className="card-name">{recipes[0].recipeName}</div>
@@ -128,13 +126,13 @@ const Recipes = (props) => {
                             Edit
                         </Link>
                     </div>
-                    <div className="card-cost">{totalPMorn}</div>
+                    <div className="card-cost">${totalPMorn}</div>
                 </div>
             </div>
             <div className="card-lunch">
                 <div className="meal-card-col1">
                     <div className="card-day">Lunch</div>
-                    <div className="card-img">{recipes[1].image}</div>
+                    <div className="card-img"><img src={recipes[1].image} alt={recipes[1].recipeName}/></div>
                 </div>
                 <div className="meal-card-col2">
                     <div className="card-name">{recipes[1].recipeName}</div>
@@ -153,13 +151,13 @@ const Recipes = (props) => {
                             Edit
                         </Link>
                     </div>
-                    <div className="card-cost">{totalPAft}</div>
+                    <div className="card-cost">${totalPAft}</div>
                 </div>
             </div>
             <div className="card-dinner">
                 <div className="meal-card-col1">
                     <div className="card-day">Dinner</div>
-                    <div className="card-img">{recipes[2].image}</div>
+                    <div className="card-img"><img src={recipes[2].image} alt={recipes[2].recipeName}/></div>
                 </div>
                 <div className="meal-card-col2">
                     <div className="card-name">{recipes[2].recipeName}</div>
@@ -178,11 +176,12 @@ const Recipes = (props) => {
                             Edit
                         </Link>
                     </div>
-                    <div className="card-cost">{totalPEve}</div>
+                    <div className="card-cost">${totalPEve}</div>
                 </div>
             </div>
         </div>
     )
+    }
 
 }
 
@@ -196,7 +195,7 @@ const MealPlan = () => {
         <Progress done={budgetP.toString()}/>
         </div>
         <Form />
-        <Recipes apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0'/>
+        <RecipeInfo apiLink='https://my.api.mockaroo.com/recipe.json?key=cf37bb40'/>
         </>
     )
 }
