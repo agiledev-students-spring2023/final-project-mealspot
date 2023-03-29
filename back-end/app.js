@@ -20,6 +20,20 @@ app.get("/", (req, res) => {
     res.send("Example :-)")
 })
 
+// GET route for recipe search page
+app.get("/recipesearch", (req, res) => {
+    async function getRecipes(url) {
+        try {
+            const response = await axios(url);
+            res.json(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
+})
+
 // GET route for saved recipes page
 app.get("/savedrecipes", (req, res) => {
     async function getRecipes(url) {
