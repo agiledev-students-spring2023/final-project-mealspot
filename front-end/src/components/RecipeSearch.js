@@ -9,7 +9,7 @@ const RecipeSearch = () => {
         <>
         <h1>Recipe Search</h1>
         <div>
-            <RecipeDisplay apiLink= {apiLink} />
+            <RecipeDisplay route='recipesearch' apiLink={apiLink} />
         </div>
         </>
     );
