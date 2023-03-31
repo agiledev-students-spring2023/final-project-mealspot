@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { IconContext } from "react-icons";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import './RecipeCard.css';
@@ -12,15 +13,31 @@ const RecipeCard = (props) => {
 
     // Function to run when the star button is clicked on this recipe card
     let onClick;
-    if (!props.recipeDetails.favorite) { // favorite
+    if (!props.recipeDetails.favorite) { // Save a recipe
         onClick = (e) => {
-            // TODO: add this recipe to the user's favorites in the database
-            console.log("favorite!");
+            const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
+            // Send a post request to the server, indicating that it should add this recipe to the user's saved recipes list in the database
+            try {
+                axios.post(url, {
+                    save: true,
+                    recipeName: props.recipeDetails.recipeName,
+                })
+            } catch (err) {
+                console.log(err);
+            }
         }
-    } else { // unfavorite
+    } else { // Unsave a recipe
         onClick = (e) => {
-            // TODO: remove this recipe from the user's favorites in the database
-            console.log("unfavorite!");
+            const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
+            // Send a post request to the server, indicating that it should remove this recipe from the user's saved recipes list in the database
+            try {
+                axios.post(url, {
+                    save: false,
+                    recipeName: props.recipeDetails.recipeName,
+                })
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 

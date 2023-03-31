@@ -10,7 +10,7 @@ const SavedRecipes = () => {
         <>
         <h1>Saved Recipes</h1>
         <div>
-            <RecipeDisplay apiLink = {apiLink} />
+            <RecipeDisplay route='savedrecipes' apiLink={apiLink} />
         </div>
         </>
     );
