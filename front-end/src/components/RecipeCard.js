@@ -3,8 +3,8 @@ import axios from 'axios';
 import { IconContext } from "react-icons";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import './RecipeCard.css';
-import { useNavigate } from 'react-router-dom';
-import {Modal, Box} from '@mui/material';
+import {Modal, Box, List, ListItemText, Button, IconButton, Divider} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const RecipeCard = (props) => {
     // Calculate the total price of this recipe, based on the ingredients
@@ -45,15 +45,15 @@ const RecipeCard = (props) => {
     // Star icon - fill if this recipe is favorited, outline if not
     const starIcon = props.recipeDetails.favorite ? <AiFillStar /> : <AiOutlineStar />
 
-    // const navigate = useNavigate()
-
-    // const detailOnClick = (e) => {
-    //     // adding scuffed popup implementation for details
-    //     navigate('/details', {state:{details:props.recipeDetails}})
-    // }
+    // for modal implementation for details
     const [open, setOpen] = React.useState(false);
     const detailOnClick = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const testImage = "http://dummyimage.com/300x300.png/cc0000/ffffff"
+    const ingredients = []
+    for (let i in props.recipeDetails.ingredients) {
+        ingredients.push(<li>{props.recipeDetails.ingredients[i].ingredientName}</li>)
+    }
 
     // Return the final component, consisting of the recipe name, image, and the list of ingredients
     return (
@@ -73,10 +73,35 @@ const RecipeCard = (props) => {
                 <Box
                     sx={{
                         backgroundColor: 'white',
-                        width: 390
+                        margin: '4%',
+                        height: '90%',
+                        padding: '1%',
+                        overflow: 'hidden',
+                        overflowY: "auto",
                     }}
                 >
-                    aaaaaaaaaaaaaaa
+                    <Box
+                        sx={{
+                            'margin-left': 'auto',
+                            'margin-right': '0',
+                        }}
+                    >
+                        <IconButton onClick={handleClose} sx={{alignRight: "auto"}}>
+                            <CloseIcon />
+                        </IconButton>
+                        <h1>{props.recipeDetails.recipeName}</h1>
+                    </Box>
+                    <img src={testImage} alt="aa"></img>
+                    <Divider variant="middle" />
+                    <h2>Ingredients</h2>
+                    <List>
+                        <ListItemText primary={ingredients}/>
+                    </List>
+                    <Divider variant="middle" />
+                    <h2>Instructions</h2>
+                    <p>In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.</p>
+                    <Divider variant="middle" />
+                    <Button variant="contained" onClick={onClick}>Save Recipe</Button>
                 </Box>
             </Modal>
             <h1 className="recipeName">{props.recipeDetails.recipeName}</h1>
