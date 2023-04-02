@@ -73,24 +73,17 @@ const RecipeCard = (props) => {
                 <Box
                     sx={{
                         backgroundColor: 'white',
-                        margin: '4%',
                         height: '90%',
+                        margin: '4%',
                         padding: '1%',
                         overflow: 'hidden',
                         overflowY: "auto",
                     }}
                 >
-                    <Box
-                        sx={{
-                            'margin-left': 'auto',
-                            'margin-right': '0',
-                        }}
-                    >
-                        <IconButton onClick={handleClose} sx={{alignRight: "auto"}}>
-                            <CloseIcon />
-                        </IconButton>
-                        <h1>{props.recipeDetails.recipeName}</h1>
-                    </Box>
+                    <IconButton onClick={handleClose} sx={{float: "right"}}>
+                        <CloseIcon />
+                    </IconButton>
+                    <h1>{props.recipeDetails.recipeName}</h1>
                     <img src={testImage} alt="aa"></img>
                     <Divider variant="middle" />
                     <h2>Ingredients</h2>
@@ -101,7 +94,7 @@ const RecipeCard = (props) => {
                     <h2>Instructions</h2>
                     <p>In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.</p>
                     <Divider variant="middle" />
-                    <Button variant="contained" onClick={onClick}>Save Recipe</Button>
+                    <Button variant="contained" onClick={onClick} sx={{margin: '1%'}}>Save Recipe</Button>
                 </Box>
             </Modal>
             <h1 className="recipeName">{props.recipeDetails.recipeName}</h1>
