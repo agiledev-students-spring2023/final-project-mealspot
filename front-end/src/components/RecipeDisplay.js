@@ -29,7 +29,7 @@ const RecipeDisplay = (props) => {
     // Make the fetched array of recipes into an array of recipe cards
     const recipeCards = recipes.map(recipe => {
         return (
-            <RecipeCard key={recipe.id} recipeDetails={recipe} />
+            <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />
         );
     })
 

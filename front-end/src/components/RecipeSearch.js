@@ -3,11 +3,13 @@ import RecipeDisplay from './RecipeDisplay.js';
 import './RecipeSearch.css';
 
 const RecipeSearch = () => {
+    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/savedrecipes`;
+
     return (
         <>
         <h1>Recipe Search</h1>
         <div>
-            <RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
+            <RecipeDisplay route='recipesearch' apiLink={apiLink} />
         </div>
         </>
     );
