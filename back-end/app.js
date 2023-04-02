@@ -52,20 +52,14 @@ app.post("/recipesearch", (req, res) => {
     })
 })
 
-app.get("/login", (req, res) => {
-    console.log('test');
-})
-
 app.post("/login", (req, res) => {
-    console.log('test');
+    console.log(req.body);
+    res.end('success')
 })
 
-app.get("register", (req, res) => {
-
-})
-
-app.post("register", (req, res) => {
-    console.log("aa");
+app.post("/register", (req, res) => {
+    console.log(req.body);
+    res.end('success')
 })
 
 // GET route for saved recipes page
