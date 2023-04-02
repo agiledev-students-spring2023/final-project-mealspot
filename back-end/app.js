@@ -52,6 +52,16 @@ app.post("/recipesearch", (req, res) => {
     })
 })
 
+app.post("/login", (req, res) => {
+    console.log(req.body);
+    res.end('success')
+})
+
+app.post("/register", (req, res) => {
+    console.log(req.body);
+    res.end('success')
+})
+
 // GET route for saved recipes page
 app.get("/savedrecipes", (req, res) => {
     async function getRecipes(url) {
