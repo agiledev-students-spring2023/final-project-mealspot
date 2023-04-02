@@ -80,5 +80,15 @@ app.post("/savedrecipes", (req, res) => {
     })
 })
 
+// GET route for my fridge page
+app.get("/myfridge", (req, res) => {
+
+})
+
+// GET route for my grocery list page
+app.get("/mygrocerylist", (req, res) => {
+
+})
+
 // Export the express app
 module.exports = app
