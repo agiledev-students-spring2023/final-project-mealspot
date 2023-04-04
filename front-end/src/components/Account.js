@@ -10,7 +10,8 @@ const Account = (props) => {
   
     useEffect(() => {
         console.log("Here")
-      axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0")
+      // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0")
+      axios(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`)
         .then(response => {
           // extract the data from the server response
           console.log(response.data[0])
