@@ -1,9 +1,22 @@
 import { TextField, Box, Button } from '@mui/material'
+import axios from 'axios'
 
 const handleSubmit = (event) => {
     event.preventDefault()
-    const data = event
-    console.log(data)
+    const data = new FormData(event.target)
+    const info = [...data.entries()]
+    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/register'
+    axios.post(url, {
+        username: info[0][1],
+        email: info[1][1],
+        password:  info[2][1]
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 }
 
 const Register = () => {

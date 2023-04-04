@@ -20,6 +20,26 @@ app.use(cors());
 app.use(express.json()) // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })) // decode url-encoded incoming POST data
 
+// GET route for recipe homepage
+app.get("/", (req, res) => {
+    async function getRecipes(url) {
+        try {
+            const response = await axios(url)
+            res.json(response.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    getRecipes('https://my.api.mockaroo.com/recipe.json?key=cf37bb40')
+})
+
+// GET route for homepage recipe edit page
+app.get("/choosepage", (req, res) => {
+    //change later
+    res.send(req.body)
+})
+
 // GET route for recipe search page
 app.get("/recipesearch", (req, res) => {
     // TODO: add logic for recommended recipes
@@ -55,6 +75,16 @@ app.post("/recipesearch", (req, res) => {
     return res.json({
         status: 'ok',
     })
+})
+
+app.post("/login", (req, res) => {
+    console.log(req.body);
+    res.end('success')
+})
+
+app.post("/register", (req, res) => {
+    console.log(req.body);
+    res.end('success')
 })
 
 // GET route for saved recipes page
@@ -115,6 +145,16 @@ app.get("/account", async (req, res)=> {
 //         status: 'ok',
 //     })
 // })
+
+// GET route for my fridge page
+app.get("/myfridge", (req, res) => {
+
+})
+
+// GET route for my grocery list page
+app.get("/mygrocerylist", (req, res) => {
+
+})
 
 // Export the express app
 module.exports = app
