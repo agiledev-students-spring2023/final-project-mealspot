@@ -9,6 +9,7 @@ require("dotenv").config({ silent: true }) // load environmental variables from 
 const morgan = require("morgan") // middleware for nice logging of incoming HTTP requests
 const cors = require('cors') // middleware to enable cross-origin resource sharing requests
 
+
 // Use the morgan middleware to log all incoming http requests
 app.use(morgan("dev")) // morgan has a few logging default styles - dev is a nice concise color-coded style
 
@@ -54,6 +55,10 @@ app.get("/recipesearch", (req, res) => {
     getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
 })
 
+app.get("/", (req, res) => {
+    res.send("Hello")
+})
+
 // POST route for recipe search page
 // When user clicks the star button on a recipe card, it will save the recipe to the user's saved recipe list if it isn't saved yet
 // ...or it will remove it from the user's saved recipe list if it is already on it
@@ -96,6 +101,7 @@ app.get("/savedrecipes", (req, res) => {
     getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
 })
 
+
 // POST route for saved recipes page
 // All the recipes on this page are already saved in the user's saved recipes list
 // When user clicks the star button on a recipe card, it will remove it from the user's saved recipes list
@@ -109,6 +115,36 @@ app.post("/savedrecipes", (req, res) => {
         status: 'ok',
     })
 })
+
+
+app.get("/account", async (req, res)=> {
+      try {
+        const {userID} = req.params;
+        const response = await axios.get("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0");
+        const person = response.data;
+        res.json(person);
+        console.log(res)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Could not retrieve user');
+    }
+})
+
+
+// // POST route for account page
+// app.post("/account", (req, res) => {
+//     // if (req.body.save) {
+//     //     // TODO: database interaction here that saves the recipe to the user's saved recipes list
+//     //     console.log("Saving the recipe: " + req.body.recipeName)
+//     // } // Unsave a recipe
+//     // else {
+//     //     // TODO: database interaction here that removes the recipe from the user's saved recipes list
+//     //     console.log("Unsaving the recipe: " + req.body.recipeName)
+//     // }
+//     return res.json({
+//         status: 'ok',
+//     })
+// })
 
 // GET route for my fridge page
 app.get("/myfridge", (req, res) => {
