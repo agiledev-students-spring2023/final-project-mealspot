@@ -55,10 +55,6 @@ app.get("/recipesearch", (req, res) => {
     getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
 })
 
-app.get("/", (req, res) => {
-    res.send("Hello")
-})
-
 // POST route for recipe search page
 // When user clicks the star button on a recipe card, it will save the recipe to the user's saved recipe list if it isn't saved yet
 // ...or it will remove it from the user's saved recipe list if it is already on it

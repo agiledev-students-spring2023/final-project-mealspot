@@ -187,6 +187,7 @@ const RecipeInfo = (props) => {
 
 const MealPlan = () => {
     let budgetP = (currSpent/100)*100 //$ spent/budget * 100
+    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/`;
     return (
         <>
         <h1>My Meal Plan</h1>
@@ -195,7 +196,7 @@ const MealPlan = () => {
         <Progress done={budgetP.toString()}/>
         </div>
         <Form />
-        <RecipeInfo apiLink='https://my.api.mockaroo.com/recipe.json?key=cf37bb40'/>
+        <RecipeInfo route='/' apiLink={apiLink}/>
         </>
     )
 }
