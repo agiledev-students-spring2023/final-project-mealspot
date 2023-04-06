@@ -26,9 +26,26 @@ const Progress = ({done}) => {
     )
 }
 
-const Form = () => {
+//handles post request of the day of the week form
+const handlePost = (selectedDay) => {
+    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/'
+    try {
+        axios.post(url, {
+            day: selectedDay,
+        })
+    } 
+    catch (err) {
+        console.log(err);
+    }
+}
+
+const Form = (props) => {
     let now = new Date()
     let today = now.getDay()
+    const selectDay = (event) => {
+        const day = event.target.value
+        props.handlePost(day)
+    }
     return (
         <FormControl fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -40,6 +57,7 @@ const Form = () => {
                 name: 'days',
                 id: 'uncontrolled-native',
                 }}
+                onChange={selectDay}
             >
                 <option value={1}>Monday</option>
                 <option value={2}>Tuesday</option>
@@ -195,7 +213,7 @@ const MealPlan = () => {
         <p>Budget Tracker</p>
         <Progress done={budgetP.toString()}/>
         </div>
-        <Form />
+        <Form handlePost={handlePost}/>
         <RecipeInfo route='/' apiLink={apiLink}/>
         </>
     )
