@@ -40,23 +40,35 @@ app.get("/choosepage", (req, res) => {
     res.send(req.body)
 })
 
+app.get("/", (req, res) => {
+    res.send("Hello")
+})
+
+app.post("/login", (req, res) => {
+    console.log(req.body);
+    res.end('success')
+})
+
+app.post("/register", (req, res) => {
+    console.log(req.body);
+    res.end('success')
+})
+
 // GET route for recipe search page
 app.get("/recipesearch", (req, res) => {
-    // TODO: add logic for recommended recipes
-    async function getRecipes(url) {
+    async function getRecipes(recipesUrl, fridgeUrl) {
         try {
-            const response = await axios(url)
-            res.json(response.data)
+            const recipes = await axios(recipesUrl)
+            // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
+            // that is, the second parameter of this async function should be able to be removed in the next sprint
+            const fridge = await axios(fridgeUrl)
+            res.json({ recipes: recipes.data, fridge: fridge.data })
         } catch (err) {
             console.log(err)
         }
     }
 
-    getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
-})
-
-app.get("/", (req, res) => {
-    res.send("Hello")
+    getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0', 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
 })
 
 // POST route for recipe search page
@@ -77,22 +89,12 @@ app.post("/recipesearch", (req, res) => {
     })
 })
 
-app.post("/login", (req, res) => {
-    console.log(req.body);
-    res.end('success')
-})
-
-app.post("/register", (req, res) => {
-    console.log(req.body);
-    res.end('success')
-})
-
 // GET route for saved recipes page
 app.get("/savedrecipes", (req, res) => {
     async function getRecipes(url) {
         try {
-            const response = await axios(url)
-            res.json(response.data);
+            const recipes = await axios(url)
+            res.json(recipes.data);
         } catch (err) {
             console.log(err)
         }
@@ -100,7 +102,6 @@ app.get("/savedrecipes", (req, res) => {
 
     getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
 })
-
 
 // POST route for saved recipes page
 // All the recipes on this page are already saved in the user's saved recipes list
