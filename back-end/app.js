@@ -91,16 +91,20 @@ app.post("/recipesearch", (req, res) => {
 
 // GET route for saved recipes page
 app.get("/savedrecipes", (req, res) => {
-    async function getRecipes(url) {
+    async function getRecipes(testRecipes, testFridge) {
         try {
-            const recipes = await axios(url)
-            res.json(recipes.data);
+            //const recipes = await axios(testRecipes)
+            //const fridge = await axios(testFridge)
+            // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using some local JSON files I wrote
+            // I need the custom JSONs in order to test that the recommendation feature is working properly
+            // note to self, switch this out for the database interaction and send back whatever was grabbed from the DB instead
+            res.json({ recipes: testRecipes, fridge: testFridge })
         } catch (err) {
             console.log(err)
         }
     }
 
-    getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
+    getRecipes(require('./testRecipes.json'), require('./testFridge.json'));
 })
 
 // POST route for saved recipes page
