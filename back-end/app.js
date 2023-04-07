@@ -34,6 +34,15 @@ app.get("/", (req, res) => {
     getRecipes('https://my.api.mockaroo.com/recipe.json?key=cf37bb40')
 })
 
+// POST route for recipe homepage days of the week form
+app.post("/", (req, res) => {
+    // Unsave a recipe
+    console.log("Selected day: " + req.body.day)
+    return res.json({
+        status: 'ok',
+    })
+})
+
 // GET route for homepage recipe edit page
 app.get("/choosepage", (req, res) => {
     //change later
@@ -53,10 +62,6 @@ app.get("/recipesearch", (req, res) => {
     }
 
     getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0');
-})
-
-app.get("/", (req, res) => {
-    res.send("Hello")
 })
 
 // POST route for recipe search page

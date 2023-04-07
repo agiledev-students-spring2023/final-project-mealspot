@@ -223,7 +223,6 @@ const Progress = (props) => {
 
 //use https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0 for weekly_budget
 const MealPlan = () => {
-    let budgetP = (currSpent/200)*200 //$ spent/budget * 100
     return (
         <>
         <h1>My Meal Plan</h1>
