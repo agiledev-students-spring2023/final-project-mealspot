@@ -42,29 +42,32 @@ const RecipeDisplay = (props) => {
     // Anytime recipes or fridge is changed, find the recipes to recommend
     useEffect(() => {
         if (Object.keys(fridge).length !== 0 && recipes.length !== 0) {
-            console.log("hello");
             sortRecipes(recipes, fridge);
         }
+        // Clean-up function that resets the cards, so it doesn't re-add cards that are already on the page
+        return () => { setRecRecipeCards([]); setOtherRecipeCards([]); setAllRecipeCards([]); }
     }, [recipes, fridge]);
+
+    // Update all recipe cards whenever the recommended and other recipe cards are updated
+    useEffect(() => {
+        // Make an array of all recipe cards that's just the other two arrays put together
+        setAllRecipeCards([...recRecipeCards, ...otherRecipeCards]);
+    }, [recRecipeCards, otherRecipeCards]);
 
     // Function to sort the recipes state array to start with the recommended recipes first
     // Argument is the user's fridge - recipes that use ingredients in the fridge will be recommended
     const sortRecipes = (recipes, fridge) => {
-        console.log("fridge:", fridge);
-        console.log("recipes:", recipes);
         const fridgeIngNames = fridge.ingredients.map(ing => ing.ingredientName);
         recipes.forEach((recipe) => {
             // Recommend this recipe if its ingredients match ingredient(s) in the fridge
             if (ingredientMatch(recipe.ingredients, fridgeIngNames)) {
                 // Add to an an array of recipe cards that's just the recommended
                 setRecRecipeCards((recRecipeCards) => [...recRecipeCards, <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />]);
-                console.log("saving rec:", recipe.id, "with name", recipe.recipeName);
             }
             // Don't recommend if none of this recipe's ingredients are in the fridge
             else {
                 // Add to an array of non-recommended recipe cards
                 setOtherRecipeCards((otherRecipeCards) => [...otherRecipeCards, <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />]);
-                console.log("saving other:", recipe.id, "with name", recipe.recipeName);
             }
         });
     }
@@ -83,12 +86,6 @@ const RecipeDisplay = (props) => {
         return result;
     }
 
-    // Update all recipe cards whenever the recommended and other recipe cards are updated
-    useEffect(() => {
-        // Make an array of all recipe cards that's just the other two arrays put together
-        setAllRecipeCards([...recRecipeCards, ...otherRecipeCards]);
-    }, [recRecipeCards, otherRecipeCards]);
-
     // Search bar functionality
     // Citation - code is based off this tutorial by Marianna: https://dev.to/mar1anna/create-a-search-bar-with-react-and-material-ui-4he
     const filterRecipes = (query, recRecipeCards, otherRecipeCards, allRecipeCards) => {
@@ -96,11 +93,12 @@ const RecipeDisplay = (props) => {
             return allRecipeCards;
         }
         else if (!query) {
-            return <div>
+            return <>
+                    <h3 className="titleText">Recommended</h3>
                     {recRecipeCards}
-                    <hr/>
+                    <h3 className="titleText">More Recipes</h3>
                     {otherRecipeCards}
-                </div>
+                </>
         } else {
             return allRecipeCards.filter((recipeCard) => {
                 return recipeCard.props.recipeDetails.recipeName.toLowerCase().includes(query);
@@ -114,7 +112,6 @@ const RecipeDisplay = (props) => {
         <div className="searchBar">
             <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         </div>
-        <h3 className="recommendedText">Recommended</h3>
         <div className="recipes">
             { filterRecipes(searchQuery, recRecipeCards, otherRecipeCards, allRecipeCards) }
         </div>
