@@ -12,9 +12,13 @@ import './MealPlan.css';
 let currSpent = 0
 let currBudget = 0
 
-const Form = () => {
+const Form = (props) => {
     let now = new Date()
     let today = now.getDay()
+    const selectDay = (event) => {
+        const day = event.target.value
+        props.handlePost(day)
+    }
     return (
         <FormControl fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -26,6 +30,7 @@ const Form = () => {
                 name: 'days',
                 id: 'uncontrolled-native',
                 }}
+                onChange={selectDay}
             >
                 <option value={1}>Monday</option>
                 <option value={2}>Tuesday</option>
@@ -118,7 +123,7 @@ const RecipeInfo = (props) => {
         <p>Budget Tracker</p>
         <Progress done={currSpent} budget={currBudget}/>
         </div>
-        <Form />
+        <Form handlePost={handlePost}/>
         <div className="meal-card">
             <div className="card-break">
                 <div className="meal-card-col1">
@@ -223,10 +228,11 @@ const Progress = (props) => {
 
 //use https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0 for weekly_budget
 const MealPlan = () => {
+    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/`
     return (
         <>
         <h1>My Meal Plan</h1>
-        <RecipeInfo apiLink='https://my.api.mockaroo.com/recipe.json?key=cf37bb40'/>
+        <RecipeInfo route='/' apiLink={apiLink}/>
         </>
     )
 }
