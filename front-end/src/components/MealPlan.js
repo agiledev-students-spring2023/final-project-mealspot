@@ -208,7 +208,7 @@ const Progress = (props) => {
     return (
         <>
         <div className="progress">
-            <div className="progress-done" style={{
+            <div className={currSpent > currBudget ? "progress-done-over" : "progress-done-under"} style={{
                 opacity: 1,
                 width: `${width}%`
             }}>
