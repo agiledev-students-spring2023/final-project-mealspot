@@ -12,6 +12,19 @@ import './MealPlan.css';
 let currSpent = 0
 let currBudget = 0
 
+//handles post request of the day of the week form
+const handlePost = (selectedDay) => {
+    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/'
+    try {
+        axios.post(url, {
+            day: selectedDay,
+        })
+    } 
+    catch (err) {
+        console.log(err);
+    }
+}
+
 const Form = (props) => {
     let now = new Date()
     let today = now.getDay()
