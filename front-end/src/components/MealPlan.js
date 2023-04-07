@@ -26,9 +26,26 @@ const Progress = ({done}) => {
     )
 }
 
-const Form = () => {
+//handles post request of the day of the week form
+const handlePost = (selectedDay) => {
+    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/'
+    try {
+        axios.post(url, {
+            day: selectedDay,
+        })
+    } 
+    catch (err) {
+        console.log(err);
+    }
+}
+
+const Form = (props) => {
     let now = new Date()
     let today = now.getDay()
+    const selectDay = (event) => {
+        const day = event.target.value
+        props.handlePost(day)
+    }
     return (
         <FormControl fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -40,6 +57,7 @@ const Form = () => {
                 name: 'days',
                 id: 'uncontrolled-native',
                 }}
+                onChange={selectDay}
             >
                 <option value={1}>Monday</option>
                 <option value={2}>Tuesday</option>
@@ -187,6 +205,7 @@ const RecipeInfo = (props) => {
 
 const MealPlan = () => {
     let budgetP = (currSpent/100)*100 //$ spent/budget * 100
+    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/`;
     return (
         <>
         <h1>My Meal Plan</h1>
@@ -194,8 +213,8 @@ const MealPlan = () => {
         <p>Budget Tracker</p>
         <Progress done={budgetP.toString()}/>
         </div>
-        <Form />
-        <RecipeInfo apiLink='https://my.api.mockaroo.com/recipe.json?key=cf37bb40'/>
+        <Form handlePost={handlePost}/>
+        <RecipeInfo route='/' apiLink={apiLink}/>
         </>
     )
 }
