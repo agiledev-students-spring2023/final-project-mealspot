@@ -4,6 +4,74 @@ const chaiHttp = require('chai-http')
 chai.use(chaiHttp);
 const should = chai.should()
 
+describe("GET request to / route", () => {
+    it("it should respond with an HTTP 200 status code and an array of objects containing recipe data in the response body", done => {
+        chai
+        .request(server)
+        .get('/')
+        .end((err, res) => {
+            res.should.have.status(200) // use should to make BDD-style assertions
+            res.body.should.be.a('array') // our route sends back an object
+            done() // resolve the Promise that these tests create so mocha can move on
+        })
+    })
+})
+
+describe("POST request to / route", () => {
+    it("it should respond with an HTTP 200 status code and an object containing day data gives status ok", done => {
+        chai
+        .request(server)
+        .post('/')
+        .set('content-type', 'application/json')
+        .send({day: 1})
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.should.have.property('status').eql('ok')
+            done()
+        })
+    })
+    it("it should respond with an HTTP 400 status code and an object containing status error", done => {
+        chai
+        .request(server)
+        .post('/')
+        .set('content-type', 'application/json')
+        .send({})
+        .end((err, res) => {
+            res.should.have.status(400)
+            res.body.should.be.a('object')
+            res.body.should.have.property('status').eql('error')
+            done()
+        })
+    })
+    it("it should respond with an HTTP 400 status code and an object containing status error", done => {
+        chai
+        .request(server)
+        .post('/')
+        .set('content-type', 'application/json')
+        .send({day: 7})
+        .end((err, res) => {
+            res.should.have.status(400)
+            res.body.should.be.a('object')
+            res.body.should.have.property('status').eql('error')
+            done()
+        })
+    })
+})
+
+describe("GET request to /choosepage route", () => {
+    it("it should respond with an HTTP 200 status code and an array of objects containing recipe data in the response body", done => {
+        chai
+        .request(server)
+        .get('/choosepage')
+        .end((err, res) => {
+            res.should.have.status(200) // use should to make BDD-style assertions
+            res.body.should.be.a('object') // our route sends back an object
+            done() // resolve the Promise that these tests create so mocha can move on
+        })
+    })
+})
+
 describe("GET request to /savedrecipes route", () => {
     it("it should respond with an HTTP 200 status code and an array of objects containing recipe data in the response body", done => {
         chai
@@ -70,7 +138,7 @@ describe("GET request to /recipesearch route", () => {
         .get("/recipesearch")
         .end((err, res) => {
             res.should.have.status(200) // use should to make BDD-style assertions
-            res.body.should.be.a('array') // our route sends back an object
+            res.body.should.be.a('object') // our route sends back an object
             done() // resolve the Promise that these tests create so mocha can move on
         })
     })
