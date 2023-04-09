@@ -5,26 +5,12 @@ import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect } from '@mui/material';
 import { IconContext } from "react-icons";
 import { AiFillEdit } from "react-icons/ai";
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import './MealPlan.css';
 
-//keep track of current money spent, will be changed by user
-let currSpent = 70
-
-//later change <Progress done="70"/> change to 
-const Progress = ({done}) => {
-    let budget = `$${currSpent}/$100` //$ spent/budget
-    return (
-        <div className="progress">
-            <div className="progress-done" style={{
-                opacity: 1,
-                width: `${done}%`
-            }}>
-            {budget}
-            </div>
-        </div>
-    )
-}
+//keep track of current money spent and budget, will be changed by user
+let currSpent = 0
+let currBudget = 0
 
 //handles post request of the day of the week form
 const handlePost = (selectedDay) => {
@@ -90,6 +76,24 @@ const RecipeInfo = (props) => {
     }, [props.apiLink])
     // Only grab the first 3 recipes
     //recipes = recipes.slice(0,3)
+
+    //TEMP WAY TO GET ACCOUNT INFO
+    const [data, setData] = useState([])
+    const userID = useParams()
+  
+    useEffect(() => {
+      // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0")
+      axios('https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0')
+        .then(response => {
+          // extract the data from the server response
+          console.log(response.data[0])
+          setData(response.data[0])
+        })
+        .catch(err => {
+          console.error(err) 
+
+        })
+    }, [userID])
     
     // Get the list of ing for each recipe
     //https://getbutterfly.com/generate-html-list-from-javascript-array/
@@ -97,8 +101,10 @@ const RecipeInfo = (props) => {
     {
         return null
     }
-    else
+    if(typeof data !== 'undefined' && data.length === 0)
     {
+        return null
+    }
     const listIngMorn = Object.values(recipes[0].ingredients).map((ingredient) => (
         <li key={ingredient.ingredientName}>{ingredient.ingredientName}</li>
     ))
@@ -119,8 +125,18 @@ const RecipeInfo = (props) => {
     const totalPEve = Object.values(recipes[2].ingredients).reduce((price, curr) => {
         return price + (curr.ppu * curr.units)
     }, 0).toFixed(2)
+    currSpent = (parseFloat(totalPMorn) + parseFloat(totalPAft) + parseFloat(totalPEve)).toFixed(2)
+    currBudget = parseFloat(data.weekly_budget.slice(1))
+    console.log(currSpent)
+    console.log(currBudget)
 
     return (
+        <>
+        <div className="progress-area">
+        <p>Budget Tracker</p>
+        <Progress done={currSpent} budget={currBudget}/>
+        </div>
+        <Form handlePost={handlePost}/>
         <div className="meal-card">
             <div className="card-break">
                 <div className="meal-card-col1">
@@ -198,22 +214,37 @@ const RecipeInfo = (props) => {
                 </div>
             </div>
         </div>
+        </>
     )
-    }
 
 }
 
+//later change <Progress done="70"/> change to 
+const Progress = (props) => {
+    let progress = `$${props.done}/$${props.budget}` //$ spent/budget
+    let width = ((props.done/props.budget)*100).toString()
+    return (
+        <>
+        <div className="progress">
+            <div className={currSpent > currBudget ? "progress-done-over" : "progress-done-under"} style={{
+                opacity: 1,
+                width: `${width}%`
+            }}>
+            </div>
+        </div>
+        <div>
+            {progress}
+        </div>
+        </>
+    )
+}
+
+//use https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0 for weekly_budget
 const MealPlan = () => {
-    let budgetP = (currSpent/100)*100 //$ spent/budget * 100
-    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/`;
+    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/`
     return (
         <>
         <h1>My Meal Plan</h1>
-        <div className="progress-area">
-        <p>Budget Tracker</p>
-        <Progress done={budgetP.toString()}/>
-        </div>
-        <Form handlePost={handlePost}/>
         <RecipeInfo route='/' apiLink={apiLink}/>
         </>
     )
