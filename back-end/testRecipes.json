@@ -1,0 +1,41 @@
+[{
+    "id":1,
+    "recipeName":"Chocolate cake",
+    "image":"http://dummyimage.com/100x100.png/dddddd/000000",
+    "favorite":true,
+    "ingredients":[
+        {"ingredientName":"Flour","ppu":4.18,"units":5},
+        {"ingredientName":"Cocoa","ppu":3.69,"units":5},
+        {"ingredientName":"Sugar","ppu":2.68,"units":3},
+        {"ingredientName":"Eggs","ppu":3.67,"units":2}
+    ],
+    "instructions":"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.",
+    "bigImage":"http://dummyimage.com/400x400.png/dddddd/000000"
+},
+{
+    "id":2,
+    "recipeName":"Taco",
+    "image":"http://dummyimage.com/100x100.png/ff4444/ffffff",
+    "favorite":true,
+    "ingredients":[
+        {"ingredientName":"Tortilla","ppu":9.12,"units":4},
+        {"ingredientName":"Beef","ppu":5.46,"units":3},
+        {"ingredientName":"Cheese","ppu":2.75,"units":1}
+    ],
+    "instructions":"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",
+    "bigImage":"http://dummyimage.com/400x400.png/ff4444/ffffff"
+},
+{
+    "id":3,
+    "recipeName":"Burrito",
+    "image":"http://dummyimage.com/100x100.png/cc0000/ffffff",
+    "favorite":true,
+    "ingredients":[
+        {"ingredientName":"Tortilla","ppu":9.12,"units":4},
+        {"ingredientName":"Chicken","ppu":8.34,"units":5},
+        {"ingredientName":"Rice","ppu":1.29,"units":2}
+    ],
+    "instructions":"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.",
+    "bigImage":"http://dummyimage.com/400x400.png/cc0000/ffffff"
+}
+]
