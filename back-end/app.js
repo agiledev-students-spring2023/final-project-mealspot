@@ -85,17 +85,20 @@ app.get("/recipesearch", (req, res) => {
 // ...or it will remove it from the user's saved recipe list if it is already on it
 app.post("/recipesearch", (req, res) => {
     // Save a recipe
-    if (req.body.save) {
+    if (req.body.save === true) {
         // TODO: database interaction here that saves the recipe to the user's saved recipes list
         console.log("Saving the recipe: " + req.body.recipeName)
+        res.json({result: "recipe saved"})
     } // Unsave a recipe
-    else {
+    else if (req.body.save === false) {
         // TODO: database interaction here that removes the recipe from the user's saved recipes list
         console.log("Unsaving the recipe: " + req.body.recipeName)
+        res.json({result: "recipe unsaved"})
     }
-    return res.json({
-        status: 'ok',
-    })
+    else { // Invalid input
+        res.status(400)
+        res.json({'msg': 'invalid input'})
+    }
 })
 
 // GET route for saved recipes page
@@ -121,13 +124,18 @@ app.get("/savedrecipes", (req, res) => {
 // When user clicks the star button on a recipe card, it will remove it from the user's saved recipes list
 app.post("/savedrecipes", (req, res) => {
     // Unsave a recipe
-    if (!req.body.save) { // Should always be true
+    if (req.body.save === false) { // Should always be true
         // TODO: database interaction here that removes the recipe from the user's saved recipes list
         console.log("Unsaving the recipe: " + req.body.recipeName)
+        res.json({result: "recipe unsaved"})
     }
-    return res.json({
-        status: 'ok',
-    })
+    else if (req.body.save === true) { // Requests from the saved recipes pages should always have save = false, because this page should only display already-saved recipes
+        res.json({result: "this should not happen"})
+    }
+    else { // Invalid input
+        res.status(400)
+        res.json({'msg': 'invalid input'})
+    }
 })
 
 
