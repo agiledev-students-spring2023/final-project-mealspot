@@ -9,7 +9,7 @@ const Account = (props) => {
     const userID = useParams()
   
     useEffect(() => {
-        console.log("Here")
+        //console.log("Here")
       // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0")
       axios(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`)
         .then(response => {
