@@ -41,36 +41,36 @@ const RecipeDisplay = (props) => {
 
     // Anytime recipes or fridge is changed, find the recipes to recommend
     useEffect(() => {
+        // Function to sort the recipes state array to start with the recommended recipes first
+        // Argument is the user's fridge - recipes that use ingredients in the fridge will be recommended
+        const sortRecipes = (recipes, fridge) => {
+            const fridgeIngNames = fridge.ingredients.map(ing => ing.ingredientName);
+            recipes.forEach((recipe) => {
+                // Recommend this recipe if its ingredients match ingredient(s) in the fridge
+                if (ingredientMatch(recipe.ingredients, fridgeIngNames)) {
+                    // Add to an an array of recipe cards that's just the recommended
+                    setRecRecipeCards((recRecipeCards) => [...recRecipeCards, <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />]);
+                }
+                // Don't recommend if none of this recipe's ingredients are in the fridge
+                else {
+                    // Add to an array of non-recommended recipe cards
+                    setOtherRecipeCards((otherRecipeCards) => [...otherRecipeCards, <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />]);
+                }
+            });
+        }
+
         if (Object.keys(fridge).length !== 0 && recipes.length !== 0) {
             sortRecipes(recipes, fridge);
         }
         // Clean-up function that resets the cards, so it doesn't re-add cards that are already on the page
         return () => { setRecRecipeCards([]); setOtherRecipeCards([]); setAllRecipeCards([]); }
-    }, [recipes, fridge]);
+    }, [recipes, fridge, props.route]);
 
     // Update all recipe cards whenever the recommended and other recipe cards are updated
     useEffect(() => {
         // Make an array of all recipe cards that's just the other two arrays put together
         setAllRecipeCards([...recRecipeCards, ...otherRecipeCards]);
     }, [recRecipeCards, otherRecipeCards]);
-
-    // Function to sort the recipes state array to start with the recommended recipes first
-    // Argument is the user's fridge - recipes that use ingredients in the fridge will be recommended
-    const sortRecipes = (recipes, fridge) => {
-        const fridgeIngNames = fridge.ingredients.map(ing => ing.ingredientName);
-        recipes.forEach((recipe) => {
-            // Recommend this recipe if its ingredients match ingredient(s) in the fridge
-            if (ingredientMatch(recipe.ingredients, fridgeIngNames)) {
-                // Add to an an array of recipe cards that's just the recommended
-                setRecRecipeCards((recRecipeCards) => [...recRecipeCards, <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />]);
-            }
-            // Don't recommend if none of this recipe's ingredients are in the fridge
-            else {
-                // Add to an array of non-recommended recipe cards
-                setOtherRecipeCards((otherRecipeCards) => [...otherRecipeCards, <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />]);
-            }
-        });
-    }
 
     // Helper function for sortRecipes that checks if there are matching ingredients in recipe and fridge
     // Parameters are the ingredients (array of objects) of the recipe

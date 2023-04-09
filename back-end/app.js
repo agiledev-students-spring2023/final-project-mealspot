@@ -49,10 +49,6 @@ app.get("/choosepage", (req, res) => {
     res.send(req.body)
 })
 
-app.get("/", (req, res) => {
-    res.send("Hello")
-})
-
 app.post("/login", (req, res) => {
     console.log(req.body);
     res.end('success')
@@ -154,23 +150,18 @@ app.get("/account", async (req, res)=> {
 
 // POST route for account page
 app.post("/account", (req, res) => {
-    const first = req.body.first_name
-    const last = req.body.last_name
-    const email = req.body.email
-    const budget = req.body.weekly_budget
-    if ((first = '') || (last = '') || (email = '') || (budget = '')) {
-        console.log('unable to find user account')
-        return res.status(400).json({
-            error: err,
-            status: 'failed to find user account',
-          })
-    }else {
-        return res.json({
-            status: 'valid user account',
-        })
+    // Change this user's budget
+    if (req.body.budget && !isNaN(req.body.budget)) { // Make sure budget is a number
+        // TODO: database interaction here that updates the user's budget in the database
+        console.log("TYPE", typeof(req.body.budget))
+        const budgetNumber = Number(req.body.budget).toFixed(2)
+        console.log('Updating budget to be: $' + budgetNumber)
+        res.json({budget: '$' + budgetNumber})
     }
-    // console.log(req.body);
-    //     res.end('success')
+    else { // Invalid input
+        res.status(400)
+        res.json({'msg': 'invalid input'})
+    }
 })
 
 // GET route for my fridge page
