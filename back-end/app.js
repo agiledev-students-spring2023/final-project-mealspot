@@ -144,7 +144,7 @@ app.post("/savedrecipes", (req, res) => {
     }
 })
 
-
+// GET route for account page
 app.get("/account", async (req, res)=> {
       try {
         const {userID} = req.params;
@@ -158,21 +158,26 @@ app.get("/account", async (req, res)=> {
     }
 })
 
-
-// // POST route for account page
-// app.post("/account", (req, res) => {
-//     // if (req.body.save) {
-//     //     // TODO: database interaction here that saves the recipe to the user's saved recipes list
-//     //     console.log("Saving the recipe: " + req.body.recipeName)
-//     // } // Unsave a recipe
-//     // else {
-//     //     // TODO: database interaction here that removes the recipe from the user's saved recipes list
-//     //     console.log("Unsaving the recipe: " + req.body.recipeName)
-//     // }
-//     return res.json({
-//         status: 'ok',
-//     })
-// })
+// POST route for account page
+app.post("/account", (req, res) => {
+    const first = req.body.first_name
+    const last = req.body.last_name
+    const email = req.body.email
+    const budget = req.body.weekly_budget
+    if ((first = '') || (last = '') || (email = '') || (budget = '')) {
+        console.log('unable to find user account')
+        return res.status(400).json({
+            error: err,
+            status: 'failed to find user account',
+          })
+    }else {
+        return res.json({
+            status: 'valid user account',
+        })
+    }
+    // console.log(req.body);
+    //     res.end('success')
+})
 
 // GET route for my fridge page
 app.get("/myfridge", (req, res) => {
