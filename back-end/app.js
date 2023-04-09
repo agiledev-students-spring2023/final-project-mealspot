@@ -152,27 +152,6 @@ app.get("/account", async (req, res)=> {
     }
 })
 
-// POST route for account page
-app.post("/account", (req, res) => {
-    const first = req.body.first_name
-    const last = req.body.last_name
-    const email = req.body.email
-    const budget = req.body.weekly_budget
-    if ((first = '') || (last = '') || (email = '') || (budget = '')) {
-        console.log('unable to find user account')
-        return res.status(400).json({
-            error: err,
-            status: 'failed to find user account',
-          })
-    }else {
-        return res.json({
-            status: 'valid user account',
-        })
-    }
-    // console.log(req.body);
-    //     res.end('success')
-})
-
 // GET route for my fridge page
 app.get("/myfridge", (req, res) => {
 
