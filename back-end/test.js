@@ -73,14 +73,16 @@ describe("GET request to /choosepage route", () => {
 })
 
 describe("GET request to /savedrecipes route", () => {
-    it("it should respond with an HTTP 200 status code and an array of objects containing recipe data in the response body", done => {
+    it("it should respond with an HTTP 200 status code and an object with recipes and fridge", done => {
         chai
         .request(server)
         .get('/savedrecipes')
         .end((err, res) => {
-            res.should.have.status(200) // use should to make BDD-style assertions
-            res.body.should.be.a('array') // our route sends back an object
-            done() // resolve the Promise that these tests create so mocha can move on
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.should.have.property('recipes')
+            res.body.should.have.property('fridge')
+            done()
         })
     })
 })
@@ -132,14 +134,16 @@ describe('POST request to /savedrecipes route', () => {
 })
 
 describe("GET request to /recipesearch route", () => {
-    it("it should respond with an HTTP 200 status code and an array of objects containing recipe data in the response body", done => {
+    it("it should respond with an HTTP 200 status code and an object containing recipes and fridge", done => {
         chai
         .request(server)
         .get("/recipesearch")
         .end((err, res) => {
-            res.should.have.status(200) // use should to make BDD-style assertions
-            res.body.should.be.a('object') // our route sends back an object
-            done() // resolve the Promise that these tests create so mocha can move on
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.should.have.property('recipes')
+            res.body.should.have.property('fridge')
+            done()
         })
     })
 })
