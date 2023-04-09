@@ -12,7 +12,6 @@ import Fridge from './Fridge.js';
 import GroceryList from './GroceryList.js';
 import Account from './Account.js';
 import Header from './Header.js';
-import RecipeDetails from './RecipeDetails';
 import Login from './Login.js';
 import Register from './Register.js';
 
@@ -40,7 +39,6 @@ function App() {
           <Route path='/fridge' element={<Fridge />} />
           <Route path='/grocerylist' element={<GroceryList />} />
           <Route path='/account' element={<Account />} />
-          <Route path='/details' element={<RecipeDetails />} />
         </Routes>
       </Router>
     </div>
