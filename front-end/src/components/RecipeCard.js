@@ -49,7 +49,6 @@ const RecipeCard = (props) => {
     const [open, setOpen] = React.useState(false);
     const detailOnClick = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const testImage = "http://dummyimage.com/300x300.png/cc0000/ffffff"
     const ingredients = []
     for (let i in props.recipeDetails.ingredients) {
         ingredients.push(<li>{props.recipeDetails.ingredients[i].ingredientName}</li>)
@@ -84,7 +83,7 @@ const RecipeCard = (props) => {
                         <CloseIcon />
                     </IconButton>
                     <h1>{props.recipeDetails.recipeName}</h1>
-                    <img src={testImage} alt="aa"></img>
+                    <img src={props.recipeDetails.bigImage} alt="aa"></img>
                     <Divider variant="middle" />
                     <h2>Ingredients</h2>
                     <List>
@@ -92,7 +91,7 @@ const RecipeCard = (props) => {
                     </List>
                     <Divider variant="middle" />
                     <h2>Instructions</h2>
-                    <p>In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.</p>
+                    <p>{props.recipeDetails.instructions}</p>
                     <Divider variant="middle" />
                     <Button variant="contained" onClick={onClick} sx={{margin: '1%'}}>Save Recipe</Button>
                 </Box>

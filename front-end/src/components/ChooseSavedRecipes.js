@@ -26,6 +26,7 @@ const ChooseSavedRecipes = () => {
     const [open, setOpen] = useState(false)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/choosesavedrecipes`;
     return (
         <div class = "popup"> 
             <div>
@@ -75,7 +76,8 @@ const ChooseSavedRecipes = () => {
                 </FormControl>
                 <p className='choose'>Choose From Saved</p>
                 <div>
-                    <RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
+                    {/* <RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' /> */}
+                    <RecipeDisplay route='choosesavedrecipes' apiLink={apiLink} />
                  </div>
             <button onClick={handleClose}>Close</button>
             </div>
