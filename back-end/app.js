@@ -3,12 +3,11 @@ const express = require("express")
 const app = express()
 
 // Middleware imports
+require("dotenv").config({ silent: true }) // load environmental variables from a hidden file named .env
 const multer = require("multer") // middleware to handle HTTP POST requests with file uploads
 const axios = require("axios") // middleware for making requests to APIs
-require("dotenv").config({ silent: true }) // load environmental variables from a hidden file named .env
 const morgan = require("morgan") // middleware for nice logging of incoming HTTP requests
 const cors = require('cors') // middleware to enable cross-origin resource sharing requests
-
 
 // Use the morgan middleware to log all incoming http requests
 app.use(morgan("dev")) // morgan has a few logging default styles - dev is a nice concise color-coded style
@@ -43,16 +42,6 @@ app.post("/", (req, res) => {
     })
 })
 
-// GET route for homepage recipe edit page
-app.get("/choosepage", (req, res) => {
-    //change later
-    res.send(req.body)
-})
-
-app.get("/", (req, res) => {
-    res.send("Hello")
-})
-
 app.post("/login", (req, res) => {
     console.log(req.body);
     res.end('success')
@@ -61,6 +50,12 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
     console.log(req.body);
     res.end('success')
+})
+
+// GET route for homepage recipe edit page
+app.get("/choosepage", (req, res) => {
+    //change later
+    res.send(req.body)
 })
 
 // GET route for recipe search page
@@ -154,13 +149,27 @@ app.get("/account", async (req, res)=> {
 
 // GET route for my fridge page
 app.get("/myfridge", (req, res) => {
-
+//This method will later be populated with code that retrieves the user's fridge items from the database.
+//Will be implemented in sprint 3
 })
 
 // GET route for my grocery list page
 app.get("/mygrocerylist", (req, res) => {
-
+//This method will later be populated with code that retrieves the user's grocery list items from the database.
+//Will be implemented with database in sprint 3
 })
+
+app.post("/myfridge", (req, res) => {
+//This method will later be populated with code that adds an ingredient into the user's fridge in the database
+//Will be implemented with database in sprint 3
+})
+
+app.post("/mygrocerylist", (req, res) => {
+//This method will later be populated with code that adds an ingredient into the user's grocery list in the database
+//Will be implemented with database in sprint 3
+})
+
+
 
 // Export the express app
 module.exports = app
