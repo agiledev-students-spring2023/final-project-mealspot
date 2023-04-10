@@ -47,7 +47,7 @@ const RecipeInfo = (props) => {
     const userID = useParams()
   
     useEffect(() => {
-      // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0")
+      // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0") temporary use of second api, should be removed during database implement
       axios('https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0')
         .then(response => {
           // extract the data from the server response
