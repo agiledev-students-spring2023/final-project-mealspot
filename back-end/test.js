@@ -327,3 +327,29 @@ describe("GET request to /addpage route", () => {
         })
     })
 })
+
+describe("GET request to /myfridge route", () => {
+    it("should respond with an HTTP 200 status code", done => {
+        chai
+        .request(server)
+        .get("/myfridge")
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            done()
+        })
+    })
+})
+
+describe("GET request to /grocerylist route", () => {
+    it("it should respond with an HTTP 200 status code", done => {
+        chai
+        .request(server)
+        .get("/grocerylist")
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            done()
+        })
+    })
+})
