@@ -255,3 +255,42 @@ describe('POST request to /register route with username, password, and email', (
         })
     })
 })
+
+describe("GET request to /account route", () => {
+    it("it should respond with an HTTP 200 status code and an object with name, email, and budget", done => {
+        chai
+        .request(server)
+        .get('/account')
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('array')
+            done()
+        })
+    })
+})
+
+describe("GET request to /choosesavedrecipes route", () => {
+    it("it should respond with an HTTP 200 status code and an object containing recipes and fridge", done => {
+        chai
+        .request(server)
+        .get("/choosesavedrecipes")
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            done()
+        })
+    })
+})
+
+describe("GET request to /addpage route", () => {
+    it("it should respond with an HTTP 200 status code and an object containing recipes and fridge", done => {
+        chai
+        .request(server)
+        .get("/addpage")
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            done()
+        })
+    })
+})

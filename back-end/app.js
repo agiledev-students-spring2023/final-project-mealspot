@@ -156,6 +156,50 @@ app.post("/savedrecipes", (req, res) => {
     }
 })
 
+// GET route for choose from saved recipes page
+app.get("/choosesavedrecipes", (req, res) => {
+    async function getRecipes(recipesUrl, fridgeUrl) {
+        try {
+            const recipes = await axios(recipesUrl)
+            // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
+            // that is, the second parameter of this async function should be able to be removed in the next sprint
+            const fridge = await axios(fridgeUrl)
+            res.json({ recipes: recipes.data, fridge: fridge.data })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+    getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0', 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
+})
+
+//POST route for choose from saved recipes page
+app.post("/choosesavedrecipes", (req, res) => {
+    //TODO
+})
+
+// GET route for add your own recipes page
+app.get("/addpage", (req, res) => {
+    async function getRecipes(recipesUrl, fridgeUrl) {
+        try {
+            const recipes = await axios(recipesUrl)
+            // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
+            // that is, the second parameter of this async function should be able to be removed in the next sprint
+            const fridge = await axios(fridgeUrl)
+            res.json({ recipes: recipes.data, fridge: fridge.data })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+    getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0', 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
+})
+
+//POST route for add your own recipes page
+app.post("/addpage", (req, res) => {
+    //TODO
+})
+
 // GET route for account page
 app.get("/account", async (req, res)=> {
       try {
