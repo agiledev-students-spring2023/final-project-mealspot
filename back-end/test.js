@@ -124,3 +124,66 @@ describe('POST request to /recipesearch route with save = true', () => {
         })
     })
 })
+
+describe('POST request to /login route with username and password', () => {
+    it('it should respond with an HTTP 200 status code and an object containing result: success', done => {
+        let requestBody = {
+            username: 'a',
+            password: 'a'
+        }
+        chai
+        .request(server)
+        .post('/login')
+        .send(requestBody)
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.should.have.property('result').eql('success')
+            done()
+        })
+    })
+    it('it should respond with an HTTP 400 status code and an object with result: fail', done => {
+        chai
+        .request(server)
+        .post('/login')
+        .send({})
+        .end((err, res) => {
+            res.should.have.status(400)
+            res.body.should.be.a('object')
+            res.body.should.have.property('result').eql('fail')
+            done()
+        })
+    })
+})
+
+describe('POST request to /register route with username, password, and email', () => {
+    it('it should respond with an HTTP 200 status code and an object containing result: success', done => {
+        let requestBody = {
+            username: 'a',
+            email: 'a',
+            password: 'a'
+        }
+        chai
+        .request(server)
+        .post('/register')
+        .send(requestBody)
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.should.have.property('result').eql('success')
+            done()
+        })
+    })
+    it('it should respond with an HTTP 400 status code and an object with result: fail', done => {
+        chai
+        .request(server)
+        .post('/register')
+        .send({})
+        .end((err, res) => {
+            res.should.have.status(400)
+            res.body.should.be.a('object')
+            res.body.should.have.property('result').eql('fail')
+            done()
+        })
+    })
+})
