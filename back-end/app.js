@@ -55,10 +55,6 @@ app.get("/choosepage", (req, res) => {
     res.send(req.body)
 })
 
-app.get("/", (req, res) => {
-    res.send("Hello")
-})
-
 app.post("/login", (req, res) => {
     if (Object.hasOwn(req.body, 'username') && Object.hasOwn(req.body, 'password')) {
         console.log(req.body.username, req.body.password)
@@ -211,6 +207,22 @@ app.get("/account", async (req, res)=> {
     } catch (error) {
         console.error(error);
         res.status(500).send('Could not retrieve user');
+    }
+})
+
+// POST route for account page
+app.post("/account", (req, res) => {
+    // Change this user's budget
+    if (req.body.budget && !isNaN(req.body.budget)) { // Make sure budget is a number
+        // TODO: database interaction here that updates the user's budget in the database
+        console.log("TYPE", typeof(req.body.budget))
+        const budgetNumber = Number(req.body.budget).toFixed(2)
+        console.log('Updating budget to be: $' + budgetNumber)
+        res.json({budget: '$' + budgetNumber})
+    }
+    else { // Invalid input
+        res.status(400)
+        res.json({'msg': 'invalid input'})
     }
 })
 

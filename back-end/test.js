@@ -148,7 +148,7 @@ describe("GET request to /recipesearch route", () => {
     })
 })
 
-describe('POST request to /recipesearch route with save = true', () => {
+describe('POST request to /recipesearch route', () => {
     it('it should respond with an HTTP 200 status code and an object containing result: recipe saved when request has save = true', done => {
         let requestBody = {
             save: true
@@ -184,6 +184,39 @@ describe('POST request to /recipesearch route with save = true', () => {
         .request(server)
         .post('/recipesearch')
         .send({})
+        .end((err, res) => {
+            res.should.have.status(400)
+            res.body.should.be.a('object')
+            res.body.should.have.property('msg').eql('invalid input')
+            done()
+        })
+    })
+})
+
+describe('POST request to /account route', () => {
+    it('it should respond with an HTTP 200 status code and an object the budget rounded to 2 decimals, with a $ appended to the front', done => {
+        let requestBody = {
+            budget: '18.5421'
+        }
+        chai
+        .request(server)
+        .post('/account')
+        .send(requestBody)
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.should.have.property('budget').eql('$18.54')
+            done()
+        })
+    })
+    it('it should respond with an HTTP 400 status code when request budget is not a number (invalid input)', done => {
+        let requestBody = {
+            budget: 'test'
+        }
+        chai
+        .request(server)
+        .post('/account')
+        .send(requestBody)
         .end((err, res) => {
             res.should.have.status(400)
             res.body.should.be.a('object')
