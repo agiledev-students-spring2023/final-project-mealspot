@@ -25,6 +25,7 @@ const AddPage = () => {
     const [open, setOpen] = useState(false)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/addpage`;
     return (
         <div class="addItemDiv">
             <div>
