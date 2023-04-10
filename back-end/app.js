@@ -38,6 +38,12 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
     // Unsave a recipe
     console.log("Selected day: " + req.body.day)
+    const day = parseInt(req.body.day);
+    if (isNaN(day) || day < 0 || day > 6) {
+        return res.status(400).json({
+            status: 'error',
+        })
+    }
     return res.json({
         status: 'ok',
     })
@@ -50,13 +56,25 @@ app.get("/choosepage", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-    console.log(req.body);
-    res.end('success')
+    if (Object.hasOwn(req.body, 'username') && Object.hasOwn(req.body, 'password')) {
+        console.log(req.body.username, req.body.password)
+        res.json({result: 'success'})
+    }
+    else {
+        res.status(400)
+        res.json({result: 'fail'})
+    }
 })
 
 app.post("/register", (req, res) => {
-    console.log(req.body);
-    res.end('success')
+    if (Object.hasOwn(req.body, 'username') && Object.hasOwn(req.body, 'password') && Object.hasOwn(req.body, 'email')) {
+        console.log(req.body.username, req.body.email, req.body.password)
+        res.json({result: 'success'})
+    }
+    else {
+        res.status(400)
+        res.json({result: 'fail'})
+    }
 })
 
 // GET route for recipe search page
@@ -132,6 +150,50 @@ app.post("/savedrecipes", (req, res) => {
         res.status(400)
         res.json({'msg': 'invalid input'})
     }
+})
+
+// GET route for choose from saved recipes page
+app.get("/choosesavedrecipes", (req, res) => {
+    async function getRecipes(recipesUrl, fridgeUrl) {
+        try {
+            const recipes = await axios(recipesUrl)
+            // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
+            // that is, the second parameter of this async function should be able to be removed in the next sprint
+            const fridge = await axios(fridgeUrl)
+            res.json({ recipes: recipes.data, fridge: fridge.data })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+    getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0', 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
+})
+
+//POST route for choose from saved recipes page
+app.post("/choosesavedrecipes", (req, res) => {
+    //TODO
+})
+
+// GET route for add your own recipes page
+app.get("/addpage", (req, res) => {
+    async function getRecipes(recipesUrl, fridgeUrl) {
+        try {
+            const recipes = await axios(recipesUrl)
+            // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
+            // that is, the second parameter of this async function should be able to be removed in the next sprint
+            const fridge = await axios(fridgeUrl)
+            res.json({ recipes: recipes.data, fridge: fridge.data })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+    getRecipes('https://my.api.mockaroo.com/recipe.json?key=8198c2b0', 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
+})
+
+//POST route for add your own recipes page
+app.post("/addpage", (req, res) => {
+    //TODO
 })
 
 // GET route for account page
