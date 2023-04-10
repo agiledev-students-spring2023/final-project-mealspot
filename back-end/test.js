@@ -255,3 +255,16 @@ describe('POST request to /register route with username, password, and email', (
         })
     })
 })
+
+describe("GET request to /account route", () => {
+    it("it should respond with an HTTP 200 status code and an object with name, email, and budget", done => {
+        chai
+        .request(server)
+        .get('/account')
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('array')
+            done()
+        })
+    })
+})
