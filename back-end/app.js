@@ -60,13 +60,25 @@ app.get("/", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-    console.log(req.body);
-    res.end('success')
+    if (Object.hasOwn(req.body, 'username') && Object.hasOwn(req.body, 'password')) {
+        console.log(req.body.username, req.body.password)
+        res.json({result: 'success'})
+    }
+    else {
+        res.status(400)
+        res.json({result: 'fail'})
+    }
 })
 
 app.post("/register", (req, res) => {
-    console.log(req.body);
-    res.end('success')
+    if (Object.hasOwn(req.body, 'username') && Object.hasOwn(req.body, 'password') && Object.hasOwn(req.body, 'email')) {
+        console.log(req.body.username, req.body.email, req.body.password)
+        res.json({result: 'success'})
+    }
+    else {
+        res.status(400)
+        res.json({result: 'fail'})
+    }
 })
 
 // GET route for recipe search page
