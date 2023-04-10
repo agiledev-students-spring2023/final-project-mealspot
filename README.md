@@ -25,7 +25,13 @@ Mealspot was built by college students to deal with one of their primary issues 
 
 ## Building and Testing
 
-todo
+Ensure dependencies are installed for both the front-end and back-end: via `npm install`
+
+To run the front-end server from the front-end directory: `npm start`
+
+To run the back-end server from the back-end directory: `npm start`
+
+To run unit tests for the back-end: `npm test`
 
 ## Relevant Reading
 
