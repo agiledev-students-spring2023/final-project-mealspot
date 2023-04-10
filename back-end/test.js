@@ -239,6 +239,7 @@ describe('POST request to /login route with username and password', () => {
         .end((err, res) => {
             res.should.have.status(200)
             res.body.should.be.a('object')
+            res.body.should.have.property('result').eql('success')
             done()
         })
     })
@@ -254,7 +255,6 @@ describe('POST request to /login route with username and password', () => {
             res.should.have.status(400)
             res.body.should.be.a('object')
             res.body.should.have.property('msg').eql('invalid input')
-            res.body.should.have.property('result').eql('success')
             done()
         })
     })
