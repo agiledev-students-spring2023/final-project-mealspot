@@ -8,6 +8,13 @@
       "func-names": "off",
       "no-process-exit": "off",
       "object-shorthand": "off",
-      "class-methods-use-this": "off"
+      "class-methods-use-this": "off",
+      "prefer-template": "off",
+      "radix": "off",
+      "global-require": "off", 
+      "no-restricted-globals": "off",
+      "prefer-const": "off",
+      "no-undef": "off",
+      "node/no-unpublished-require": "off"
     }
   }
