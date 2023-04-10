@@ -268,3 +268,29 @@ describe("GET request to /account route", () => {
         })
     })
 })
+
+describe("GET request to /choosesavedrecipes route", () => {
+    it("it should respond with an HTTP 200 status code and an object containing recipes and fridge", done => {
+        chai
+        .request(server)
+        .get("/choosesavedrecipes")
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            done()
+        })
+    })
+})
+
+describe("GET request to /addpage route", () => {
+    it("it should respond with an HTTP 200 status code and an object containing recipes and fridge", done => {
+        chai
+        .request(server)
+        .get("/addpage")
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            done()
+        })
+    })
+})
