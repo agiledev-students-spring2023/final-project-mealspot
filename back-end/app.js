@@ -38,6 +38,12 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
     // Unsave a recipe
     console.log("Selected day: " + req.body.day)
+    const day = parseInt(req.body.day);
+    if (isNaN(day) || day < 0 || day > 6) {
+        return res.status(400).json({
+            status: 'error',
+        })
+    }
     return res.json({
         status: 'ok',
     })
