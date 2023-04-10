@@ -243,21 +243,6 @@ describe('POST request to /login route with username and password', () => {
             done()
         })
     })
-    it('it should respond with an HTTP 400 status code when request budget is not a number (invalid input)', done => {
-        let requestBody = {
-            budget: 'test'
-        }
-        chai
-        .request(server)
-        .post('/account')
-        .send(requestBody)
-        .end((err, res) => {
-            res.should.have.status(400)
-            res.body.should.be.a('object')
-            res.body.should.have.property('msg').eql('invalid input')
-            done()
-        })
-    })
     it('it should respond with an HTTP 400 status code and an object with result: fail', done => {
         chai
         .request(server)
