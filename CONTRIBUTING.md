@@ -51,4 +51,6 @@
 - Then open up the final project using any IDE of your choice.
 
 ## Building and Testing Instructions
-- Will be updated once the final project reaches the building and testing phase.
+- npm install all the required packages, one in the front-end directory and the other in the back-end directory. 
+- To run the server, navigate to the back-end directory and run npm start. Do the same in the front-end directory. This should launch the app on your local network.
+- To test the server, navigate to the back-end directory and run npm test.
