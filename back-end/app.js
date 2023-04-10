@@ -165,6 +165,7 @@ app.get("/choosesavedrecipes", (req, res) => {
             // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
             // that is, the second parameter of this async function should be able to be removed in the next sprint
             const fridge = await axios(fridgeUrl)
+            console.log(fridge.data)
             res.json({ recipes: recipes.data, fridge: fridge.data })
         } catch (err) {
             console.log(err)
@@ -235,25 +236,27 @@ app.post("/account", (req, res) => {
 app.get("/myfridge", (req, res) => {
 //This method will later be populated with code that retrieves the user's fridge items from the database.
 //Will be implemented in sprint 3
+    res.send(req.body)
 })
 
 // GET route for my grocery list page
 app.get("/mygrocerylist", (req, res) => {
 //This method will later be populated with code that retrieves the user's grocery list items from the database.
 //Will be implemented with database in sprint 3
+    res.send(req.body)
 })
 
 app.post("/myfridge", (req, res) => {
 //This method will later be populated with code that adds an ingredient into the user's fridge in the database
 //Will be implemented with database in sprint 3
+res.send(req.body)
 })
 
 app.post("/mygrocerylist", (req, res) => {
 //This method will later be populated with code that adds an ingredient into the user's grocery list in the database
 //Will be implemented with database in sprint 3
+res.send(req.body)
 })
-
-
 
 // Export the express app
 module.exports = app

@@ -5,11 +5,7 @@ import './Account.css';
 
 
 const Account = (props) => {
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
-    const [newBudget, setNewBudget] = useState(0.0)
-    const [currentBudget, setCurrentBudget] = useState(0.0)
+    const [data, setData] = useState([])
     const userID = useParams()
   
     useEffect(() => {
@@ -18,30 +14,14 @@ const Account = (props) => {
       axios(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`)
         .then(response => {
           // extract the data from the server response
-          setFirstName(response.data[0].first_name)
-          setLastName(response.data[0].last_name)
-          setEmail(response.data[0].email)
-          setCurrentBudget(response.data[0].weekly_budget)
+          console.log(response.data[0])
+          setData(response.data[0])
         })
         .catch(err => {
           console.error(err) 
 
         })
     }, [userID])
-
-    const submitForm = async(e) => {
-      e.preventDefault() // prevent normal browser submit behavior
-  
-      try {
-        const res = await axios.post(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`, { budget: newBudget })
-        // update current budget
-        setCurrentBudget(res.data.budget)
-        // clear form
-        setNewBudget(0.0)
-      } catch(err) {
-        console.log(err)
-      }
-    }  
 
     return (
       <div className="UserAccount">
@@ -51,20 +31,11 @@ const Account = (props) => {
         
         {<div className='account'>
             <div>
-                <p>Name: {firstName} {lastName}</p>
-                <p>Email: {email}</p>
-                <p>Weekly budget: {currentBudget}</p>
+                <p>Name: {data.first_name} {data.last_name}</p>
+                <p>Email: {data.email}</p>
+                <p>Weekly Budget: {data.weekly_budget}</p>
             </div>
-            <form className="budgetForm" onSubmit={submitForm}>
-              <input
-                type="number"
-                step="0.01"
-                placeholder="Edit budget..."
-                value={newBudget}
-                onChange={e => setNewBudget(e.target.value)}
-              />
-              <input type="submit" disabled={!newBudget} value="Save" />
-            </form>
+            
             {/* {data.map(d => <div>Name: {d.first_name} {d.last_name}</div>)}
             {data.map(d => <div>Email: {d.email}</div>)}
             {data.map(d => <div>Weekly Budget: {d.weekly_budget}</div>)} */}

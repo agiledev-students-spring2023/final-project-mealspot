@@ -309,7 +309,7 @@ describe("GET request to /choosesavedrecipes route", () => {
         .get("/choosesavedrecipes")
         .end((err, res) => {
             res.should.have.status(200)
-            res.body.should.be.a('object')
+            res.body.should.be.a('array')
             done()
         })
     })
@@ -322,7 +322,7 @@ describe("GET request to /addpage route", () => {
         .get("/addpage")
         .end((err, res) => {
             res.should.have.status(200)
-            res.body.should.be.a('object')
+            res.body.should.be.a('array')
             done()
         })
     })
@@ -345,7 +345,33 @@ describe("GET request to /grocerylist route", () => {
     it("it should respond with an HTTP 200 status code", done => {
         chai
         .request(server)
-        .get("/grocerylist")
+        .get("/mygrocerylist")
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            done()
+        })
+    })
+})
+
+describe("POST request to /myfridge route", () => {
+    it("should respond with an HTTP 200 status code", done => {
+        chai
+        .request(server)
+        .post("/myfridge")
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            done()
+        })
+    })
+})
+
+describe("POST request to /grocerylist route", () => {
+    it("it should respond with an HTTP 200 status code", done => {
+        chai
+        .request(server)
+        .post("/mygrocerylist")
         .end((err, res) => {
             res.should.have.status(200)
             res.body.should.be.a('object')
