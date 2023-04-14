@@ -37,7 +37,6 @@ const RecipeDisplay = (props) => {
 
         getRecipes(props.apiLink);
     }, [props.apiLink]);
-    // TODO: the page should update whenever the data in the database is changed
 
     // Anytime recipes or fridge is changed, find the recipes to recommend
     useEffect(() => {
@@ -57,7 +56,7 @@ const RecipeDisplay = (props) => {
     // Function to sort the recipes state array to start with the recommended recipes first
     // Argument is the user's fridge - recipes that use ingredients in the fridge will be recommended
     const sortRecipes = (recipes, fridge) => {
-        const fridgeIngNames = fridge.ingredients.map(ing => ing.ingredientName);
+        const fridgeIngNames = fridge.ingredients.map(ing => ing.ingredientName); // TODO ingredients.name
         recipes.forEach((recipe) => {
             // Recommend this recipe if its ingredients match ingredient(s) in the fridge
             if (ingredientMatch(recipe.ingredients, fridgeIngNames)) {
@@ -78,7 +77,7 @@ const RecipeDisplay = (props) => {
     const ingredientMatch = (recipeIngs, fridgeIngNames) => {
         let result = false;
         recipeIngs.forEach((ing) => {
-            if (fridgeIngNames.includes(ing.ingredientName)) {
+            if (fridgeIngNames.includes(ing.name)) {
                 result = true;
                 return false;
             }

@@ -92,9 +92,31 @@ app.get('/choosepage', (req, res) => {
 app.get('/recipesearch', (req, res) => {
   async function getRecipes(recipesUrl, fridgeUrl) {
     try {
-      const recipes = await axios(recipesUrl);
-      // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
-      // that is, the second parameter of this async function should be able to be removed in the next sprint
+      // Get the raw recipes data from the Spoonacular API
+      const recipesRawData = await axios(recipesUrl);
+      // Box all the raw data into recipe objects
+      const recipes = recipesRawData.recipes.map((recipe) => {
+        const reducedIngredients = data.extendedIngredients.map(async(ing) => {
+          // Get the unit price for this ingredient
+          const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?amount=1&apiKey=${process.env.API_KEY}`);
+          const ingredientPrice = Number((ingData.estimatedCost.value / 100.0).toFixed(2));
+          return {
+            id: ing.id,
+            ingredientName: ing.name,
+            units: ing.amount,
+            ppu: ingredientPrice
+          }
+        });
+        return {
+          id: recipe.id,
+          recipeName: recipe.title,
+          image: recipe.image,
+          instructions: recipe.instructions,
+          ingredients: reducedIngredients
+        }
+      });
+      // TODO: database interaction here that gets the data of what's in the fridge
+      // remove the second parameter of this async function once properly implemented
       const fridge = await axios(fridgeUrl);
       res.json({ recipes: recipes.data, fridge: fridge.data });
     } catch (err) {
@@ -102,8 +124,11 @@ app.get('/recipesearch', (req, res) => {
     }
   }
 
+  const recipesUrl = 'https://api.spoonacular.com/recipes/random';
+  const numRecipes = 3;
+
   getRecipes(
-    'https://my.api.mockaroo.com/recipe.json?key=8198c2b0',
+    `${recipesUrl}?number=${numRecipes}&apiKey=${process.env.API_KEY}`,
     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
   );
 });

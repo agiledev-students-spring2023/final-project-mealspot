@@ -83,7 +83,7 @@ const RecipeCard = (props) => {
                         <CloseIcon />
                     </IconButton>
                     <h1>{props.recipeDetails.recipeName}</h1>
-                    <img src={props.recipeDetails.bigImage} alt="aa"></img>
+                    <img src={props.recipeDetails.image} alt="aa"></img>
                     <Divider variant="middle" />
                     <h2>Ingredients</h2>
                     <List>
