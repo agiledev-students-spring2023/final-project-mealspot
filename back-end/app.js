@@ -92,23 +92,10 @@ app.get('/choosepage', (req, res) => {
 app.get('/recipesearch', (req, res) => {
   async function getRecipes(recipesUrl, fridgeUrl) {
     try {
-      // Get the raw recipes data from the Spoonacular API
+      // Get the raw recipes data from Mockaroo
       const recipesRaw = await axios(recipesUrl);
       // Box all the raw data into recipe objects
       const recipes = recipesRaw.data.recipes.map((recipe) => {
-      /* TODO
-        const reducedIngredients = recipe.extendedIngredients.map(async(ing) => {
-          // Get the unit price for this ingredient
-          const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?apiKey=${process.env.API_KEY}&amount=1`);
-          const ingredientPrice = Number((ingData.data.estimatedCost.value / 100.0).toFixed(2));
-          return {
-            id: ing.id,
-            ingredientName: ing.name,
-            units: ing.amount,
-            ppu: ingredientPrice
-          }
-        })
-      */
         return {
           id: recipe.id,
           recipeName: recipe.title,
@@ -128,22 +115,11 @@ app.get('/recipesearch', (req, res) => {
     }
   }
 
-  const recipesUrl = 'https://api.spoonacular.com/recipes/random';
-  const numRecipes = 1;
-
-  // TODO the daily free request limit for spoonacular is so low that I'll need to make another mockaroo that mocks that API to test
-  // Hopefully they will approve my request for university access (which would give us 5000 requests a day)
-
-  /* TODO
-  getRecipes(
-    `${recipesUrl}?apiKey=${process.env.API_KEY}&number=${numRecipes}`,
-    'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
-  );
-  */
   getRecipes(
     'https://my.api.mockaroo.com/real_recipe.json?key=8198c2b0',
     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
   );
+  // TODO: planning to replace mockaroo with the "Spoonacular" API - currently waiting to get educational access
 });
 
 // POST route for recipe search page
@@ -229,26 +205,12 @@ app.get('/choosesavedrecipes', (req, res) => {
 // POST route for choose from saved recipes page
 app.post('/choosesavedrecipes', (req, res) => {
   // TODO
+  // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
 });
 
 // GET route for add your own recipes page
 app.get('/addpage', (req, res) => {
-  async function getRecipes(recipesUrl, fridgeUrl) {
-    try {
-      const recipes = await axios(recipesUrl);
-      // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
-      // that is, the second parameter of this async function should be able to be removed in the next sprint
-      const fridge = await axios(fridgeUrl);
-      res.json({ recipes: recipes.data, fridge: fridge.data });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  getRecipes(
-    'https://my.api.mockaroo.com/recipe.json?key=8198c2b0',
-    'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
-  );
+  // No data is needed for this page.
 });
 
 // POST route for add your own recipes page
@@ -277,9 +239,7 @@ app.post('/account', (req, res) => {
   if (req.body.budget && !isNaN(req.body.budget)) {
     // Make sure budget is a number
     // TODO: database interaction here that updates the user's budget in the database
-    console.log('TYPE', typeof req.body.budget);
     const budgetNumber = Number(req.body.budget).toFixed(2);
-    console.log('Updating budget to be: $' + budgetNumber);
     res.json({ budget: '$' + budgetNumber });
   } else {
     // Invalid input
