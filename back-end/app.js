@@ -93,13 +93,13 @@ app.get('/recipesearch', (req, res) => {
   async function getRecipes(recipesUrl, fridgeUrl) {
     try {
       // Get the raw recipes data from the Spoonacular API
-      const recipesRawData = await axios(recipesUrl);
+      const recipesRaw = await axios(recipesUrl);
       // Box all the raw data into recipe objects
-      const recipes = recipesRawData.recipes.map((recipe) => {
-        const reducedIngredients = data.extendedIngredients.map(async(ing) => {
+      const recipes = recipesRaw.data.recipes.map((recipe) => {
+        const reducedIngredients = recipe.extendedIngredients.map(async(ing) => {
           // Get the unit price for this ingredient
-          const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?amount=1&apiKey=${process.env.API_KEY}`);
-          const ingredientPrice = Number((ingData.estimatedCost.value / 100.0).toFixed(2));
+          const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?apiKey=${process.env.API_KEY}&amount=1`);
+          const ingredientPrice = Number((ingData.data.estimatedCost.value / 100.0).toFixed(2));
           return {
             id: ing.id,
             ingredientName: ing.name,
@@ -112,23 +112,27 @@ app.get('/recipesearch', (req, res) => {
           recipeName: recipe.title,
           image: recipe.image,
           instructions: recipe.instructions,
-          ingredients: reducedIngredients
+          ingredients: reducedIngredients,
+          saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
         }
       });
       // TODO: database interaction here that gets the data of what's in the fridge
       // remove the second parameter of this async function once properly implemented
       const fridge = await axios(fridgeUrl);
-      res.json({ recipes: recipes.data, fridge: fridge.data });
+      res.json({ recipes: recipes, fridge: fridge.data });
     } catch (err) {
       console.log(err);
     }
   }
 
   const recipesUrl = 'https://api.spoonacular.com/recipes/random';
-  const numRecipes = 3;
+  const numRecipes = 1;
+
+  // TODO the daily free request limit for spoonacular is so low that I'll need to make another mockaroo that mocks that API to test
+  // Hopefully they will approve my request for university access (which would give us 5000 requests a day)
 
   getRecipes(
-    `${recipesUrl}?number=${numRecipes}&apiKey=${process.env.API_KEY}`,
+    `${recipesUrl}?apiKey=${process.env.API_KEY}&number=${numRecipes}`,
     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
   );
 });

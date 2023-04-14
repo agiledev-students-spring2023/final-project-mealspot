@@ -40,7 +40,7 @@ const RecipeDisplay = (props) => {
 
     // Anytime recipes or fridge is changed, find the recipes to recommend
     useEffect(() => {
-        if (Object.keys(fridge).length !== 0 && recipes.length !== 0) {
+        if (Object.keys(fridge).length !== 0 && Object.keys(recipes).length !== 0) {
             sortRecipes(recipes, fridge);
         }
         // Clean-up function that resets the cards, so it doesn't re-add cards that are already on the page

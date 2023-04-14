@@ -9,12 +9,16 @@ import CloseIcon from '@mui/icons-material/Close';
 const RecipeCard = (props) => {
     // Calculate the total price of this recipe, based on the ingredients
     const totalPrice = props.recipeDetails.ingredients.reduce((price, curr) => {
+        // TODO testing here
+        console.log("ppu:", curr.ppu);
+        console.log("units:", curr.units);
+
         return price + (curr.ppu * curr.units);
     }, 0).toFixed(2);
 
     // Function to run when the star button is clicked on this recipe card
     let onClick;
-    if (!props.recipeDetails.favorite) { // Save a recipe
+    if (!props.recipeDetails.saved) { // Save a recipe
         onClick = (e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
             // Send a post request to the server, indicating that it should add this recipe to the user's saved recipes list in the database
@@ -43,7 +47,7 @@ const RecipeCard = (props) => {
     }
 
     // Star icon - fill if this recipe is favorited, outline if not
-    const starIcon = props.recipeDetails.favorite ? <AiFillStar /> : <AiOutlineStar />
+    const starIcon = props.recipeDetails.saved ? <AiFillStar /> : <AiOutlineStar />
 
     // for modal implementation for details
     const [open, setOpen] = React.useState(false);
