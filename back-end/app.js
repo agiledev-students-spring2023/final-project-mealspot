@@ -119,55 +119,6 @@ app.get('/recipesearch', (req, res) => {
     'https://my.api.mockaroo.com/real_recipe.json?key=8198c2b0',
     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
   );
-  /*
-  // Version using Spoonacular instead of Mockaroo (WARNING: runs out of requests really fast. Currently waiting on their reply to attempt to get
-  // educational access to the API, which would get us 5000 requests/day.)
-
-  // NOTE: The .env file with the correct API_KEY is needed in the back-end directory for this code to work
-  // Contact Charlotte if you don't have the file (it is not committed to GitHub because API key should be kept secret)
-  async function getRecipes(recipesUrl, fridgeUrl) {
-    try {
-      // Get the raw recipes data from the Spoonacular API
-      const recipesRaw = await axios(recipesUrl);
-      // Box all the raw data into recipe objects
-      const recipes = recipesRaw.data.recipes.map((recipe) => {
-        const reducedIngredients = recipe.extendedIngredients.map(async(ing) => {
-          // Get the unit price for this ingredient
-          const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?apiKey=${process.env.API_KEY}&amount=1`);
-          const ingredientPrice = Number((ingData.data.estimatedCost.value / 100.0).toFixed(2)); // TODO getting NaN here - a bug yet to be squashed
-          return {
-            id: ing.id,
-            ingredientName: ing.name,
-            units: ing.amount,
-            ppu: ingredientPrice
-          }
-        })
-        return {
-          id: recipe.id,
-          recipeName: recipe.title,
-          image: recipe.image,
-          instructions: recipe.instructions,
-          ingredients: reducedIngredients,
-          saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
-        }
-      });
-      // TODO: database interaction here that gets the data of what's in the fridge
-      // remove the second parameter of this async function once properly implemented
-      const fridge = await axios(fridgeUrl);
-
-      res.json({ recipes: recipes, fridge: fridge.data });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const recipesUrl = 'https://api.spoonacular.com/recipes/random';
-  const numRecipes = 1;
-  getRecipes(
-    `${recipesUrl}?apiKey=${process.env.API_KEY}&number=${numRecipes}`,
-    'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
-  );
-  */
 });
 
 // POST route for recipe search page
