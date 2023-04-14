@@ -47,15 +47,16 @@ const RecipeCard = (props) => {
     }
 
     // Star icon - fill if this recipe is favorited, outline if not
-    const starIcon = props.recipeDetails.saved ? <AiFillStar /> : <AiOutlineStar />
+    const starIcon = props.recipeDetails.saved ? <AiFillStar /> : <AiOutlineStar />;
+    const buttonText = props.recipeDetails.saved ? 'Unsave Recipe' : 'Save recipe';
 
     // for modal implementation for details
     const [open, setOpen] = React.useState(false);
     const detailOnClick = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const ingredients = []
+    const ingredients = [];
     for (let i in props.recipeDetails.ingredients) {
-        ingredients.push(<li>{props.recipeDetails.ingredients[i].ingredientName}</li>)
+        ingredients.push(<li>{props.recipeDetails.ingredients[i].ingredientName}</li>);
     }
 
     // Return the final component, consisting of the recipe name, image, and the list of ingredients
@@ -97,7 +98,7 @@ const RecipeCard = (props) => {
                     <h2>Instructions</h2>
                     <p>{props.recipeDetails.instructions}</p>
                     <Divider variant="middle" />
-                    <Button variant="contained" onClick={onClick} sx={{margin: '1%'}}>Save Recipe</Button>
+                    <Button variant="contained" onClick={onClick} sx={{margin: '1%'}}>{buttonText}</Button>
                 </Box>
             </Modal>
             <h1 className="recipeName">{props.recipeDetails.recipeName}</h1>
