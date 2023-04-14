@@ -28,6 +28,7 @@ const RecipeDisplay = (props) => {
         async function getRecipes(url) {
             try {
                 const response = await axios(url);
+                console.log(response.data.recipes[0]);
                 setRecipes(response.data.recipes);
                 setFridge(response.data.fridge);
             } catch (err) {
@@ -56,7 +57,7 @@ const RecipeDisplay = (props) => {
     // Function to sort the recipes state array to start with the recommended recipes first
     // Argument is the user's fridge - recipes that use ingredients in the fridge will be recommended
     const sortRecipes = (recipes, fridge) => {
-        const fridgeIngNames = fridge.ingredients.map(ing => ing.ingredientName); // TODO ingredients.name
+        const fridgeIngNames = fridge.ingredients.map(ing => ing.ingredientName);
         recipes.forEach((recipe) => {
             // Recommend this recipe if its ingredients match ingredient(s) in the fridge
             if (ingredientMatch(recipe.ingredients, fridgeIngNames)) {

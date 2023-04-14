@@ -96,6 +96,7 @@ app.get('/recipesearch', (req, res) => {
       const recipesRaw = await axios(recipesUrl);
       // Box all the raw data into recipe objects
       const recipes = recipesRaw.data.recipes.map((recipe) => {
+      /* TODO
         const reducedIngredients = recipe.extendedIngredients.map(async(ing) => {
           // Get the unit price for this ingredient
           const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?apiKey=${process.env.API_KEY}&amount=1`);
@@ -106,19 +107,21 @@ app.get('/recipesearch', (req, res) => {
             units: ing.amount,
             ppu: ingredientPrice
           }
-        });
+        })
+      */
         return {
           id: recipe.id,
           recipeName: recipe.title,
           image: recipe.image,
           instructions: recipe.instructions,
-          ingredients: reducedIngredients,
+          ingredients: [{id: 1, ingredientName: 'sampleOne', units: 1.0, ppu: 2.99}, {id: 2, ingredientName: 'sampleTwo', units: 2.0, ppu: 3.49}],
           saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
         }
       });
       // TODO: database interaction here that gets the data of what's in the fridge
       // remove the second parameter of this async function once properly implemented
       const fridge = await axios(fridgeUrl);
+
       res.json({ recipes: recipes, fridge: fridge.data });
     } catch (err) {
       console.log(err);
@@ -131,8 +134,14 @@ app.get('/recipesearch', (req, res) => {
   // TODO the daily free request limit for spoonacular is so low that I'll need to make another mockaroo that mocks that API to test
   // Hopefully they will approve my request for university access (which would give us 5000 requests a day)
 
+  /* TODO
   getRecipes(
     `${recipesUrl}?apiKey=${process.env.API_KEY}&number=${numRecipes}`,
+    'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
+  );
+  */
+  getRecipes(
+    'https://my.api.mockaroo.com/real_recipe.json?key=8198c2b0',
     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
   );
 });
