@@ -89,7 +89,7 @@ const RecipeDisplay = (props) => {
     // Search bar functionality
     // Citation - code is based off this tutorial by Marianna: https://dev.to/mar1anna/create-a-search-bar-with-react-and-material-ui-4he
     const filterRecipes = (query, recRecipeCards, otherRecipeCards, allRecipeCards) => {
-        if (recRecipeCards.length === 0) {
+        if (!query && recRecipeCards.length === 0) {
             return allRecipeCards;
         }
         else if (!query) {
