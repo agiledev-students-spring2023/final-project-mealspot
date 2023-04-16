@@ -119,27 +119,7 @@ app.get('/recipesearch', (req, res) => {
     'https://my.api.mockaroo.com/real_recipe.json?key=8198c2b0',
     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
   );
-});
 
-// POST route for recipe search page
-// When user clicks the star button on a recipe card, it will save the recipe to the user's saved recipe list if it isn't saved yet
-// ...or it will remove it from the user's saved recipe list if it is already on it
-app.post('/recipesearch', (req, res) => {
-  // Save a recipe
-  if (req.body.save === true) {
-    // TODO: database interaction here that saves the recipe to the user's saved recipes list
-    console.log('Saving the recipe: ' + req.body.recipeName);
-    res.json({ result: 'recipe saved' });
-  } // Unsave a recipe
-  else if (req.body.save === false) {
-    // TODO: database interaction here that removes the recipe from the user's saved recipes list
-    console.log('Unsaving the recipe: ' + req.body.recipeName);
-    res.json({ result: 'recipe unsaved' });
-  } else {
-    // Invalid input
-    res.status(400);
-    res.json({ msg: 'invalid input' });
-  }
   /*
   // Version using Spoonacular instead of Mockaroo (WARNING: runs out of requests really fast. Currently waiting on their reply to attempt to get
   // educational access to the API, which would get us 5000 requests/day.)
@@ -151,11 +131,13 @@ app.post('/recipesearch', (req, res) => {
       // Get the raw recipes data from the Spoonacular API
       const recipesRaw = await axios(recipesUrl);
       // Box all the raw data into recipe objects
-      const recipes = recipesRaw.data.recipes.map((recipe) => {
-        const reducedIngredients = recipe.extendedIngredients.map(async(ing) => {
+      const recipes = recipesRaw.data.recipes.map(async(recipe) => {
+        const reducedIngredients = await recipe.extendedIngredients.map(async(ing) => {
           // Get the unit price for this ingredient
           const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?apiKey=${process.env.API_KEY}&amount=1`);
-          const ingredientPrice = Number((ingData.data.estimatedCost.value / 100.0).toFixed(2)); // TODO getting NaN here - a bug yet to be squashed
+          const ingredientPrice = Number((ingData.data.estimatedCost.value / 100.0).toFixed(2));
+          console.log(ingredientPrice);
+          console.log(ing.amount);
           return {
             id: ing.id,
             ingredientName: ing.name,
@@ -163,6 +145,27 @@ app.post('/recipesearch', (req, res) => {
             ppu: ingredientPrice
           }
         })
+        
+
+        // TODO for testing purposes I will only grab one ingredient
+        const temp = recipe.extendedIngredients[0];
+        const tempArr = [temp];
+        const reducedIngredients = await tempArr.map(async(ing) => {
+          // Get the unit price for this ingredient
+          const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?apiKey=${process.env.API_KEY}&amount=1`);
+          const ingredientPrice = Number((ingData.data.estimatedCost.value / 100.0).toFixed(2));
+          console.log(ingredientPrice);
+          console.log(ing.amount);
+          return {
+            id: ing.id,
+            ingredientName: ing.name,
+            units: ing.amount,
+            ppu: ingredientPrice
+          }
+        })
+
+
+        console.log(reducedIngredients);
         return {
           id: recipe.id,
           recipeName: recipe.title,
@@ -189,6 +192,27 @@ app.post('/recipesearch', (req, res) => {
     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
   );
   */
+});
+
+// POST route for recipe search page
+// When user clicks the star button on a recipe card, it will save the recipe to the user's saved recipe list if it isn't saved yet
+// ...or it will remove it from the user's saved recipe list if it is already on it
+app.post('/recipesearch', (req, res) => {
+  // Save a recipe
+  if (req.body.save === true) {
+    // TODO: database interaction here that saves the recipe to the user's saved recipes list
+    console.log('Saving the recipe: ' + req.body.recipeName);
+    res.json({ result: 'recipe saved' });
+  } // Unsave a recipe
+  else if (req.body.save === false) {
+    // TODO: database interaction here that removes the recipe from the user's saved recipes list
+    console.log('Unsaving the recipe: ' + req.body.recipeName);
+    res.json({ result: 'recipe unsaved' });
+  } else {
+    // Invalid input
+    res.status(400);
+    res.json({ msg: 'invalid input' });
+  }
 });
 
 // GET route for saved recipes page
