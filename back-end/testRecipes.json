@@ -2,7 +2,7 @@
     "id":1,
     "recipeName":"Chocolate cake",
     "image":"http://dummyimage.com/100x100.png/dddddd/000000",
-    "favorite":true,
+    "saved":true,
     "ingredients":[
         {"ingredientName":"Flour","ppu":4.18,"units":5},
         {"ingredientName":"Cocoa","ppu":3.69,"units":5},
@@ -16,7 +16,7 @@
     "id":2,
     "recipeName":"Taco",
     "image":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-    "favorite":true,
+    "saved":true,
     "ingredients":[
         {"ingredientName":"Tortilla","ppu":9.12,"units":4},
         {"ingredientName":"Beef","ppu":5.46,"units":3},
@@ -29,7 +29,7 @@
     "id":3,
     "recipeName":"Burrito",
     "image":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-    "favorite":true,
+    "saved":true,
     "ingredients":[
         {"ingredientName":"Tortilla","ppu":9.12,"units":4},
         {"ingredientName":"Chicken","ppu":8.34,"units":5},
