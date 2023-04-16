@@ -28,13 +28,15 @@ const UserSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MealPlan',
   },
-  // Saved recipes list is an array of ID numbers - each ID number corresponds to a specific recipe in the recipes API
+  // Saved recipes list is an array of Ingredients
   savedRecipes: [{
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ingredient',
   }],
-  // Fridge list is similarly an array of ID numbers - each ID number corresponds to a specific ingredient in the recipes API
+  // Fridge list is similarly an array of Ingredients
   fridge: [{
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ingredient',
   }],
 })
 
