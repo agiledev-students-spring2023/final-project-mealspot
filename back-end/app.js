@@ -6,6 +6,12 @@ const app = express();
 // Import helper functions for calling the recipe/ingredients API
 const apiCall = require('./apiCall.js');
 
+// Import Mongoose models for MongoDB data manipulation
+const mongoose = require("mongoose");
+const User = require("./models/User.js");
+const MealPlan = require("./models/MealPlan.js");
+const Day = require("./models/Day.js");
+
 // Middleware imports
 require('dotenv').config({ silent: true }); // load environmental variables from a hidden file named .env
 const multer = require('multer'); // middleware to handle HTTP POST requests with file uploads

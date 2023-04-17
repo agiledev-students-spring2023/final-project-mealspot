@@ -12,60 +12,21 @@ import './MealPlan.css';
 let currSpent = 0
 let currBudget = 0
 
-//handles post request of the day of the week form
-const handlePost = (selectedDay) => {
-    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/'
-    try {
-        axios.post(url, {
-            day: selectedDay,
-        })
-    } 
-    catch (err) {
-        console.log(err);
-    }
-}
-
-const Form = (props) => {
-    let now = new Date()
-    let today = now.getDay()
-    const selectDay = (event) => {
-        const day = event.target.value
-        props.handlePost(day)
-    }
-    return (
-        <FormControl fullWidth>
-            <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Day of the Week
-            </InputLabel>
-            <NativeSelect
-                defaultValue={today}
-                inputProps={{
-                name: 'days',
-                id: 'uncontrolled-native',
-                }}
-                onChange={selectDay}
-            >
-                <option value={1}>Monday</option>
-                <option value={2}>Tuesday</option>
-                <option value={3}>Wednesday</option>
-                <option value={4}>Thursday</option>
-                <option value={5}>Friday</option>
-                <option value={6}>Saturday</option>
-                <option value={0}>Sunday</option>
-            </NativeSelect>
-        </FormControl>
-    )
-}
-
 //<RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
 const RecipeInfo = (props) => {
     // State to store the recipes fetched from the database
     const [recipes, setRecipes] = useState([])
 
+     // State to store day fetched from the database
+     const [day, setDay] = useState(new Date().getDay())
+
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
     useEffect(() => {
         async function getRecipes(url) {
             try {
+                await axios.post(url, {
+                    day: day,
+                })
                 const response = await axios(url)
                 setRecipes(response.data)
             } catch (err) {
@@ -73,16 +34,20 @@ const RecipeInfo = (props) => {
             }
         }
         getRecipes(props.apiLink)
-    }, [props.apiLink])
-    // Only grab the first 3 recipes
-    //recipes = recipes.slice(0,3)
+    }, [day, props.apiLink])
+    
+    //setting day
+    useEffect(() => {
+        setDay(new Date().getDay())
+    }, [])
+    console.log(day)
 
     //TEMP WAY TO GET ACCOUNT INFO
     const [data, setData] = useState([])
     const userID = useParams()
   
     useEffect(() => {
-      // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0")
+      // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0") temporary use of second api, should be removed during database implement
       axios('https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0')
         .then(response => {
           // extract the data from the server response
@@ -136,7 +101,29 @@ const RecipeInfo = (props) => {
         <p>Budget Tracker</p>
         <Progress done={currSpent} budget={currBudget}/>
         </div>
-        <Form handlePost={handlePost}/>
+        <FormControl fullWidth>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                Day of the Week
+            </InputLabel>
+            <NativeSelect
+                defaultValue={day}
+                inputProps={{
+                name: 'days',
+                id: 'uncontrolled-native',
+                }}
+                onChange={(event) =>
+                    setDay(event.target.value)
+                }
+            >
+                <option value={1}>Monday</option>
+                <option value={2}>Tuesday</option>
+                <option value={3}>Wednesday</option>
+                <option value={4}>Thursday</option>
+                <option value={5}>Friday</option>
+                <option value={6}>Saturday</option>
+                <option value={0}>Sunday</option>
+            </NativeSelect>
+        </FormControl>
         <div className="meal-card">
             <div className="card-break">
                 <div className="meal-card-col1">
