@@ -95,7 +95,7 @@ app.get('/recipesearch', (req, res) => {
   async function getRecipes(recipesUrl, numRecipes, ingredientsUrl, fridgeUrl) {
     try {
       // Get the raw recipes data from the Spoonacular API
-      const recipeOptions = {
+      const options = {
         method: 'GET',
         url: recipesUrl,
         params: {number: numRecipes},
@@ -104,10 +104,10 @@ app.get('/recipesearch', (req, res) => {
           'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
         }
       };      
-      const recipeResponse = await axios(recipeOptions);
+      const response = await axios(options);
 
       // Box all the raw data into recipe objects
-      const recipes = await Promise.all(recipeResponse.data.recipes.map(async(recipe) => simplifyRecipe(recipe)));
+      const recipes = await Promise.all(response.data.recipes.map(async(recipe) => simplifyRecipe(recipe)));
       // TODO: database interaction here that gets the data of what's in the fridge
       // remove the second parameter of this async function once properly implemented
       const fridge = await axios(fridgeUrl);
@@ -122,15 +122,39 @@ app.get('/recipesearch', (req, res) => {
 
   // TODO 4/17:
   // Write helper functions for calling the endpoints we'll need:
-  // ingredient search
-  // get ingredient information
-  // get random recipes
-  // get recipe information
+  // ingredient search, for fridge and grocery list
+  // price breakdown, for recipe search
+  // get random recipes, for recipe search
+  // get recipe information, for saved recipes and meal plan
   // These helper functions should just take the params...everything else is reuseable across api calls
-  // Also: discussion about serving sizes (i.e. )
+  // Also: can just use the API's price calculation
+  // Also: servings should be 1
+  // Also: update the recipe recommendation feature so it uses the endpoint get recipe by ingredients and generates like 4 recs
 
   async function simplifyRecipe(recipe) {
-    const reducedIngredients = await getReducedIngredients(ingredientsUrl, recipe);
+    // Get information on this recipe's price and its ingredients
+    const options = {
+      method: 'GET',
+      url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipe.id}/priceBreakdownWidget.json`,
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+      }
+    };
+    const response = await axios(options);
+    const price = response.data.totalCostPerServing;
+    // TODO consider making all recipes only have 1 serving, by dividing ingredient amounts by # of servings
+
+    // const ingredients = getIngredients(ingredientsUrl, recipe);
+    const ingredients = response.data.ingredients.map((ing) => {
+      return {
+        ingredientName: ing.name,
+        amount: ing.amount.us.value / recipe.servings, // TODO some rounding may be needed here
+        units: ing.amount.us.unit,
+      }
+    });
+
+    // TODO update recipe details page to display the amount of ingredients along with the name, e.g. "1 cup of blueberries"
 
     const image = recipe.image ? recipe.image : "";
 
@@ -139,12 +163,14 @@ app.get('/recipesearch', (req, res) => {
       recipeName: recipe.title,
       image: image,
       instructions: recipe.instructions,
-      ingredients: reducedIngredients,
+      ingredients: ingredients,
+      price: price,
       saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
     }
   };
 
-  async function getReducedIngredients(ingredientsUrl, recipe) {
+  /*
+  async function getIngredients(ingredientsUrl, recipe) {
     return await Promise.all(recipe.extendedIngredients.map(async(ing) => {
       // Get the unit price for this ingredient
       const ingredientOptions = {
@@ -157,12 +183,13 @@ app.get('/recipesearch', (req, res) => {
         }
       };
       const ingResponse = await axios(ingredientOptions);
-      const ingredientPrice = Number((ingResponse.data.estimatedCost.value / 100.0).toFixed(2));
+      const ppu = Number((ingResponse.data.estimatedCost.value / 100.0).toFixed(2));
       return {
         id: ing.id,
         ingredientName: ing.name,
-        units: ing.amount,
-        ppu: ingredientPrice
+        units: ing.amount / recipe.servings, // All recipes should only make 1 serving... TODO might need some rounding here
+        _unit: ing.unitLong, // TODO change the variable names once the recipe display code is also updated
+        ppu: ppu,
       }
     }));
     
@@ -187,8 +214,9 @@ app.get('/recipesearch', (req, res) => {
       ppu: ingredientPrice
     }];
     // Testing block ends here
-    */
+    
   };
+  */
 
   const recipesUrl = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random';
   const numRecipes = '1';
