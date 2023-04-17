@@ -7,15 +7,6 @@ import {Modal, Box, List, ListItemText, Button, IconButton, Divider} from '@mui/
 import CloseIcon from '@mui/icons-material/Close';
 
 const RecipeCard = (props) => {
-    // Calculate the total price of this recipe, based on the ingredients
-    const totalPrice = props.recipeDetails.ingredients.reduce((price, curr) => {
-        // TODO testing here
-        console.log("ppu:", curr.ppu);
-        console.log("units:", curr.units);
-
-        return price + (curr.ppu * curr.units);
-    }, 0).toFixed(2);
-
     // Function to run when the star button is clicked on this recipe card
     let onClick;
     if (!props.recipeDetails.saved) { // Save a recipe
@@ -56,7 +47,7 @@ const RecipeCard = (props) => {
     const handleClose = () => setOpen(false);
     const ingredients = [];
     for (let i in props.recipeDetails.ingredients) {
-        ingredients.push(<li>{props.recipeDetails.ingredients[i].ingredientName}</li>);
+        ingredients.push(<li>{props.recipeDetails.ingredients[i].ingredientString}</li>);
     }
 
     // Return the final component, consisting of the recipe name, image, and the list of ingredients
@@ -102,7 +93,7 @@ const RecipeCard = (props) => {
                 </Box>
             </Modal>
             <h1 className="recipeName">{props.recipeDetails.recipeName}</h1>
-            <h2 className="totalPrice">${totalPrice}</h2>
+            <h2 className="totalPrice">${props.recipeDetails.price}</h2>
         </div>
     );
 }
