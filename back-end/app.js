@@ -90,94 +90,29 @@ app.get('/choosepage', (req, res) => {
 
 // GET route for recipe search page
 app.get('/recipesearch', (req, res) => {
-  async function getRecipes(recipesUrl, fridgeUrl) {
-    try {
-      // Get the raw recipes data from Mockaroo
-      const recipesRaw = await axios(recipesUrl);
-      // Box all the raw data into recipe objects
-      const recipes = recipesRaw.data.recipes.map((recipe) => {
-        return {
-          id: recipe.id,
-          recipeName: recipe.title,
-          image: recipe.image,
-          instructions: recipe.instructions,
-          ingredients: [{id: 1, ingredientName: 'sampleOne', units: 1.0, ppu: 2.99}, {id: 2, ingredientName: 'sampleTwo', units: 2.0, ppu: 3.49}],
-          saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
-        }
-      });
-      // TODO: database interaction here that gets the data of what's in the fridge
-      // remove the second parameter of this async function once properly implemented
-      const fridge = await axios(fridgeUrl);
-
-      res.json({ recipes: recipes, fridge: fridge.data });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  getRecipes(
-    'https://my.api.mockaroo.com/real_recipe.json?key=8198c2b0',
-    'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
-  );
-
-  /*
-  // Version using Spoonacular instead of Mockaroo (WARNING: runs out of requests really fast. Currently waiting on their reply to attempt to get
-  // educational access to the API, which would get us 5000 requests/day.)
-
   // NOTE: The .env file with the correct API_KEY is needed in the back-end directory for this code to work
   // Contact Charlotte if you don't have the file (it is not committed to GitHub because API key should be kept secret)
-  async function getRecipes(recipesUrl, fridgeUrl) {
+  async function getRecipes(recipesUrl, numRecipes, ingredientsUrl, fridgeUrl) {
     try {
       // Get the raw recipes data from the Spoonacular API
-      const recipesRaw = await axios(recipesUrl);
-      // Box all the raw data into recipe objects
-      const recipes = recipesRaw.data.recipes.map(async(recipe) => {
-        const reducedIngredients = await recipe.extendedIngredients.map(async(ing) => {
-          // Get the unit price for this ingredient
-          const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?apiKey=${process.env.API_KEY}&amount=1`);
-          const ingredientPrice = Number((ingData.data.estimatedCost.value / 100.0).toFixed(2));
-          console.log(ingredientPrice);
-          console.log(ing.amount);
-          return {
-            id: ing.id,
-            ingredientName: ing.name,
-            units: ing.amount,
-            ppu: ingredientPrice
-          }
-        })
-        
-
-        // TODO for testing purposes I will only grab one ingredient
-        const temp = recipe.extendedIngredients[0];
-        const tempArr = [temp];
-        const reducedIngredients = await tempArr.map(async(ing) => {
-          // Get the unit price for this ingredient
-          const ingData = await axios(`https://api.spoonacular.com/food/ingredients/${ing.id}/information?apiKey=${process.env.API_KEY}&amount=1`);
-          const ingredientPrice = Number((ingData.data.estimatedCost.value / 100.0).toFixed(2));
-          console.log(ingredientPrice);
-          console.log(ing.amount);
-          return {
-            id: ing.id,
-            ingredientName: ing.name,
-            units: ing.amount,
-            ppu: ingredientPrice
-          }
-        })
-
-
-        console.log(reducedIngredients);
-        return {
-          id: recipe.id,
-          recipeName: recipe.title,
-          image: recipe.image,
-          instructions: recipe.instructions,
-          ingredients: reducedIngredients,
-          saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
+      const recipeOptions = {
+        method: 'GET',
+        url: recipesUrl,
+        params: {number: numRecipes},
+        headers: {
+          'X-RapidAPI-Key': process.env.API_KEY,
+          'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
         }
-      });
+      };      
+      const recipeResponse = await axios(recipeOptions);
+
+      // Box all the raw data into recipe objects
+      const recipes = await Promise.all(recipeResponse.data.recipes.map(async(recipe) => simplifyRecipe(recipe)));
       // TODO: database interaction here that gets the data of what's in the fridge
       // remove the second parameter of this async function once properly implemented
       const fridge = await axios(fridgeUrl);
+
+      console.log(recipes);
 
       res.json({ recipes: recipes, fridge: fridge.data });
     } catch (err) {
@@ -185,13 +120,81 @@ app.get('/recipesearch', (req, res) => {
     }
   }
 
-  const recipesUrl = 'https://api.spoonacular.com/recipes/random';
-  const numRecipes = 1;
-  getRecipes(
-    `${recipesUrl}?apiKey=${process.env.API_KEY}&number=${numRecipes}`,
-    'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
-  );
-  */
+  // TODO 4/17:
+  // Write helper functions for calling the endpoints we'll need:
+  // ingredient search
+  // get ingredient information
+  // get random recipes
+  // get recipe information
+  // These helper functions should just take the params...everything else is reuseable across api calls
+  // Also: discussion about serving sizes (i.e. )
+
+  async function simplifyRecipe(recipe) {
+    const reducedIngredients = await getReducedIngredients(ingredientsUrl, recipe);
+
+    const image = recipe.image ? recipe.image : "";
+
+    return {
+      id: recipe.id,
+      recipeName: recipe.title,
+      image: image,
+      instructions: recipe.instructions,
+      ingredients: reducedIngredients,
+      saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
+    }
+  };
+
+  async function getReducedIngredients(ingredientsUrl, recipe) {
+    return await Promise.all(recipe.extendedIngredients.map(async(ing) => {
+      // Get the unit price for this ingredient
+      const ingredientOptions = {
+        method: 'GET',
+        url: ingredientsUrl,
+        params: {id: ing.id, amount: '1'},
+        headers: {
+          'X-RapidAPI-Key': process.env.API_KEY,
+          'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+        }
+      };
+      const ingResponse = await axios(ingredientOptions);
+      const ingredientPrice = Number((ingResponse.data.estimatedCost.value / 100.0).toFixed(2));
+      return {
+        id: ing.id,
+        ingredientName: ing.name,
+        units: ing.amount,
+        ppu: ingredientPrice
+      }
+    }));
+    
+    /*
+    // TODO for testing purposes, only fetch 1 of the ingredients
+    const ing = recipe.extendedIngredients[0]; // TODO
+    const ingredientOptions = {
+      method: 'GET',
+      url: ingredientsUrl,
+      params: {id: ing.id, amount: '1'},
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+      }
+    };
+    const ingResponse = await axios(ingredientOptions);
+    const ingredientPrice = Number((ingResponse.data.estimatedCost.value / 100.0).toFixed(2));
+    return [{
+      id: ing.id,
+      ingredientName: ing.name,
+      units: ing.amount,
+      ppu: ingredientPrice
+    }];
+    // Testing block ends here
+    */
+  };
+
+  const recipesUrl = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random';
+  const numRecipes = '1';
+  const ingredientsUrl = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/9266/information';
+
+  getRecipes(recipesUrl, numRecipes, ingredientsUrl, 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
 });
 
 // POST route for recipe search page
