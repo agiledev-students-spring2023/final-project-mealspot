@@ -42,7 +42,6 @@ async function simplifyRecipe(recipe) {
   const response = await axios(options);
   const price = Number(response.data.totalCostPerServing / 100).toFixed(2);
 
-  /*
   const ingredients = response.data.ingredients.map((ing) => {
     const name = ing.name;
     let amount = ing.amount.us.value / recipe.servings;
@@ -54,7 +53,8 @@ async function simplifyRecipe(recipe) {
       ingredientString: `${amount} ${units} ${name}`,
     }
   });
-  */
+  
+  /*
   // TODO for testing purposes, only do one ingredient
   const ing = response.data.ingredients[0];
   const name = ing.name;
@@ -68,8 +68,8 @@ async function simplifyRecipe(recipe) {
       ingredientString: `${amount} ${units} ${name}`,
     }
   ]
+  */
   
-  // TODO update recipe details page to display the amount of ingredients along with the name, e.g. "1 cup of blueberries" (!!!!!!!!!!!!!!!!!!!!!!!)
   const image = recipe.image ? recipe.image : "";
 
   return {
@@ -97,10 +97,6 @@ function countDecimals(num) {
 // ingredient search, for fridge and grocery list
 // get recipe information, for saved recipes and meal plan
 // get recipe by ingredients, for saved recipes and recipe search
-
-// update the recipe recommendation feature so it uses the endpoint and generates like 4 recs, then send the rec and not rec as a payload
-// This should significantly simplify the front end as well...sadly will probably delete my four hours' worth of front-end code...
-// At least the code will be simpler in the end.
 
 module.exports = {
   getRandomRecipes: getRandomRecipes,
