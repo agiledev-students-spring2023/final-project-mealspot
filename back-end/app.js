@@ -96,6 +96,7 @@ app.get('/recipesearch', (req, res) => {
   async function getRecipes(numRecipes, fridgeUrl) {
     try {
       const recipes = await apiCall.getRandomRecipes(numRecipes);
+      console.log(recipes);
       // TODO: database interaction here that gets the data of what's in the fridge
       // remove the second parameter of this async function once properly implemented
       const fridge = await axios(fridgeUrl);

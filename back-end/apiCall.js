@@ -40,19 +40,36 @@ async function simplifyRecipe(recipe) {
     }
   };
   const response = await axios(options);
-  const price = response.data.totalCostPerServing;
+  const price = Number(response.data.totalCostPerServing / 100).toFixed(2);
 
-  // const ingredients = getIngredients(ingredientsUrl, recipe);
+  /*
   const ingredients = response.data.ingredients.map((ing) => {
+    const name = ing.name;
+    let amount = ing.amount.us.value / recipe.servings;
+    if (countDecimals(amount) >= 2) {
+      amount = Number(ing.amount.us.value / recipe.servings).toFixed(2);
+    }
+    const units = ing.amount.us.unit;
     return {
-      ingredientName: ing.name,
-      amount: ing.amount.us.value / recipe.servings, // TODO some rounding may be needed here
-      units: ing.amount.us.unit,
+      ingredientString: `${amount} ${units} ${name}`,
     }
   });
-
+  */
+  // TODO for testing purposes, only do one ingredient
+  const ing = response.data.ingredients[0];
+  const name = ing.name;
+  let amount = ing.amount.us.value / recipe.servings;
+  if (countDecimals(amount) >= 2) {
+    amount = Number(ing.amount.us.value / recipe.servings).toFixed(2);
+  }
+  const units = ing.amount.us.unit;
+  const ingredients = [
+    {
+      ingredientString: `${amount} ${units} ${name}`,
+    }
+  ]
+  
   // TODO update recipe details page to display the amount of ingredients along with the name, e.g. "1 cup of blueberries" (!!!!!!!!!!!!!!!!!!!!!!!)
-
   const image = recipe.image ? recipe.image : "";
 
   return {
@@ -61,10 +78,20 @@ async function simplifyRecipe(recipe) {
     image: image,
     instructions: recipe.instructions,
     ingredients: ingredients,
-    price: price, // TODO: change Recipe Card to use the price field instead of calculating it itself. (!!!!!!!!!!!!!!!!!!!!!!)
+    price: price,
     saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
   }
 };
+
+// Helper function for ingredient amounts
+// Code attribution: Nikhilesh Aleti, https://www.tutorialspoint.com/decimal-count-of-a-number-in-javascript
+function countDecimals(num) {
+  const str = num.toString();
+  if (str.includes('.')) {
+     return str.split('.')[1].length;
+  };
+  return 0;
+}
 
 // TODO: write functions for...
 // ingredient search, for fridge and grocery list
