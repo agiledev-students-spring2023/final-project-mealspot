@@ -3,6 +3,9 @@ const express = require('express');
 
 const app = express();
 
+// Import helper functions for calling the recipe/ingredients API
+const apiCall = require('./apiCall.js');
+
 // Middleware imports
 require('dotenv').config({ silent: true }); // load environmental variables from a hidden file named .env
 const multer = require('multer'); // middleware to handle HTTP POST requests with file uploads
@@ -90,29 +93,12 @@ app.get('/choosepage', (req, res) => {
 
 // GET route for recipe search page
 app.get('/recipesearch', (req, res) => {
-  // NOTE: The .env file with the correct API_KEY is needed in the back-end directory for this code to work
-  // Contact Charlotte if you don't have the file (it is not committed to GitHub because API key should be kept secret)
-  async function getRecipes(recipesUrl, numRecipes, ingredientsUrl, fridgeUrl) {
+  async function getRecipes(numRecipes, fridgeUrl) {
     try {
-      // Get the raw recipes data from the Spoonacular API
-      const options = {
-        method: 'GET',
-        url: recipesUrl,
-        params: {number: numRecipes},
-        headers: {
-          'X-RapidAPI-Key': process.env.API_KEY,
-          'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-        }
-      };      
-      const response = await axios(options);
-
-      // Box all the raw data into recipe objects
-      const recipes = await Promise.all(response.data.recipes.map(async(recipe) => simplifyRecipe(recipe)));
+      const recipes = await apiCall.getRandomRecipes(numRecipes);
       // TODO: database interaction here that gets the data of what's in the fridge
       // remove the second parameter of this async function once properly implemented
       const fridge = await axios(fridgeUrl);
-
-      console.log(recipes);
 
       res.json({ recipes: recipes, fridge: fridge.data });
     } catch (err) {
@@ -120,109 +106,8 @@ app.get('/recipesearch', (req, res) => {
     }
   }
 
-  // TODO 4/17:
-  // Write helper functions for calling the endpoints we'll need:
-  // ingredient search, for fridge and grocery list
-  // price breakdown, for recipe search
-  // get random recipes, for recipe search
-  // get recipe information, for saved recipes and meal plan
-  // These helper functions should just take the params...everything else is reuseable across api calls
-  // Also: can just use the API's price calculation
-  // Also: servings should be 1
-  // Also: update the recipe recommendation feature so it uses the endpoint get recipe by ingredients and generates like 4 recs
-
-  async function simplifyRecipe(recipe) {
-    // Get information on this recipe's price and its ingredients
-    const options = {
-      method: 'GET',
-      url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipe.id}/priceBreakdownWidget.json`,
-      headers: {
-        'X-RapidAPI-Key': process.env.API_KEY,
-        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-      }
-    };
-    const response = await axios(options);
-    const price = response.data.totalCostPerServing;
-    // TODO consider making all recipes only have 1 serving, by dividing ingredient amounts by # of servings
-
-    // const ingredients = getIngredients(ingredientsUrl, recipe);
-    const ingredients = response.data.ingredients.map((ing) => {
-      return {
-        ingredientName: ing.name,
-        amount: ing.amount.us.value / recipe.servings, // TODO some rounding may be needed here
-        units: ing.amount.us.unit,
-      }
-    });
-
-    // TODO update recipe details page to display the amount of ingredients along with the name, e.g. "1 cup of blueberries"
-
-    const image = recipe.image ? recipe.image : "";
-
-    return {
-      id: recipe.id,
-      recipeName: recipe.title,
-      image: image,
-      instructions: recipe.instructions,
-      ingredients: ingredients,
-      price: price,
-      saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
-    }
-  };
-
-  /*
-  async function getIngredients(ingredientsUrl, recipe) {
-    return await Promise.all(recipe.extendedIngredients.map(async(ing) => {
-      // Get the unit price for this ingredient
-      const ingredientOptions = {
-        method: 'GET',
-        url: ingredientsUrl,
-        params: {id: ing.id, amount: '1'},
-        headers: {
-          'X-RapidAPI-Key': process.env.API_KEY,
-          'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-        }
-      };
-      const ingResponse = await axios(ingredientOptions);
-      const ppu = Number((ingResponse.data.estimatedCost.value / 100.0).toFixed(2));
-      return {
-        id: ing.id,
-        ingredientName: ing.name,
-        units: ing.amount / recipe.servings, // All recipes should only make 1 serving... TODO might need some rounding here
-        _unit: ing.unitLong, // TODO change the variable names once the recipe display code is also updated
-        ppu: ppu,
-      }
-    }));
-    
-    /*
-    // TODO for testing purposes, only fetch 1 of the ingredients
-    const ing = recipe.extendedIngredients[0]; // TODO
-    const ingredientOptions = {
-      method: 'GET',
-      url: ingredientsUrl,
-      params: {id: ing.id, amount: '1'},
-      headers: {
-        'X-RapidAPI-Key': process.env.API_KEY,
-        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-      }
-    };
-    const ingResponse = await axios(ingredientOptions);
-    const ingredientPrice = Number((ingResponse.data.estimatedCost.value / 100.0).toFixed(2));
-    return [{
-      id: ing.id,
-      ingredientName: ing.name,
-      units: ing.amount,
-      ppu: ingredientPrice
-    }];
-    // Testing block ends here
-    
-  };
-  */
-
-  const recipesUrl = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random';
   const numRecipes = '1';
-  const ingredientsUrl = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/9266/information';
-
-  getRecipes(recipesUrl, numRecipes, ingredientsUrl, 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
+  getRecipes(numRecipes, 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
 });
 
 // POST route for recipe search page
