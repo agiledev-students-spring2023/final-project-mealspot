@@ -3,6 +3,9 @@ const express = require('express');
 
 const app = express();
 
+// Import helper functions for calling the recipe/ingredients API
+const apiCall = require('./apiCall.js');
+
 // Import Mongoose models for MongoDB data manipulation
 const mongoose = require("mongoose");
 const User = require("./models/User.js");
@@ -96,21 +99,10 @@ app.get('/choosepage', (req, res) => {
 
 // GET route for recipe search page
 app.get('/recipesearch', (req, res) => {
-  async function getRecipes(recipesUrl, fridgeUrl) {
+  async function getRecipes(numRecipes, fridgeUrl) {
     try {
-      // Get the raw recipes data from Mockaroo
-      const recipesRaw = await axios(recipesUrl);
-      // Box all the raw data into recipe objects
-      const recipes = recipesRaw.data.recipes.map((recipe) => {
-        return {
-          id: recipe.id,
-          recipeName: recipe.title,
-          image: recipe.image,
-          instructions: recipe.instructions,
-          ingredients: [{id: 1, ingredientName: 'sampleOne', units: 1.0, ppu: 2.99}, {id: 2, ingredientName: 'sampleTwo', units: 2.0, ppu: 3.49}],
-          saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
-        }
-      });
+      const recipes = await apiCall.getRandomRecipes(numRecipes);
+      console.log(recipes);
       // TODO: database interaction here that gets the data of what's in the fridge
       // remove the second parameter of this async function once properly implemented
       const fridge = await axios(fridgeUrl);
@@ -121,10 +113,8 @@ app.get('/recipesearch', (req, res) => {
     }
   }
 
-  getRecipes(
-    'https://my.api.mockaroo.com/real_recipe.json?key=8198c2b0',
-    'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
-  );
+  const numRecipes = '1';
+  getRecipes(numRecipes, 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
 });
 
 // POST route for recipe search page
