@@ -28,7 +28,7 @@ async function getRandomRecipes(numRecipes) {
   }
 }
 
-// Helper function that gets only the necessary information for displaying a recipe on the recipe search page
+// Helper function that gets only the necessary information for displaying a recipe in our app, e.g. on the recipe search, saved recipes, or meal plan page
 async function simplifyRecipe(recipe) {
   // Get information on this recipe's price and its ingredients
   const options = {
@@ -93,11 +93,141 @@ function countDecimals(num) {
   return 0;
 }
 
-// TODO: write functions for...
-// ingredient search, for fridge and grocery list
-// get recipe information, for saved recipes and meal plan
-// get recipe by ingredients, for saved recipes and recipe search
+// Find an ingredient by a search query, returns the ID of the cheapest matching ingredient, or -1 if this ingredient is not recognized
+// To be used for the fridge POST and grocery list POST
+async function searchIngredientsByName(ingredientName) {
+  try {
+    const options = {
+      method: 'GET',
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/search',
+      params: {
+        query: ingredientName,
+        sort: 'price',
+        sortDirection: 'asc',
+        number: '1',
+      },
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+      }
+    };
+    
+    const response = await axios(options);
+
+    if (response.data.results.length === 0) { // Ingredient not recognized - no results for this query
+      return -1;
+    } else { // Ingredient recognized - 1 result for this query
+      return response.data.results[0].id;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// Takes the ID number and quantity of an ingredient
+// Returns the corresponding ingredient's name and the price for the given quantity (in dollars)
+// If the ID doesn't correspond to any ingredient, returns an object that has status failure
+// To be used for fridge GET and grocery list GET
+async function getIngredientByID(ingredientID, quantity) {
+  try {
+    const options = {
+      method: 'GET',
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/9266/information',
+      params: {amount: quantity},
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+      }
+    };
+
+    const response = await axios(options);
+
+    if (response.status === 'failure' && response.code === 404) { // Given ID doesn't have a corresponding ingredient
+      return {
+        status: 'failure',
+      }
+    } else { // Found the corresponding ingredient
+      return {
+        ingredientName: response.data.name,
+        price: Number(response.data.estimatedCost.value / 100).toFixed(2),
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// Takes the ID number of a recipe
+// Returns the corresponding recipe's information
+// If the ID doesn't correspond to any recipe, returns an object that has status failure
+// To be used for saved recipes GET and meal plan GET
+async function getRecipeByID(recipeID) {
+  try {
+    const options = {
+      method: 'GET',
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/479101/information',
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+      }
+    };
+
+    const response = await axios(options);
+
+    if (response.status === 'failure' && response.code === 404) { // Given ID doesn't have a corresponding recipe
+      return {
+        status: 'failure',
+      }
+    } else { // Found the corresponding recipe - simplify it to just the info that we need, and return it
+      return simplifyRecipe(response.data);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// Takes an array of strings - each string is a query string for an ingredient name
+// Returns at most 4 recipes that use those ingredients (empty array if no matching recipes were found)
+// To be used for recommendation feature in saved recipes GET and recipe search GET
+async function getRecipeByIngredients(ingredients) {
+  try {
+    const commaSep = ingredients.reduce((accum, curr) => {
+      return accum + curr + ',';
+    }, '');
+
+    const options = {
+      method: 'GET',
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
+      params: {
+        ingredients: commaSep,
+        number: '4',
+        ignorePantry: 'true',
+        ranking: '1'
+      },
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+      }
+    };
+    
+    // The data returned by the API here is an array of recipes
+    const response = await axios(options);
+
+    // Map that array into an array of those recipes, but simplified to just the info we need
+    const recipes = response.data.map((recipe) => {
+      simplifyRecipe(recipe);
+    });
+
+    return recipes;
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 module.exports = {
   getRandomRecipes: getRandomRecipes,
+  searchIngredientsByName: searchIngredientsByName,
+  getIngredientByID: getIngredientByID,
+  getRecipeByID: getRecipeByID,
+  getRecipeByIngredients: getRecipeByIngredients,
 }
