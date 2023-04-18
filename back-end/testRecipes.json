@@ -4,13 +4,13 @@
     "image":"http://dummyimage.com/100x100.png/dddddd/000000",
     "saved":true,
     "ingredients":[
-        {"ingredientName":"Flour","ppu":4.18,"units":5},
-        {"ingredientName":"Cocoa","ppu":3.69,"units":5},
-        {"ingredientName":"Sugar","ppu":2.68,"units":3},
-        {"ingredientName":"Eggs","ppu":3.67,"units":2}
+        {"ingredientString":"1 cup flour", "ingredientName": "Flour"},
+        {"ingredientString":"0.5 cup cocoa", "ingredientName": "Cocoa"},
+        {"ingredientString":"1 cup sugar", "ingredientName": "Sugar"},
+        {"ingredientString":"2 eggs", "ingredientName": "Eggs"}
     ],
     "instructions":"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.",
-    "bigImage":"http://dummyimage.com/400x400.png/dddddd/000000"
+    "price": 5.43
 },
 {
     "id":2,
@@ -18,12 +18,12 @@
     "image":"http://dummyimage.com/100x100.png/ff4444/ffffff",
     "saved":true,
     "ingredients":[
-        {"ingredientName":"Tortilla","ppu":9.12,"units":4},
-        {"ingredientName":"Beef","ppu":5.46,"units":3},
-        {"ingredientName":"Cheese","ppu":2.75,"units":1}
+        {"ingredientString":"1 tortilla", "ingredientName": "Tortilla"},
+        {"ingredientString":"0.25 pound beef", "ingredientName": "Beef"},
+        {"ingredientString":"0.5 cup cheese", "ingredientName": "Cheese"}
     ],
     "instructions":"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",
-    "bigImage":"http://dummyimage.com/400x400.png/ff4444/ffffff"
+    "price": 3.22
 },
 {
     "id":3,
@@ -31,11 +31,11 @@
     "image":"http://dummyimage.com/100x100.png/cc0000/ffffff",
     "saved":true,
     "ingredients":[
-        {"ingredientName":"Tortilla","ppu":9.12,"units":4},
-        {"ingredientName":"Chicken","ppu":8.34,"units":5},
-        {"ingredientName":"Rice","ppu":1.29,"units":2}
+        {"ingredientString":"1 tortilla", "ingredientName": "Tortilla"},
+        {"ingredientString":"0.25 pound chicken", "ingredientName": "Chicken"},
+        {"ingredientString":"1 cup rice", "ingredientName": "Rice"}
     ],
     "instructions":"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.",
-    "bigImage":"http://dummyimage.com/400x400.png/cc0000/ffffff"
+    "price": 4.19
 }
 ]
