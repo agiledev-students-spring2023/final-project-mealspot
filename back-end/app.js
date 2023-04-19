@@ -113,7 +113,7 @@ app.get('/recipesearch', (req, res) => {
     }
   }
 
-  const numRecipes = '1';
+  const numRecipes = '6';
   getRecipes(numRecipes, 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
 });
 
