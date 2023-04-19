@@ -66,10 +66,12 @@ const RecipeInfo = (props) => {
     {
         return null
     }
+    //temp comment out for out of mockaroo req
+    /*
     if(typeof data !== 'undefined' && data.length === 0)
     {
         return null
-    }
+    }*/
     const listIngMorn = Object.values(recipes[0].ingredients).map((ingredient) => (
         <li key={ingredient.ingredientName}>{ingredient.ingredientName}</li>
     ))
@@ -91,7 +93,8 @@ const RecipeInfo = (props) => {
         return price + (curr.ppu * curr.units)
     }, 0).toFixed(2)
     currSpent = (parseFloat(totalPMorn) + parseFloat(totalPAft) + parseFloat(totalPEve)).toFixed(2)
-    currBudget = parseFloat(data.weekly_budget.slice(1))
+    //temp comment out for out of mockaroo req
+    currBudget = 100//parseFloat(data.weekly_budget.slice(1))
     console.log(currSpent)
     console.log(currBudget)
 
