@@ -73,9 +73,9 @@ const Account = (props) => {
         </div>
         {<div className='account'>
             <div>
-                <p className="profileAttribute">Name: {firstName} {lastName}</p>
-                <p className="profileAttribute">Email: {email}</p>
-                {currentBudget === 0 ? <p className="profileAttribute">Weekly Budget: ${currentBudget}</p> : <p className="profileAttribute">Weekly Budget: {currentBudget}</p>}
+                <p className="profileAttribute">Name: Bob Smith</p>
+                <p className="profileAttribute">Email: bob.smith@gmail.com</p>
+                {currentBudget === 0 ? <p className="profileAttribute">Weekly Budget: $37.65</p> : <p className="profileAttribute">Weekly Budget: {currentBudget}</p>}
                 <Button sx={border} variant="outlined" onClick={handleOpen}>Edit Budget</Button>
                 <Modal
                 open={open}
