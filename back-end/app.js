@@ -29,6 +29,16 @@ app.use(cors());
 app.use(express.json()); // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })); // decode url-encoded incoming POST data
 
+const mongooseOpts = {
+  useNewUrlParser: true,  
+  useUnifiedTopology: true
+};
+
+mongoose.connect(process.env.URI, mongooseOpts)
+.then(() => console.log("Connected Successfully!"))
+.catch((err) => console.log(err));
+
+
 // GET route for recipe homepage
 app.get('/', (req, res) => {
   async function getRecipes(url) {
@@ -268,15 +278,6 @@ app.post('/mygrocerylist', (req, res) => {
   // Will be implemented with database in sprint 3
   res.send(req.body);
 });
-
-const mongooseOpts = {
-  useNewUrlParser: true,  
-  useUnifiedTopology: true
-};
-
-mongoose.connect(process.env.URI, mongooseOpts)
-.then(() => console.log("Connected Successfully!"))
-.catch((err) => console.log(err));
 
 // Export the express app
 module.exports = app;
