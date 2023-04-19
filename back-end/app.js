@@ -269,5 +269,14 @@ app.post('/mygrocerylist', (req, res) => {
   res.send(req.body);
 });
 
+const mongooseOpts = {
+  useNewUrlParser: true,  
+  useUnifiedTopology: true
+};
+
+mongoose.connect(process.env.URI, mongooseOpts)
+.then(() => console.log("Connected Successfully!"))
+.catch((err) => console.log(err));
+
 // Export the express app
 module.exports = app;
