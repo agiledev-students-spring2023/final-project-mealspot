@@ -27,15 +27,23 @@ Mealspot was built by college students to deal with one of their primary issues 
 
 Ensure dependencies are installed for both the front-end and back-end: via `npm install`
 
-To run the front-end server from the front-end directory: `npm start`
+To run the front-end server from the front-end directory: 
+    1. Navigate to the front end directory via `cd front-end`
+    2. Run `npm start` to launch the React.js server
 
-To run the back-end server from the back-end directory: `npm start`
+To run the back-end server from the back-end directory: 
+    1. Navigate to the back end directory via `cd back-end`
+    2. Run `npm start` to launch the back-end server
 
 To run unit tests for the back-end: `npm test`
 
 ## Relevant Reading
 
-todo
+- [React.js](https://reactjs.org) for front-end
+- [Express.js](http://express.js.com) for back-end
+- [mongoose](https://mongoosejs.com) to connect to the MongoDB database
+- [Material UI](https://mui.com/material-ui/getting-started/overview/) overview
+- [Spoonacular API](https://rapidapi.com/spoonacular/api/recipe-food-nutrition/) for recipes and ingredients
 
 This repository will be used for team projects.
 
