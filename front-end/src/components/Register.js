@@ -1,6 +1,13 @@
 import { TextField, Box, Button } from '@mui/material'
 import axios from 'axios'
 
+const border = {
+    border: 1.4,
+    marginLeft: '30%',
+    marginRight: '30%',
+    marginBottom: '2vh'
+  }
+
 const handleSubmit = (event) => {
     event.preventDefault()
     const data = new FormData(event.target)
@@ -45,11 +52,21 @@ const Register = () => {
                     label="Password"
                     name="password"
                 ></TextField><br/>
-                <Button
-                    variant="contained"
+                <br/>
+                <br/>
+                <Button sx={border}
+                    variant="outlined"
                     type="submit"
                 >
                     Register
+                </Button>
+                <br/>
+                <br/>
+                <Button sx={border}
+                    variant="outlined"
+                    href="/login"
+                >
+                    Login
                 </Button>
             </Box>
         </div>

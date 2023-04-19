@@ -34,3 +34,7 @@
     text-decoration: underline;
     text-align: center;
 }
+
+.profileAttribute {
+    word-wrap: break-word;
+}
