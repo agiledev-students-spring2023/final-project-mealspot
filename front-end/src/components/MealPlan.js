@@ -94,7 +94,7 @@ const RecipeInfo = (props) => {
     }, 0).toFixed(2)
     currSpent = (parseFloat(totalPMorn) + parseFloat(totalPAft) + parseFloat(totalPEve)).toFixed(2)
     //temp comment out for out of mockaroo req
-    currBudget = 100//parseFloat(data.weekly_budget.slice(1))
+    currBudget = 200//parseFloat(data.weekly_budget.slice(1))
     console.log(currSpent)
     console.log(currBudget)
 
