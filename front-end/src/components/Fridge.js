@@ -18,7 +18,7 @@ const boxStyle = {
   };
 
   const border = {
-    border: 1,
+    border: 1.4,
     marginLeft: '30%',
     marginRight: '30%',
     marginBottom: '2vh'
@@ -60,8 +60,7 @@ const Fridge = () => {
     return (
         <div className="myFridgeDiv">
             <h1>My Fridge</h1>
-            {myFridge.length === 0 && <h3>You currently have no items in your fridge.</h3>}
-            {myFridge.length > 0 && <div className="myFridgeHeader"><p className="myFridgeName">Item:</p><p className="myFridgeQuantity">Quantity: </p></div>}
+            {myFridge.length === 0 ? <h3>You currently have no items in your fridge.</h3> : <div className="myFridgeHeader"><p className="myFridgeName">Item:</p><p className="myFridgeQuantity">Quantity: </p></div>}
             {myFridge.map(item => (
             <FridgeItem
               key={item.id}
@@ -71,7 +70,7 @@ const Fridge = () => {
             />
           ))}
            <br/>
-            <Button sx={border} onClick={handleOpen}>Add Item</Button>
+            <Button sx={border} variant="outlined" onClick={handleOpen}>Add Item</Button>
             <Modal
             open={open}
             onClose={handleClose}
@@ -87,7 +86,7 @@ const Fridge = () => {
                 <br/>
                 <TextField required id="outlined-basic" label="Quantity" placeholder="Enter Quantity" onChange={handleChange} name="quantity" value={inputs.quantity} variant="outlined" />
                 <br/>
-                <Button sx={border} type="submit">Submit</Button>
+                <Button sx={border} variant="outlined" type="submit">Submit</Button>
                 </FormControl>
                 </form>
             </Box>

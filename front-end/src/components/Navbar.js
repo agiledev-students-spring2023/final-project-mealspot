@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { AiOutlineHome, AiOutlineSearch, AiOutlineStar } from "react-icons/ai";
 import { BiFridge } from "react-icons/bi";
@@ -7,6 +7,11 @@ import { HiOutlineClipboardList } from "react-icons/hi";
 import './Navbar.css';
 
 const Navbar = () => {
+  let location = useLocation();
+  if(location.pathname === "/login" || location.pathname === "/register"){
+    return null;
+  }
+  else{
   return (
     <div className="navbar blueBackground">
       <Link to="/" className="link">
@@ -51,6 +56,7 @@ const Navbar = () => {
       </Link>
     </div>
   );
+  }
 }
 
 export default Navbar;

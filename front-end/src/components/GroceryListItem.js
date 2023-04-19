@@ -3,7 +3,7 @@ import {Button} from '@mui/material';
 import './GroceryListItem.css';
 
 const buttonStyle = {
-  border: 1,
+  border: 1.4,
   height: 30,
   marginTop: '18px',
   left: '75%'
@@ -23,7 +23,7 @@ function GroceryListItem({id, name, quantity}){
         <div className="groceryListItemDiv">
             <p className="groceryListItemName">{name}</p>
             <p className="groceryListItemQuantity">{quantity}</p>
-            <Button sx={buttonStyle} onClick={removeFromCart}>Remove</Button>
+            <Button sx={buttonStyle} variant="outlined" onClick={removeFromCart}>Remove</Button>
         </div>
     );
 }

@@ -1,8 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import axios from 'axios';
+import { Button, InputLabel, FormControl, Box, Typography, Modal, InputAdornment, OutlinedInput} from '@mui/material';
 import './Account.css';
 
+const boxStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  textAlign: 'center',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+const border = {
+  border: 1.4,
+  marginLeft: '30%',
+  marginRight: '30%',
+  marginBottom: '2vh'
+}
 
 const Account = (props) => {
     const [firstName, setFirstName] = useState('')
@@ -11,6 +31,10 @@ const Account = (props) => {
     const [newBudget, setNewBudget] = useState(0.0)
     const [currentBudget, setCurrentBudget] = useState(0.0)
     const userID = useParams()
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    
   
     useEffect(() => {
       axios(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`)
@@ -39,6 +63,7 @@ const Account = (props) => {
       } catch(err) {
         console.log(err)
       }
+      handleClose()
     }  
 
     return (
@@ -46,28 +71,42 @@ const Account = (props) => {
         <div className='profilepic'>
             <p>Profile Picture</p>
         </div>
-        
         {<div className='account'>
             <div>
-                <p>Name: {firstName} {lastName}</p>
-                <p>Email: {email}</p>
-                <p>Weekly budget: {currentBudget}</p>
+                <p className="profileAttribute">Name: Bob Smith</p>
+                <p className="profileAttribute">Email: bob.smith@gmail.com</p>
+                {currentBudget === 0 ? <p className="profileAttribute">Weekly Budget: $37.65</p> : <p className="profileAttribute">Weekly Budget: {currentBudget}</p>}
+                <Button sx={border} variant="outlined" onClick={handleOpen}>Edit Budget</Button>
+                <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                >
+                <Box sx={boxStyle}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">Enter New Budget</Typography>
+                <br/>
+                <form onSubmit={submitForm}>
+                <FormControl>
+                <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+                <OutlinedInput
+                  required
+                  id="outlined-adornment-amount"
+                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                  label="Amount"
+                  onChange={e => setNewBudget(e.target.value)}
+                />
+                <br/>
+                <Button sx={border} variant="outlined" type="submit">Submit</Button>
+                </FormControl>
+                </form>
+                </Box> 
+                </Modal>
             </div>
-            <form className="budgetForm" onSubmit={submitForm}>
-              <input
-                type="number"
-                step="0.01"
-                placeholder="Edit budget..."
-                value={newBudget}
-                onChange={e => setNewBudget(e.target.value)}
-              />
-              <input type="submit" disabled={!newBudget} value="Save" />
-            </form>
         </div>}
-        <button>
-            Logout
-        </button>
-      </div> 
+        <br/><br/>
+          <Button sx={border} variant="outlined" href="/login">Logout</Button>
+        </div> 
     )
   }
 

@@ -18,7 +18,7 @@ const boxStyle = {
   };
 
 const border = {
-    border: 1,
+    border: 1.4,
     marginLeft: '30%',
     marginRight: '30%',
     marginBottom: '2vh'
@@ -62,8 +62,7 @@ const GroceryList = () => {
     return (
         <div className="groceryListDiv">
             <h1>My Grocery List</h1>
-            {groceryList.length === 0 && <h3>You currently have no items in your grocery list.</h3>}
-            {groceryList.length > 0 && <div className="groceryListHeader"><p className="groceryListName">Item:</p><p className="groceryListQuantity">Quantity: </p></div>}
+            {groceryList.length === 0 ? <h3>You currently have no items in your grocery list.</h3> : <div className="groceryListHeader"><p className="groceryListName">Item:</p><p className="groceryListQuantity">Quantity: </p></div>}
             {groceryList.map(item => (
             <GroceryListItem
               key={item.id}
@@ -73,7 +72,7 @@ const GroceryList = () => {
             />
           ))}
            <br/>
-            <Button sx={border} onClick={handleOpen}>Add Item</Button>
+            <Button sx={border} variant="outlined" onClick={handleOpen}>Add Item</Button>
             <Modal
             open={open}
             onClose={handleClose}
@@ -89,7 +88,7 @@ const GroceryList = () => {
                 <br/>
                 <TextField required id="outlined-basic" label="Quantity" placeholder="Enter Quantity" onChange={handleChange} name="quantity" value={inputs.quantity} variant="outlined" />
                 <br/>
-                <Button sx={border} type="submit">Submit</Button>
+                <Button sx={border} variant="outlined" type="submit">Submit</Button>
                 </FormControl>
                 </form>
             </Box>

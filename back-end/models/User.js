@@ -38,6 +38,10 @@ const UserSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Ingredient',
   }],
+  groceryList: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ingredient',
+  }],
 })
 
 // hash the password before the user is saved
