@@ -28,12 +28,12 @@ Mealspot was built by college students to deal with one of their primary issues 
 Ensure dependencies are installed for both the front-end and back-end: via `npm install`
 
 To run the front-end server from the front-end directory: 
-    1. Navigate to the front end directory via `cd front-end`
-    2. Run `npm start` to launch the React.js server
+1. Navigate to the front end directory via `cd front-end`
+2. Run `npm start` to launch the React.js server
 
 To run the back-end server from the back-end directory: 
-    1. Navigate to the back end directory via `cd back-end`
-    2. Run `npm start` to launch the back-end server
+1. Navigate to the back end directory via `cd back-end`
+2. Run `npm start` to launch the back-end server
 
 To run unit tests for the back-end: `npm test`
 
