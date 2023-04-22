@@ -51,6 +51,10 @@ app.get('/', (req, res) => {
   }
 
   getRecipes('https://my.api.mockaroo.com/recipe.json?key=cf37bb40');
+  /*
+  const budget = req.user.weeklyBudget;
+  res.json({budget: budget});
+  */
 });
 
 // POST route for recipe homepage days of the week form
