@@ -14,6 +14,9 @@ const RecipeDisplay = (props) => {
     // State to store all the non-recommended recipes fetched from the database
     const [otherRecipes, setOtherRecipes] = useState([]);
 
+    // State to store recipes that come up as search results
+    const [searchResults, setSearchResults] = useState([]);
+
     // State to store card version of recommended recipes
     const [recRecipeCards, setRecRecipeCards] = useState([]);
 
@@ -25,8 +28,15 @@ const RecipeDisplay = (props) => {
         async function getRecipes(url) {
             try {
                 const response = await axios(url);
-                setRecRecipes(response.data.recRecipes);
-                setOtherRecipes(response.data.otherRecipes);
+                // Search results version of the page, after user uses search bar
+                if (response.data.searchResults) {
+                    setSearchResults(response.data.searchResults);
+                }
+                // Default version of the page, before user uses search bar
+                else {
+                    setRecRecipes(response.data.recRecipes);
+                    setOtherRecipes(response.data.otherRecipes);
+                }
             } catch (err) {
                 console.log(err);
             }
@@ -46,8 +56,8 @@ const RecipeDisplay = (props) => {
     }, [recRecipes, otherRecipes, props.route]);
 
     // Search bar functionality
-    // Citation - code is based off this tutorial by Marianna: https://dev.to/mar1anna/create-a-search-bar-with-react-and-material-ui-4he
-    const filterRecipes = (query, recRecipeCards, otherRecipeCards) => {
+    // Citation - code is partially based off this tutorial by Marianna: https://dev.to/mar1anna/create-a-search-bar-with-react-and-material-ui-4he
+    const filterRecipes = (query) => {
         if (!query && recRecipeCards.length === 0) {
             return otherRecipeCards;
         }
@@ -59,10 +69,20 @@ const RecipeDisplay = (props) => {
                 {otherRecipeCards}
             </>
         } else {
-            const allRecipeCards = [...recRecipeCards, ...otherRecipeCards];
-            return allRecipeCards.filter((recipeCard) => {
-                return recipeCard.props.recipeDetails.recipeName.toLowerCase().includes(query);
-            });
+            // On the /savedrecipes route, display all saved recipes that match the query - no need to go to back end
+            if (props.route === 'savedrecipes') {
+                const allRecipeCards = [...recRecipeCards, ...otherRecipeCards];
+                return allRecipeCards.filter((recipeCard) => {
+                    return recipeCard.props.recipeDetails.recipeName.toLowerCase().includes(query);
+                });
+            }
+            // On the /recipesearch route, display the recipes from the API that match the search query
+            else {
+                const searchResultsCards = searchResults.map((recipe) => {
+                    return <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />
+                });
+                return searchResultsCards;
+            }
         }
     };
 
@@ -70,10 +90,10 @@ const RecipeDisplay = (props) => {
     return (
         <>
         <div className="searchBar">
-            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <SearchBar route={props.route} searchQuery={searchQuery} setSearchQuery={setSearchQuery} setSearchResults={setSearchResults} />
         </div>
         <div className="recipes">
-            { filterRecipes(searchQuery, recRecipeCards, otherRecipeCards) }
+            { filterRecipes(searchQuery) }
         </div>
         </>
     );

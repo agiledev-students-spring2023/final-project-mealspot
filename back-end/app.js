@@ -109,7 +109,7 @@ app.get('/choosepage', (req, res) => {
 
 // GET route for recipe search page
 app.get('/recipesearch', (req, res) => {
-  async function getRecipes(numRec, numOther, fridgeUrl) {
+  async function getRecipes(numRec, numOther) {
     try {
       // TODO: database interaction here that gets the data of what's in the fridge
       // Then map it to an array of ingredient names
@@ -128,9 +128,23 @@ app.get('/recipesearch', (req, res) => {
     }
   }
 
+  async function searchRecipes(searchQuery, numResults) {
+    const searchResults = await apiCall.searchRecipes(searchQuery, numResults);
+    res.json({ searchResults: searchResults });
+  }
+
   const numRec = '1';
   const numOther = '1';
-  getRecipes(numRec, numOther);
+  const numSearchResults = '1';
+
+  // Default recipe display: user hasn't used the search bar
+  if (!req.query.searchQuery) {
+    getRecipes(numRec, numOther);
+  }
+  // Show only the search result recipes if the user uses the search bar
+  else {
+    searchRecipes(req.query.searchQuery, numSearchResults);
+  }
 });
 
 // POST route for recipe search page
