@@ -108,7 +108,7 @@ app.get('/recipesearch', (req, res) => {
 
       // Get recommended recipes that match the ingredients in the user's fridge
       const recRecipes = await apiCall.getRecipesByIngredients(numRec, ingredients);
-      
+
       // Get random recipes to populate the rest of the recipe search page
       const otherRecipes = await apiCall.getRandomRecipes(numOther);
 
@@ -148,17 +148,44 @@ app.post('/recipesearch', (req, res) => {
 app.get('/savedrecipes', (req, res) => {
   async function getRecipes(testRecipes, testFridge) {
     try {
-      // const recipes = await axios(testRecipes)
-      // const fridge = await axios(testFridge)
-      // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using some local JSON files I wrote
-      // I need the custom JSONs in order to test that the recommendation feature is working properly
-      // note to self, switch this out for the database interaction and send back whatever was grabbed from the DB instead
-      res.json({ recipes: testRecipes, fridge: testFridge });
+      // TODO: database interaction - get list of user's saved recipes ID from database
+      // TODO: map them to apiCall.getRecipeByID(), save into "allSavedRecipes"
+      const allSavedRecipes = testRecipes;
+
+      // TODO: database interaction - get user's fridge (just IDs is sufficient)
+      const fridgeIngredients = testFridge.ingredients;
+      
+      // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
+      let recRecipes = [];
+      let otherRecipes = [];
+      // Check each saved recipe
+      allSavedRecipes.forEach((recipe) => {
+        // Loop through fridge ingredients
+        fridgeIngredients.every((fridgeIng) => {
+          // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
+          // Otherwise, push this recipe to the other recipes array
+          let matchFound = false;
+          recipe.ingredients.every((recipeIng) => {
+            if (fridgeIng.id === recipeIng.id) {
+              recRecipes.push(recipe);
+              matchFound = true;
+              return false;
+            }
+          });
+          if (!matchFound) {
+            otherRecipes.push(recipe);
+          }
+        });
+      });
+
+      res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes});
     } catch (err) {
       console.log(err);
     }
   }
 
+  // TODO: using JSONs for testing purposes
+  // note to self, switch this out for the database interaction and send back whatever was grabbed from the DB instead
   getRecipes(require('./testRecipes.json'), require('./testFridge.json'));
 });
 

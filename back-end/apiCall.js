@@ -5,6 +5,19 @@
 require('dotenv').config({ silent: true });
 const axios = require('axios');
 
+/*
+NOTE:
+All functions that return a recipe return it as an object in this form:
+  id: number,
+  recipeName: string,
+  image: image,
+  instructions: string,
+  ingredients: array of objects of the form {ingredientString: string, id: number},
+  price: number,
+  saved: boolean
+*/
+
+
 // Get Random Recipes - used for the recipe search page
 async function getRandomRecipes(numRecipes) {
   try {
@@ -53,6 +66,11 @@ async function simplifyRecipe(recipe) {
       ingredientString: `${amount} ${units} ${name}`,
     }
   });
+
+  // Include ingredient IDs in the ingredients
+  ingredients.forEach((ing, i) => {
+    ing.id = recipe.extendedIngredients[i].id;
+  })
   
   /*
   // TODO for testing purposes, only do one ingredient
@@ -95,7 +113,7 @@ function countDecimals(num) {
 
 // Find an ingredient by a search query, returns the ID of the cheapest matching ingredient, or -1 if this ingredient is not recognized
 // To be used for the fridge POST and grocery list POST
-async function searchIngredientsByName(ingredientName) {
+async function getIngredientByName(ingredientName) {
   try {
     const options = {
       method: 'GET',
@@ -117,7 +135,7 @@ async function searchIngredientsByName(ingredientName) {
     if (response.data.results.length === 0) { // Ingredient not recognized - no results for this query
       return -1;
     } else { // Ingredient recognized - 1 result for this query
-      return response.data.results[0].id;
+      return getIngredientByID(response.data.results[0].id);
     }
   } catch (err) {
     console.log(err);
@@ -132,7 +150,7 @@ async function getIngredientByID(ingredientID, quantity) {
   try {
     const options = {
       method: 'GET',
-      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/9266/information',
+      url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/${ingredientID}/information`,
       params: {amount: quantity},
       headers: {
         'X-RapidAPI-Key': process.env.API_KEY,
@@ -148,6 +166,7 @@ async function getIngredientByID(ingredientID, quantity) {
       }
     } else { // Found the corresponding ingredient
       return {
+        id: ingredientID,
         ingredientName: response.data.name,
         price: Number(response.data.estimatedCost.value / 100).toFixed(2),
       }
@@ -224,7 +243,7 @@ async function getRecipesByIngredients(numRecipes, ingredients) {
 
 module.exports = {
   getRandomRecipes: getRandomRecipes,
-  searchIngredientsByName: searchIngredientsByName,
+  getIngredientByName: getIngredientByName,
   getIngredientByID: getIngredientByID,
   getRecipeByID: getRecipeByID,
   getRecipesByIngredients: getRecipesByIngredients,
