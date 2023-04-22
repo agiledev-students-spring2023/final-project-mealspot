@@ -55,6 +55,7 @@ async function simplifyRecipe(recipe) {
   const response = await axios(options);
   const price = Number(response.data.totalCostPerServing / 100).toFixed(2);
 
+  /*
   const ingredients = response.data.ingredients.map((ing) => {
     const name = ing.name;
     let amount = ing.amount.us.value / recipe.servings;
@@ -71,8 +72,8 @@ async function simplifyRecipe(recipe) {
   ingredients.forEach((ing, i) => {
     ing.id = recipe.extendedIngredients[i].id;
   })
+  */
   
-  /*
   // TODO for testing purposes, only do one ingredient
   const ing = response.data.ingredients[0];
   const name = ing.name;
@@ -83,10 +84,10 @@ async function simplifyRecipe(recipe) {
   const units = ing.amount.us.unit;
   const ingredients = [
     {
+      id: ing.id,
       ingredientString: `${amount} ${units} ${name}`,
     }
   ]
-  */
   
   const image = recipe.image ? recipe.image : "";
 
@@ -241,10 +242,42 @@ async function getRecipesByIngredients(numRecipes, ingredients) {
   }
 }
 
+// Takes a search query and returns an array of the recipes that match that query (matches based on recipe name and ingredients)
+// Number of recipes that are in the returned array is set by the parameter numResults
+// To be used for recipe search page
+async function searchRecipes(searchQuery, numResults) {
+  try {
+    const options = {
+      method: 'GET',
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch',
+      params: {
+        query: searchQuery,
+        number: numResults,
+      },
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+      }
+    };
+    
+    const response = await axios(options);
+
+    if (response.data.results.length === 0) { // No recipes found that match this query
+      return -1;
+    } else { // Return the matching recipes that were found
+      const recipes = await Promise.all(response.data.results.map(async(recipe) => { return await getRecipeByID(recipe.id); }));
+      return recipes;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   getRandomRecipes: getRandomRecipes,
   getIngredientByName: getIngredientByName,
   getIngredientByID: getIngredientByID,
   getRecipeByID: getRecipeByID,
   getRecipesByIngredients: getRecipesByIngredients,
+  searchRecipes: searchRecipes,
 }
