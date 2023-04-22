@@ -8,7 +8,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 const SearchBar = (props) => {
     // Two different types of search bars (one for recipe search and one for saved recipes)
     let submitType = '';
-    let onSubmit = () => {};
+    let onSubmit = (e) => { e.preventDefault() };
     let onInput = () => {};
     if (props.route === 'recipesearch') {
         submitType = 'submit';
