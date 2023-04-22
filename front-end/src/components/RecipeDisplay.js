@@ -5,17 +5,14 @@ import RecipeCard from './RecipeCard.js';
 import SearchBar from './SearchBar.js';
 
 const RecipeDisplay = (props) => {
-    // State to store the fridge ingredients fetched from the database
-    const [fridge, setFridge] = useState({});
-
     // State to store user input in the search bar
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState('');
     
-    // State to store all the recipes fetched from the database
-    const [recipes, setRecipes] = useState([]);
+    // State to store all the recommended recipes fetched from the database
+    const [recRecipes, setRecRecipes] = useState([]);
 
-    // State to store card version of all recipes
-    const [allRecipeCards, setAllRecipeCards] = useState([]);
+    // State to store all the non-recommended recipes fetched from the database
+    const [otherRecipes, setOtherRecipes] = useState([]);
 
     // State to store card version of recommended recipes
     const [recRecipeCards, setRecRecipeCards] = useState([]);
@@ -28,8 +25,8 @@ const RecipeDisplay = (props) => {
         async function getRecipes(url) {
             try {
                 const response = await axios(url);
-                setRecipes(response.data.recipes);
-                setFridge(response.data.fridge);
+                setRecRecipes(response.data.recRecipes);
+                setOtherRecipes(response.data.otherRecipes);
             } catch (err) {
                 console.log(err);
             }
@@ -38,62 +35,31 @@ const RecipeDisplay = (props) => {
         getRecipes(props.apiLink);
     }, [props.apiLink]);
 
-    // Anytime recipes or fridge is changed, find the recipes to recommend
+    // Create recipe cards for the recommended and other recipes
     useEffect(() => {
-        if (Object.keys(fridge).length !== 0 && Object.keys(recipes).length !== 0) {
-            // Find recommended recipes and other recipes
-            const fridgeIngNames = fridge.ingredients.map(ing => ing.ingredientName);
-            recipes.forEach((recipe) => {
-                // Recommend this recipe if its ingredients match ingredient(s) in the fridge
-                if (ingredientMatch(recipe.ingredients, fridgeIngNames)) {
-                    // Add to an an array of recipe cards that's just the recommended
-                    setRecRecipeCards((recRecipeCards) => [...recRecipeCards, <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />]);
-                }
-                // Don't recommend if none of this recipe's ingredients are in the fridge
-                else {
-                    // Add to an array of non-recommended recipe cards
-                    setOtherRecipeCards((otherRecipeCards) => [...otherRecipeCards, <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />]);
-                }
-            });
-        }
-        // Clean-up function that resets the cards, so it doesn't re-add cards that are already on the page
-        return () => { setRecRecipeCards([]); setOtherRecipeCards([]); setAllRecipeCards([]); }
-    }, [recipes, fridge, props.route]);
-
-    // Update all recipe cards whenever the recommended and other recipe cards are updated
-    useEffect(() => {
-        // Make an array of all recipe cards that's just the other two arrays put together
-        setAllRecipeCards([...recRecipeCards, ...otherRecipeCards]);
-    }, [recRecipeCards, otherRecipeCards]);
-
-    // Helper function for sortRecipes that checks if there are matching ingredients in recipe and fridge
-    // Parameters are the ingredients (array of objects) of the recipe
-    // And the names of the ingredients in the fridge
-    const ingredientMatch = (recipeIngs, fridgeIngNames) => {
-        let result = false;
-        recipeIngs.forEach((ing) => {
-            if (fridgeIngNames.includes(ing.ingredientName)) {
-                result = true;
-                return false;
-            }
-        });
-        return result;
-    }
+        setRecRecipeCards(recRecipes.map((recipe) => {
+            return <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />
+        }));
+        setOtherRecipeCards(otherRecipes.map((recipe) => {
+            return <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />
+        }));
+    }, [recRecipes, otherRecipes, props.route]);
 
     // Search bar functionality
     // Citation - code is based off this tutorial by Marianna: https://dev.to/mar1anna/create-a-search-bar-with-react-and-material-ui-4he
-    const filterRecipes = (query, recRecipeCards, otherRecipeCards, allRecipeCards) => {
+    const filterRecipes = (query, recRecipeCards, otherRecipeCards) => {
         if (!query && recRecipeCards.length === 0) {
-            return allRecipeCards;
+            return otherRecipeCards;
         }
         else if (!query) {
             return <>
-                    <h3 className="titleText">Recommended</h3>
-                    {recRecipeCards}
-                    <h3 className="titleText">More Recipes</h3>
-                    {otherRecipeCards}
-                </>
+                <h3 className="titleText">Recommended</h3>
+                {recRecipeCards}
+                <h3 className="titleText">More Recipes</h3>
+                {otherRecipeCards}
+            </>
         } else {
+            const allRecipeCards = [...recRecipeCards, ...otherRecipeCards];
             return allRecipeCards.filter((recipeCard) => {
                 return recipeCard.props.recipeDetails.recipeName.toLowerCase().includes(query);
             });
@@ -107,7 +73,7 @@ const RecipeDisplay = (props) => {
             <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         </div>
         <div className="recipes">
-            { filterRecipes(searchQuery, recRecipeCards, otherRecipeCards, allRecipeCards) }
+            { filterRecipes(searchQuery, recRecipeCards, otherRecipeCards) }
         </div>
         </>
     );

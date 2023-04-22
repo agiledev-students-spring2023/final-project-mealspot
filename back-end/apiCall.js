@@ -165,7 +165,7 @@ async function getRecipeByID(recipeID) {
   try {
     const options = {
       method: 'GET',
-      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/479101/information',
+      url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipeID}/information`,
       headers: {
         'X-RapidAPI-Key': process.env.API_KEY,
         'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
@@ -182,14 +182,14 @@ async function getRecipeByID(recipeID) {
       return simplifyRecipe(response.data);
     }
   } catch (err) {
-    console.log(err);
+   console.log(err);
   }
 }
 
 // Takes an array of strings - each string is a query string for an ingredient name
 // Returns at most 4 recipes that use those ingredients (empty array if no matching recipes were found)
 // To be used for recommendation feature in saved recipes GET and recipe search GET
-async function getRecipeByIngredients(ingredients) {
+async function getRecipesByIngredients(numRecipes, ingredients) {
   try {
     const commaSep = ingredients.reduce((accum, curr) => {
       return accum + curr + ',';
@@ -200,7 +200,7 @@ async function getRecipeByIngredients(ingredients) {
       url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
       params: {
         ingredients: commaSep,
-        number: '4',
+        number: numRecipes,
         ignorePantry: 'true',
         ranking: '1'
       },
@@ -214,9 +214,7 @@ async function getRecipeByIngredients(ingredients) {
     const response = await axios(options);
 
     // Map that array into an array of those recipes, but simplified to just the info we need
-    const recipes = response.data.map((recipe) => {
-      simplifyRecipe(recipe);
-    });
+    const recipes = await Promise.all(response.data.map(async(recipe) => { return await getRecipeByID(recipe.id); }));
 
     return recipes;
   } catch (err) {
@@ -229,5 +227,5 @@ module.exports = {
   searchIngredientsByName: searchIngredientsByName,
   getIngredientByID: getIngredientByID,
   getRecipeByID: getRecipeByID,
-  getRecipeByIngredients: getRecipeByIngredients,
+  getRecipesByIngredients: getRecipesByIngredients,
 }

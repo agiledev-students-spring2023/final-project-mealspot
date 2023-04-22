@@ -99,22 +99,28 @@ app.get('/choosepage', (req, res) => {
 
 // GET route for recipe search page
 app.get('/recipesearch', (req, res) => {
-  async function getRecipes(numRecipes, fridgeUrl) {
+  async function getRecipes(numRec, numOther, fridgeUrl) {
     try {
-      const recipes = await apiCall.getRandomRecipes(numRecipes);
-      console.log(recipes);
       // TODO: database interaction here that gets the data of what's in the fridge
-      // remove the second parameter of this async function once properly implemented
-      const fridge = await axios(fridgeUrl);
+      // Then map it to an array of ingredient names
+      // For now, just make it a mock array
+      const ingredients = ['egg','butter','lemon','sugar'];
 
-      res.json({ recipes: recipes, fridge: fridge.data });
+      // Get recommended recipes that match the ingredients in the user's fridge
+      const recRecipes = await apiCall.getRecipesByIngredients(numRec, ingredients);
+      
+      // Get random recipes to populate the rest of the recipe search page
+      const otherRecipes = await apiCall.getRandomRecipes(numOther);
+
+      res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes });
     } catch (err) {
       console.log(err);
     }
   }
 
-  const numRecipes = '6';
-  getRecipes(numRecipes, 'https://my.api.mockaroo.com/fridge.json?key=8198c2b0');
+  const numRec = '1';
+  const numOther = '1';
+  getRecipes(numRec, numOther);
 });
 
 // POST route for recipe search page
