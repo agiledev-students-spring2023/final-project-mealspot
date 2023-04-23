@@ -14,6 +14,7 @@ import Account from './Account.js';
 import Header from './Header.js';
 import Login from './Login.js';
 import Register from './Register.js';
+import Protected from './Protected.js';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path='/fridge' element={<Fridge />} />
           <Route path='/grocerylist' element={<GroceryList />} />
           <Route path='/account' element={<Account />} />
+          <Route path='/protected' element={<Protected />} />
         </Routes>
       </Router>
     </div>

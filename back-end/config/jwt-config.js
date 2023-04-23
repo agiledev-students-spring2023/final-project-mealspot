@@ -11,11 +11,11 @@ let jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"), // look for the Authorization request header
   secretOrKey: process.env.JWT_SECRET, // an arbitrary string used during encryption - see the .env file
 }
-// console.log(jwtOptions) // debug to make sure the secret from the .env file is loaded correctly
+console.log(jwtOptions) // debug to make sure the secret from the .env file is loaded correctly
 
 // define the method that is used by passport to verify the contents (i.e. the payload) of the JWT token
 const jwtVerifyToken = async function (jwt_payload, next) {
-  // console.log("JWT payload received", jwt_payload) // debugging
+  console.log("JWT payload received", jwt_payload) // debugging
 
   // check if the token has expired
   const expirationDate = new Date(jwt_payload.exp * 1000) // convert from seconds to milliseconds
@@ -27,7 +27,7 @@ const jwtVerifyToken = async function (jwt_payload, next) {
   // try to find a matching user in our database
 
   // find this user in the database
-  const userId = ObjectId(jwt_payload.id) // convert the string id to an ObjectId
+  const userId = new ObjectId(jwt_payload.id) // convert the string id to an ObjectId
   const user = await User.findOne({ _id: userId }).exec()
   if (user) {
     // we found the user... keep going

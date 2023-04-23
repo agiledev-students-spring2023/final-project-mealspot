@@ -189,8 +189,21 @@ app.post('/recipesearch', (req, res) => {
   }
 });
 
+app.get("/protected", passport.authenticate("jwt", { session: false }), (req, res) => {
+    res.json({
+      success: true,
+      user: {
+        id: req.user.id,
+        username: req.user.username,
+      },
+      message:
+        "Congratulations: you have accessed this route because you have a valid JWT token!",
+    })
+  }
+)
+
 // GET route for saved recipes page
-app.get('/savedrecipes', (req, res) => {
+app.get('/savedrecipes', passport.authenticate("jwt", { session: false }), (req, res) => {
   async function getRecipes(testRecipes, testFridge) {
     try {
       // Database interaction - get list of user's saved recipes ID from database
