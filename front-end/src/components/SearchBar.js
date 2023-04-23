@@ -19,7 +19,9 @@ const SearchBar = (props) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route ;
             // Send a GET request to the server with the user's search query
             try {
-                const response = await axios.get(url, { params: { searchQuery: searchQuery } });
+                const jwtToken = localStorage.getItem("token")
+                const authToken = 'jwt ' + jwtToken + ''
+                const response = await axios.get(url, { params: { searchQuery: searchQuery }, headers: { Authorization: authToken } });
                 props.setSearchResults(response.data.searchResults);
             } catch (err) {
                 console.log(err);
