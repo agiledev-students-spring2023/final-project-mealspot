@@ -212,26 +212,33 @@ app.get('/savedrecipes', passport.authenticate("jwt", { session: false }), (req,
         const recRecipes = [];
         const otherRecipes = [];
         // Check each saved recipe
-        allSavedRecipes.forEach((recipe) => {
-          // Loop through fridge ingredients
-          fridgeIngredients.every((fridgeIng) => {
-            // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
-            // Otherwise, push this recipe to the other recipes array
-            let matchFound = false;
-            recipe.ingredients.every((recipeIng) => {
-              if (fridgeIng.id === recipeIng.id) {
-                recRecipes.push(recipe);
-                matchFound = true;
-                return false;
-              }
-            });
-            if (!matchFound) {
-              otherRecipes.push(recipe);
-            }
-          });
-        });
+        // allSavedRecipes.forEach((data) => {
+        //   data.then((recipe) => {
+        //     // // Loop through fridge ingredients
+        //     // fridgeIngredients.every((fridgeIng) => {
+        //     //   // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
+        //     //   // Otherwise, push this recipe to the other recipes array
+        //     //   let matchFound = false;
+        //     //   recipe.ingredients.every((recipeIng) => {
+        //     //     if (fridgeIng.id === recipeIng.id) {
+        //     //       recRecipes.push(recipe);
+        //     //       matchFound = true;
+        //     //       return false;
+        //     //     }
+        //     //   });
+        //     //   if (!matchFound) {
+        //     //     otherRecipes.push(recipe);
+        //     //   }
+        //     // });
+        //     otherRecipes.push(recipe);
+        //     console.log(otherRecipes)
+        //   })
+        // });
 
-        res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes});
+        Promise.all(allSavedRecipes).then((values) => {
+          res.json({ recRecipes: values, otherRecipes: []})
+        });
+        
       } else {
         res.json({ recRecipes: [], otherRecipes: [] });
       }
