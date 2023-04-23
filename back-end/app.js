@@ -195,7 +195,7 @@ app.get('/savedrecipes', passport.authenticate("jwt", { session: false }), (req,
   async function getRecipes(testRecipes, testFridge) {
     try {
       // Database interaction - get list of user's saved recipes ID from database
-      const savedRecipes = await Recipe.find({'_id': {$in: req.user.savedRecipes}});
+      const savedRecipes = await Recipe.find({'user': {$in: req.user._id}});
       // Map recipe IDs to actual recipes
       if (savedRecipes.length !== 0) {
         const allSavedRecipes = savedRecipes.map(async(recipe) => await apiCall.getRecipeByID(recipe.id));
@@ -209,8 +209,8 @@ app.get('/savedrecipes', passport.authenticate("jwt", { session: false }), (req,
         // TODO test const fridgeIngredients = testFridge.ingredients;
         
         // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
-        let recRecipes = [];
-        let otherRecipes = [];
+        const recRecipes = [];
+        const otherRecipes = [];
         // Check each saved recipe
         allSavedRecipes.forEach((recipe) => {
           // Loop through fridge ingredients

@@ -32,6 +32,7 @@ const RecipeDisplay = (props) => {
                 const jwtToken = localStorage.getItem("token")
                 const authToken = 'jwt ' + jwtToken + ''
                 const response = await axios(url, {headers: { Authorization: authToken }});
+                console.log(response);
                 // Search results version of the page, after user uses search bar
                 if (response.data.searchResults) {
                     setSearchResults(response.data.searchResults);
