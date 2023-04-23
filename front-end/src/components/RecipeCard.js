@@ -17,6 +17,7 @@ const RecipeCard = (props) => {
                 axios.post(url, {
                     save: true,
                     recipeName: props.recipeDetails.recipeName,
+                    id: props.recipeDetails.id,
                 })
             } catch (err) {
                 console.log(err);
@@ -30,6 +31,7 @@ const RecipeCard = (props) => {
                 axios.post(url, {
                     save: false,
                     recipeName: props.recipeDetails.recipeName,
+                    id: props.recipeDetails.id,
                 })
             } catch (err) {
                 console.log(err);
