@@ -7,6 +7,10 @@ import {Modal, Box, List, ListItemText, Button, IconButton, Divider} from '@mui/
 import CloseIcon from '@mui/icons-material/Close';
 
 const RecipeCard = (props) => {
+    // for authenticated users
+    const jwtToken = localStorage.getItem("token")
+    const authToken = 'jwt ' + jwtToken + ''
+
     // Function to run when the star button is clicked on this recipe card
     let onClick;
     if (!props.recipeDetails.saved) { // Save a recipe
@@ -18,7 +22,7 @@ const RecipeCard = (props) => {
                     save: true,
                     recipeName: props.recipeDetails.recipeName,
                     id: props.recipeDetails.id,
-                })
+                }, {headers: { Authorization: authToken }})
             } catch (err) {
                 console.log(err);
             }

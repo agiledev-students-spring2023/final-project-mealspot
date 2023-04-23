@@ -95,7 +95,8 @@ app.get('/choosepage', (req, res) => {
 });
 
 // GET route for recipe search page
-app.get('/recipesearch', (req, res) => {
+app.get('/recipesearch', passport.authenticate("jwt", { session: false }), (req, res) => {
+  console.log(req.user._id)
   async function getRecipes(numRec, numOther) {
     try {
       // Database interaction that gets the ingredients in the fridge
@@ -154,7 +155,7 @@ app.get('/recipesearch', (req, res) => {
 // POST route for recipe search page
 // When user clicks the star button on a recipe card, it will save the recipe to the user's saved recipe list if it isn't saved yet
 // ...or it will remove it from the user's saved recipe list if it is already on it
-app.post('/recipesearch', (req, res) => {
+app.post('/recipesearch', passport.authenticate("jwt", { session: false }), (req, res) => {
   // Database interaction that saves the recipe to the user's saved recipes list
   async function saveRecipe() {
     console.log('Saving the recipe: ' + req.body.recipeName);
@@ -190,11 +191,11 @@ app.post('/recipesearch', (req, res) => {
 });
 
 // GET route for saved recipes page
-app.get('/savedrecipes', (req, res) => {
+app.get('/savedrecipes', passport.authenticate("jwt", { session: false }), (req, res) => {
   async function getRecipes(testRecipes, testFridge) {
     try {
       // Database interaction - get list of user's saved recipes ID from database
-      const savedRecipes = await Recipe.find({'_id': {$in: req.user.savedRecipes}});
+      const savedRecipes = await Recipe.find({'user': {$in: req.user._id}});
       // Map recipe IDs to actual recipes
       if (savedRecipes.length !== 0) {
         const allSavedRecipes = savedRecipes.map(async(recipe) => await apiCall.getRecipeByID(recipe.id));
@@ -208,8 +209,8 @@ app.get('/savedrecipes', (req, res) => {
         // TODO test const fridgeIngredients = testFridge.ingredients;
         
         // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
-        let recRecipes = [];
-        let otherRecipes = [];
+        const recRecipes = [];
+        const otherRecipes = [];
         // Check each saved recipe
         allSavedRecipes.forEach((recipe) => {
           // Loop through fridge ingredients
@@ -247,7 +248,7 @@ app.get('/savedrecipes', (req, res) => {
 // POST route for saved recipes page
 // All the recipes on this page are already saved in the user's saved recipes list
 // When user clicks the star button on a recipe card, it will remove it from the user's saved recipes list
-app.post('/savedrecipes', (req, res) => {
+app.post('/savedrecipes', passport.authenticate("jwt", { session: false }), (req, res) => {
   // Database interaction that removes the recipe from the user's saved recipes list
   async function unsaveRecipe() {
     console.log('Unsaving the recipe: ' + req.body.recipeName);

@@ -5,6 +5,7 @@ import RecipeCard from './RecipeCard.js';
 import SearchBar from './SearchBar.js';
 
 const RecipeDisplay = (props) => {
+
     // State to store user input in the search bar
     const [searchQuery, setSearchQuery] = useState('');
     
@@ -27,7 +28,11 @@ const RecipeDisplay = (props) => {
     useEffect(() => {
         async function getRecipes(url) {
             try {
-                const response = await axios(url);
+                // for authentication purposes
+                const jwtToken = localStorage.getItem("token")
+                const authToken = 'jwt ' + jwtToken + ''
+                const response = await axios(url, {headers: { Authorization: authToken }});
+                console.log(response);
                 // Search results version of the page, after user uses search bar
                 if (response.data.searchResults) {
                     setSearchResults(response.data.searchResults);
