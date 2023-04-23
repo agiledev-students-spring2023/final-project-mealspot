@@ -116,7 +116,7 @@ app.get('/recipesearch', (req, res) => {
       // Database interaction that gets the ingredients in the fridge
       const fridgeIngredients = await Ingredient.find({'user': req.user._id});
       // Then map it to an array of ingredient names
-      const ingredients = fridgeIngredients.map((ing) => apiCall.getIngredientByID(ing.id));
+      const ingredients = fridgeIngredients.map(async(ing) => await apiCall.getIngredientByID(ing.id));
       // TODO test const ingredients = ['egg','butter','lemon','sugar'];
 
       // Get recommended recipes that match the ingredients in the user's fridge
@@ -179,11 +179,11 @@ app.get('/savedrecipes', (req, res) => {
       const savedRecipes = await Recipe.find({'_id': {$in: req.user.savedRecipes}});
       // Map recipe IDs to actual recipes
       if (savedRecipes.length !== 0) {
-        const allSavedRecipes = savedRecipes.map((recipe) => apiCall.getRecipeByID(recipe.id));
+        const allSavedRecipes = savedRecipes.map(async(recipe) => await apiCall.getRecipeByID(recipe.id));
         // TODO test const allSavedRecipes = testRecipes;
 
         // Database interaction - get user's fridge (just IDs is sufficient)
-        const fridgeIngredients = await Ingredient.find({'user': req.user._id});
+        const fridgeIngredients = await Ingredient.find({'user': req.user._id, type: 'fridge'});
         // TODO test const fridgeIngredients = testFridge.ingredients;
         
         // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
@@ -227,11 +227,19 @@ app.get('/savedrecipes', (req, res) => {
 // All the recipes on this page are already saved in the user's saved recipes list
 // When user clicks the star button on a recipe card, it will remove it from the user's saved recipes list
 app.post('/savedrecipes', (req, res) => {
+  // Database interaction that removes the recipe from the user's saved recipes list
+  async function unsaveRecipe() {
+    console.log('Unsaving the recipe: ' + req.body.recipeName);
+    try {
+      await Recipe.findOneAndDelete({user: req.user._id, id: req.body.id});
+    } catch (err) {
+      console.log(err);
+    }
+  }
   // Unsave a recipe
   if (req.body.save === false) {
     // Should always be true
-    // TODO: database interaction here that removes the recipe from the user's saved recipes list
-    console.log('Unsaving the recipe: ' + req.body.recipeName);
+    unsaveRecipe();
     res.json({ result: 'recipe unsaved' });
   } else if (req.body.save === true) {
     // Requests from the saved recipes pages should always have save = false, because this page should only display already-saved recipes
