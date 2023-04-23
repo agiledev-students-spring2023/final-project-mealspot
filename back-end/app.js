@@ -39,6 +39,7 @@ app.use("/auth", authRoutes())
 // passport setup for auth
 const jwtStrategy = require("./config/jwt-config.js") // import setup options for using JWT in passport
 passport.use(jwtStrategy)
+app.use(passport.initialize())
 
 const mongooseOpts = {
   useNewUrlParser: true,  

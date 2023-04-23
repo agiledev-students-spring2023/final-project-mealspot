@@ -65,15 +65,14 @@ const authenticationRouter = () => {
           })
         }
         console.log("User logged in successfully.")
-        const token = user.generateJWT() // generate a signed token
+        const token = user.generateJWT()
         res.json({
           success: true,
           message: "User logged in successfully.",
           token: token,
           username: user.username,
-        }) // send the token to the client to store
+        })
       } catch (err) {
-        // check error
         console.error(`Error looking up user: ${err}`)
         return res.status(500).json({
           success: false,
