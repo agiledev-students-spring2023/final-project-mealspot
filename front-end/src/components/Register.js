@@ -12,11 +12,12 @@ const handleSubmit = (event) => {
     event.preventDefault()
     const data = new FormData(event.target)
     const info = [...data.entries()]
-    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/register'
+    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/auth/register'
     axios.post(url, {
         username: info[0][1],
         email: info[1][1],
-        password:  info[2][1]
+        password:  info[2][1],
+        weeklyBudget: 0
       })
       .then(function (response) {
         console.log(response);

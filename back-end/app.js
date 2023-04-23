@@ -18,6 +18,10 @@ const multer = require('multer'); // middleware to handle HTTP POST requests wit
 const axios = require('axios'); // middleware for making requests to APIs
 const morgan = require('morgan'); // middleware for nice logging of incoming HTTP requests
 const cors = require('cors'); // middleware to enable cross-origin resource sharing requests
+// middleware for user authentication
+const jwt = require("jsonwebtoken")
+const passport = require("passport")
+const authRoutes = require("./auth-routes.js")
 
 // Use the morgan middleware to log all incoming http requests
 app.use(morgan('dev')); // morgan has a few logging default styles - dev is a nice concise color-coded style
@@ -28,6 +32,13 @@ app.use(cors());
 // Use Express body parsing middleware
 app.use(express.json()); // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })); // decode url-encoded incoming POST data
+
+// router for login/register functions
+app.use("/auth", authRoutes())
+
+// passport setup for auth
+const jwtStrategy = require("./config/jwt-config.js") // import setup options for using JWT in passport
+passport.use(jwtStrategy)
 
 const mongooseOpts = {
   useNewUrlParser: true,  
@@ -72,33 +83,6 @@ app.post('/', (req, res) => {
 app.get('/choosepage', (req, res) => {
   // change later
   res.send(req.body);
-});
-
-app.post('/login', (req, res) => {
-  if (
-    Object.hasOwn(req.body, 'username') &&
-    Object.hasOwn(req.body, 'password')
-  ) {
-    console.log(req.body.username, req.body.password);
-    res.json({ result: 'success' });
-  } else {
-    res.status(400);
-    res.json({ result: 'fail' });
-  }
-});
-
-app.post('/register', (req, res) => {
-  if (
-    Object.hasOwn(req.body, 'username') &&
-    Object.hasOwn(req.body, 'password') &&
-    Object.hasOwn(req.body, 'email')
-  ) {
-    console.log(req.body.username, req.body.email, req.body.password);
-    res.json({ result: 'success' });
-  } else {
-    res.status(400);
-    res.json({ result: 'fail' });
-  }
 });
 
 // GET route for homepage recipe edit page
