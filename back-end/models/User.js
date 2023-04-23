@@ -31,13 +31,14 @@ const UserSchema = new Schema({
   // Saved recipes list is an array of Ingredients
   savedRecipes: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Ingredient',
+    ref: 'Recipe',
   }],
-  // Fridge list is similarly an array of Ingredients
+  // Fridge list is an array of Ingredients
   fridge: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Ingredient',
   }],
+  // Grocery list is an array of Ingredients
   groceryList: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Ingredient',
