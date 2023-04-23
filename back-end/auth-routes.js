@@ -11,7 +11,7 @@ const authenticationRouter = () => {
       const email = req.body.email
       const weeklyBudget = req.body.weeklyBudget
 
-      if (!username || !password || !email || !weeklyBudget) {
+      if (!username || !password || !email) {
         res.status(401).json({
           success: false,
           message: `Missing required information.`,
@@ -19,13 +19,7 @@ const authenticationRouter = () => {
       }
   
       try {
-        const user = new User({ username, password, email, weeklyBudget })
-        try {
-            await user.save()
-        }
-        catch (err) {
-            console.log(err)
-        }
+        const user = await new User({ username, password, email, weeklyBudget }).save()
         console.error(`New user: ${user}`)
         const token = user.generateJWT()
         res.json({
