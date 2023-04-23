@@ -100,7 +100,7 @@ app.get('/recipesearch', passport.authenticate("jwt", { session: false }), (req,
   async function getRecipes(numRec, numOther) {
     try {
       // Database interaction that gets the ingredients in the fridge
-      const fridgeIngredients = await Ingredient.find({'user': req.user._id});
+      const fridgeIngredients = await Ingredient.find({'user': req.user._id, 'type': 'fridge'});
       // Then map it to an array of ingredient names
       const ingredients = fridgeIngredients.map(async(ing) => await apiCall.getIngredientByID(ing.id));
       // TODO test const ingredients = ['egg','butter','lemon','sugar'];
