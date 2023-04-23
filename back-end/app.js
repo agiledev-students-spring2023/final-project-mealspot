@@ -113,10 +113,11 @@ app.get('/choosepage', (req, res) => {
 app.get('/recipesearch', (req, res) => {
   async function getRecipes(numRec, numOther) {
     try {
-      // TODO: database interaction here that gets the data of what's in the fridge
+      // Database interaction that gets the ingredients in the fridge
+      const fridgeIngredients = await Ingredient.find({'user': req.user._id});
       // Then map it to an array of ingredient names
-      // For now, just make it a mock array
-      const ingredients = ['egg','butter','lemon','sugar'];
+      const ingredients = fridgeIngredients.map((ing) => apiCall.getIngredientByID(ing.id));
+      // TODO test const ingredients = ['egg','butter','lemon','sugar'];
 
       // Get recommended recipes that match the ingredients in the user's fridge
       const recRecipes = await apiCall.getRecipesByIngredients(numRec, ingredients);
