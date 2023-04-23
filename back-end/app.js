@@ -55,9 +55,9 @@ mongoose.connect(process.env.URI, mongooseOpts)
 //temp test data into db
 /*
 const userTest = new User({
-    username: 'John',
+    username: 'test',
     password: 'test',
-    email: 'john.doe@gmail.com',
+    email: 'test@gmail.com',
     weeklyBudget: 200,
 });
 const dayTest = new Day({
@@ -92,7 +92,9 @@ mealTest.save()
   .catch((err) => {
     console.error('Failed to save MealPlan:', err);
   });
+*/
   //prints out what's in the temp db
+/*
 User.find()
   .then((documents) => {
     console.log('Users:');
@@ -118,6 +120,9 @@ MealPlan.find()
     console.error('Failed to retrieve documents:', err);
   });
 */
+
+let testUser = User.findOne({username: 'test'});
+console.log(testUser.username);
 
 // GET route for recipe homepage
 app.get('/', (req, res) => {
@@ -161,13 +166,9 @@ app.get('/', (req, res) => {
         }
 
         // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
-        let breakfast = [];
-        let lunch = [];
-        let dinner = [];
-        // these need to be changed to await apiCall
-        breakfast.push(apiCall.getRecipeByID(meal.breakfast));
-        lunch.push(apiCall.getRecipeByID(meal.lunch));
-        dinner.push(apiCall.getRecipeByID(meal.dinner));
+        const breakfast = await apiCall.getRecipeByID(meal.breakfast);
+        const lunch = await apiCall.getRecipeByID(meal.lunch);
+        const dinner = await apiCall.getRecipeByID(meal.dinner);
 
         res.json({ budget: budget, breakfast: breakfast, lunch: lunch, dinner: dinner });
     } 
