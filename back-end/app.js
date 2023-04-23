@@ -95,7 +95,8 @@ app.get('/choosepage', (req, res) => {
 });
 
 // GET route for recipe search page
-app.get('/recipesearch', (req, res) => {
+app.get('/recipesearch', passport.authenticate("jwt", { session: false }), (req, res) => {
+  console.log(req.user._id)
   async function getRecipes(numRec, numOther) {
     try {
       // Database interaction that gets the ingredients in the fridge
@@ -154,7 +155,7 @@ app.get('/recipesearch', (req, res) => {
 // POST route for recipe search page
 // When user clicks the star button on a recipe card, it will save the recipe to the user's saved recipe list if it isn't saved yet
 // ...or it will remove it from the user's saved recipe list if it is already on it
-app.post('/recipesearch', (req, res) => {
+app.post('/recipesearch', passport.authenticate("jwt", { session: false }), (req, res) => {
   // Database interaction that saves the recipe to the user's saved recipes list
   async function saveRecipe() {
     console.log('Saving the recipe: ' + req.body.recipeName);
@@ -188,19 +189,6 @@ app.post('/recipesearch', (req, res) => {
     res.json({ msg: 'invalid input' });
   }
 });
-
-app.get("/protected", passport.authenticate("jwt", { session: false }), (req, res) => {
-    res.json({
-      success: true,
-      user: {
-        id: req.user.id,
-        username: req.user.username,
-      },
-      message:
-        "Congratulations: you have accessed this route because you have a valid JWT token!",
-    })
-  }
-)
 
 // GET route for saved recipes page
 app.get('/savedrecipes', passport.authenticate("jwt", { session: false }), (req, res) => {
@@ -260,7 +248,7 @@ app.get('/savedrecipes', passport.authenticate("jwt", { session: false }), (req,
 // POST route for saved recipes page
 // All the recipes on this page are already saved in the user's saved recipes list
 // When user clicks the star button on a recipe card, it will remove it from the user's saved recipes list
-app.post('/savedrecipes', (req, res) => {
+app.post('/savedrecipes', passport.authenticate("jwt", { session: false }), (req, res) => {
   // Database interaction that removes the recipe from the user's saved recipes list
   async function unsaveRecipe() {
     console.log('Unsaving the recipe: ' + req.body.recipeName);
