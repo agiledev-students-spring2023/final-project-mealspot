@@ -38,6 +38,72 @@ mongoose.connect(process.env.URI, mongooseOpts)
 .then(() => console.log("Connected Successfully!"))
 .catch((err) => console.log(err));
 
+//temp test data into db
+/*
+const userTest = new User({
+    username: 'John',
+    password: 'test',
+    email: 'john.doe@gmail.com',
+    weeklyBudget: 200,
+});
+const dayTest = new Day({
+    mealPlan: 0,
+    breakfast: 1,
+    lunch: 1,
+    dinner: 1,
+});
+const mealTest = new MealPlan({
+    user: userTest._id,
+    0: dayTest._id
+});
+dayTest.mealPlan = mealTest._id
+userTest.save()
+  .then(() => {
+    console.log('User saved successfully');
+  })
+  .catch((err) => {
+    console.error('Failed to save User:', err);
+  });
+dayTest.save()
+  .then(() => {
+    console.log('Day saved successfully');
+  })
+  .catch((err) => {
+    console.error('Failed to save Day:', err);
+  });
+mealTest.save()
+  .then(() => {
+    console.log('MealPlan saved successfully');
+  })
+  .catch((err) => {
+    console.error('Failed to save MealPlan:', err);
+  });
+  //prints out what's in the temp db
+User.find()
+  .then((documents) => {
+    console.log('Users:');
+    console.log(documents); // Print the retrieved documents
+  })
+  .catch((err) => {
+    console.error('Failed to retrieve documents:', err);
+  });
+Day.find()
+  .then((documents) => {
+    console.log('Days:');
+    console.log(documents); // Print the retrieved documents
+  })
+  .catch((err) => {
+    console.error('Failed to retrieve documents:', err);
+  });
+MealPlan.find()
+  .then((documents) => {
+    console.log('MealPlans:');
+    console.log(documents); // Print the retrieved documents
+  })
+  .catch((err) => {
+    console.error('Failed to retrieve documents:', err);
+  });
+*/
 
 // GET route for recipe homepage
 app.get('/', (req, res) => {
@@ -52,14 +118,57 @@ app.get('/', (req, res) => {
 
   getRecipes('https://my.api.mockaroo.com/recipe.json?key=cf37bb40');
   /*
-  const budget = req.user.weeklyBudget;
-  res.json({budget: budget});
+  // switch after authentication is implemented
+  //app.get('/:mealPlanId/:userId (req, res) => {
+  app.get('/ (req, res) => {
+  async function getRecipes(userId, budget, mealPlanId) {
+
+    const mealPlanId = req.params.mealPlanId;
+    const userId = req.params.userId;
+    try {
+        // Find the MealPlan by _id and populate the 'user' field with the User model
+        const mealPlan = await MealPlan.findOne({ _id: mealPlanId }).populate('user');
+
+        if (!mealPlan) {
+        return res.status(404).send('MealPlan not found');
+        }
+
+        // Check if the mealPlan.user._id matches the userId parameter
+        // switch after authentication is implemented
+        //if (mealPlan.user._id.toString() !== userId) {
+        //return res.status(401).send('Unauthorized');
+        //}
+
+        // Find the Day by 'mealPlan' field and populate the 'mealPlan' field with the MealPlan model
+        const meal = await Day.findOne({ mealPlan: mealPlan }).populate('mealPlan');
+
+        if (!meal) {
+        return res.status(404).send('Day not found');
+        }
+
+        // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
+        let breakfast = [];
+        let lunch = [];
+        let dinner = [];
+        // these need to be changed to await apiCall
+        breakfast.push(apiCall.getRecipeByID(meal.breakfast));
+        lunch.push(apiCall.getRecipeByID(meal.lunch));
+        dinner.push(apiCall.getRecipeByID(meal.dinner));
+
+        res.json({ budget: budget, breakfast: breakfast, lunch: lunch, dinner: dinner });
+    } 
+    catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+    getRecipes(req.params.userId, req.params.mealPlanId, req.user.weeklyBudget)
+  }
+});
   */
 });
 
 // POST route for recipe homepage days of the week form
 app.post('/', (req, res) => {
-  // Unsave a recipe
   console.log('Selected day: ' + req.body.day);
   const day = parseInt(req.body.day);
   if (isNaN(day) || day < 0 || day > 6) {

@@ -8,31 +8,38 @@ const MealPlanSchema = new Schema({
         ref: 'User',
         required: true,
     },
-    sunday: {
+    //Sunday
+    0: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Day',
     },
-    monday: {
+    //Monday
+    1: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Day',
     },
-    tuesday: {
+    //Tuesday
+    2: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Day',
     },
-    wednesday: {
+    //Wednesday
+    3: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Day',
     },
-    thursday: {
+    //Thursday
+    4: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Day',
     },
-    friday: {
+    //Friday
+    5: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Day',
     },
-    saturday: {
+    //Sunday
+    6: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Day',
     },
