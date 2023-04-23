@@ -11,6 +11,8 @@ const mongoose = require("mongoose");
 const User = require("./models/User.js");
 const MealPlan = require("./models/MealPlan.js");
 const Day = require("./models/Day.js");
+const Ingredient = require("./models/Ingredient.js");
+const Recipe = require("./models/Recipe.js");
 
 // Middleware imports
 require('dotenv').config({ silent: true }); // load environmental variables from a hidden file named .env
@@ -172,37 +174,44 @@ app.post('/recipesearch', (req, res) => {
 app.get('/savedrecipes', (req, res) => {
   async function getRecipes(testRecipes, testFridge) {
     try {
-      // TODO: database interaction - get list of user's saved recipes ID from database
-      // TODO: map them to apiCall.getRecipeByID(), save into "allSavedRecipes"
-      const allSavedRecipes = testRecipes;
+      // Database interaction - get list of user's saved recipes ID from database
+      const savedRecipes = await Recipe.find({'_id': {$in: req.user.savedRecipes}});
+      // Map recipe IDs to actual recipes
+      if (savedRecipes.length !== 0) {
+        const allSavedRecipes = savedRecipes.map((recipe) => apiCall.getRecipeByID(recipe.id));
+        // TODO test const allSavedRecipes = testRecipes;
 
-      // TODO: database interaction - get user's fridge (just IDs is sufficient)
-      const fridgeIngredients = testFridge.ingredients;
-      
-      // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
-      let recRecipes = [];
-      let otherRecipes = [];
-      // Check each saved recipe
-      allSavedRecipes.forEach((recipe) => {
-        // Loop through fridge ingredients
-        fridgeIngredients.every((fridgeIng) => {
-          // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
-          // Otherwise, push this recipe to the other recipes array
-          let matchFound = false;
-          recipe.ingredients.every((recipeIng) => {
-            if (fridgeIng.id === recipeIng.id) {
-              recRecipes.push(recipe);
-              matchFound = true;
-              return false;
+        // Database interaction - get user's fridge (just IDs is sufficient)
+        const fridgeIngredients = await Ingredient.find({'user': req.user._id});
+        // TODO test const fridgeIngredients = testFridge.ingredients;
+        
+        // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
+        let recRecipes = [];
+        let otherRecipes = [];
+        // Check each saved recipe
+        allSavedRecipes.forEach((recipe) => {
+          // Loop through fridge ingredients
+          fridgeIngredients.every((fridgeIng) => {
+            // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
+            // Otherwise, push this recipe to the other recipes array
+            let matchFound = false;
+            recipe.ingredients.every((recipeIng) => {
+              if (fridgeIng.id === recipeIng.id) {
+                recRecipes.push(recipe);
+                matchFound = true;
+                return false;
+              }
+            });
+            if (!matchFound) {
+              otherRecipes.push(recipe);
             }
           });
-          if (!matchFound) {
-            otherRecipes.push(recipe);
-          }
         });
-      });
 
-      res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes});
+        res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes});
+      } else {
+        res.json({ recRecipes: [], otherRecipes: [] });
+      }
     } catch (err) {
       console.log(err);
     }
