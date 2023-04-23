@@ -311,17 +311,23 @@ app.post('/addpage', (req, res) => {
 
 // GET route for account page
 app.get('/account', async (req, res) => {
-  try {
-    const { userID } = req.params;
-    const response = await axios.get(
-      'https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0'
-    );
-    const person = response.data;
-    res.json(person);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Could not retrieve user');
-  }
+//   try {
+//     const { userID } = req.params;
+//     const response = await axios.get(
+//       'https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0'
+//     );
+//     const person = response.data;
+//     res.json(person);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Could not retrieve user');
+//   }
+    const user = await User.find({});
+    try {
+        response.send(user);
+      } catch (error) {
+        res.status(500).send(error);
+      }
 });
 
 // POST route for account page
