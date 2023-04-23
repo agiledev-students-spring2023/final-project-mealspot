@@ -125,6 +125,22 @@ app.get('/recipesearch', (req, res) => {
       // Get random recipes to populate the rest of the recipe search page
       const otherRecipes = await apiCall.getRandomRecipes(numOther);
 
+      // Database interaction to determine if any recipe's ID is included in the user's saved recipe list
+      recRecipes.forEach(async (recipe) => {
+        const found = await Recipe.findOne({'user': req.user._id, 'id': recipe.id});
+        if (found) {
+          // Mark this recipe as saved, because it was found in the user's saved recipes list
+          recipe.saved = true;
+        }
+      })
+      otherRecipes.forEach(async (recipe) => {
+        const found = await Recipe.findOne({'user': req.user._id, 'id': recipe.id});
+        if (found) {
+          // Mark this recipe as saved, because it was found in the user's saved recipes list
+          recipe.saved = true;
+        }
+      })
+
       res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes });
     } catch (err) {
       console.log(err);
@@ -154,15 +170,32 @@ app.get('/recipesearch', (req, res) => {
 // When user clicks the star button on a recipe card, it will save the recipe to the user's saved recipe list if it isn't saved yet
 // ...or it will remove it from the user's saved recipe list if it is already on it
 app.post('/recipesearch', (req, res) => {
+  // Database interaction that saves the recipe to the user's saved recipes list
+  async function saveRecipe() {
+    console.log('Saving the recipe: ' + req.body.recipeName);
+    try {
+      const recipeToSave = new Recipe({user: req.user._id, id: req.body.id});
+      await recipeToSave.save();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  // Database interaction here that removes the recipe from the user's saved recipes list
+  async function unsaveRecipe() {
+    console.log('Unsaving the recipe: ' + req.body.recipeName);
+    try {
+      await Recipe.findOneAndDelete({user: req.user._id, id: req.body.id});
+    } catch (err) {
+      console.log(err);
+    }
+  }
   // Save a recipe
   if (req.body.save === true) {
-    // TODO: database interaction here that saves the recipe to the user's saved recipes list
-    console.log('Saving the recipe: ' + req.body.recipeName);
+    saveRecipe();
     res.json({ result: 'recipe saved' });
   } // Unsave a recipe
   else if (req.body.save === false) {
-    // TODO: database interaction here that removes the recipe from the user's saved recipes list
-    console.log('Unsaving the recipe: ' + req.body.recipeName);
+    unsaveRecipe();
     res.json({ result: 'recipe unsaved' });
   } else {
     // Invalid input
@@ -181,6 +214,9 @@ app.get('/savedrecipes', (req, res) => {
       if (savedRecipes.length !== 0) {
         const allSavedRecipes = savedRecipes.map(async(recipe) => await apiCall.getRecipeByID(recipe.id));
         // TODO test const allSavedRecipes = testRecipes;
+
+        // Mark all the recipes 'saved'
+        allSavedRecipes.forEach((recipe) => { recipe.saved = true });
 
         // Database interaction - get user's fridge (just IDs is sufficient)
         const fridgeIngredients = await Ingredient.find({'user': req.user._id, type: 'fridge'});

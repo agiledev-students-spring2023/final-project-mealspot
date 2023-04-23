@@ -98,7 +98,7 @@ async function simplifyRecipe(recipe) {
     instructions: recipe.instructions,
     ingredients: ingredients,
     price: price,
-    saved: false // TODO: database interaction: check to see if this recipe's ID is included in the user's saved list
+    saved: false, // defaults to false, is updated in the route in app.js
   }
 };
 
