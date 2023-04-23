@@ -25,8 +25,9 @@ const border = {
 }
 
 const Account = (props) => {
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
+    // const [firstName, setFirstName] = useState('')
+    // const [lastName, setLastName] = useState('')
+    const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [newBudget, setNewBudget] = useState(0.0)
     const [currentBudget, setCurrentBudget] = useState(0.0)
@@ -40,8 +41,9 @@ const Account = (props) => {
       axios(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`)
         .then(response => {
           // extract the data from the server response
-          setFirstName(response.data[0].first_name)
-          setLastName(response.data[0].last_name)
+          // setFirstName(response.data[0].first_name)
+          // setLastName(response.data[0].last_name)
+          setUsername(response.data[0].username)
           setEmail(response.data[0].email)
           setCurrentBudget(response.data[0].weekly_budget)
         })
@@ -73,8 +75,11 @@ const Account = (props) => {
         </div>
         {<div className='account'>
             <div>
-                <p className="profileAttribute">Name: Bob Smith</p>
-                <p className="profileAttribute">Email: bob.smith@gmail.com</p>
+                {/* <p>Name: {firstName} {lastName}</p> */}
+                {/* <p>Email: {email}</p> */}
+                {/* <p>Weekly budget: {currentBudget}</p> */}
+                <p className="profileAttribute">Name: {username}</p>
+                <p className="profileAttribute">Email: {email}</p>
                 {currentBudget === 0 ? <p className="profileAttribute">Weekly Budget: $37.65</p> : <p className="profileAttribute">Weekly Budget: {currentBudget}</p>}
                 <Button sx={border} variant="outlined" onClick={handleOpen}>Edit Budget</Button>
                 <Modal
