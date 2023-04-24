@@ -64,7 +64,11 @@ const Account = (props) => {
         console.log(err)
       }
       handleClose()
-    }  
+    }
+    
+    const logoutOnClick = (event) => {
+      localStorage.removeItem("token")
+    }
 
     return (
       <div className="UserAccount">
@@ -105,7 +109,7 @@ const Account = (props) => {
             </div>
         </div>}
         <br/><br/>
-          <Button sx={border} variant="outlined" href="/login">Logout</Button>
+          <Button sx={border} variant="outlined" href="/login" onSubmit={logoutOnClick}>Logout</Button>
         </div> 
     )
   }
