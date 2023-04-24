@@ -17,38 +17,65 @@ const RecipeInfo = (props) => {
     // State to store the recipes fetched from the database
     const [recipes, setRecipes] = useState([])
 
-     // State to store day fetched from the database
-     const [day, setDay] = useState(new Date().getDay())
+    // State to store day fetched from the database
+    const [day, setDay] = useState(new Date().getDay())
 
+    // State to store the budget fetched from the database
+    const [budget, setBudget] = useState([])
+
+    // State to store the spent fetched from the database
+    const [spent, setSpent] = useState([])
+
+    console.log(props)
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
     useEffect(() => {
         async function getRecipes(url) {
             try {
+                // for authentication purposes
+                const jwtToken = localStorage.getItem("token")
+                const authToken = 'jwt ' + jwtToken + ''
+                const response = await axios(url, {headers: { Authorization: authToken }})
+                console.log(response)
+                console.log('hi')
+                setRecipes(response.data.recipes)
+                setBudget(response.data.budget)
+                setSpent(response.data.spent)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getRecipes(props.apiLink)
+    }, [props.apiLink])//[day, props.apiLink])
+    console.log(recipes)
+    console.log(budget)
+    console.log(spent)
+    console.log(day)
+
+    //setting day
+    useEffect(() => {
+        async function getRecipes(url) {
+            try {
+                // for authentication purposes
+                const jwtToken = localStorage.getItem("token")
+                const authToken = 'jwt ' + jwtToken + ''
+                const response = await axios(url, {headers: { Authorization: authToken }})
+                console.log(response)
                 await axios.post(url, {
                     day: day,
-                })
-                 // for authentication purposes
-                 const jwtToken = localStorage.getItem("token")
-                 const authToken = 'jwt ' + jwtToken + ''
-                 const response = await axios(url, {headers: { Authorization: authToken }});
-                setRecipes(response.data)
+                }, {headers: { Authorization: authToken }})
+                setDay(response.data.dayOfWeek)
             } catch (err) {
                 console.log(err)
             }
         }
         getRecipes(props.apiLink)
     }, [day, props.apiLink])
-    
-    //setting day
-    useEffect(() => {
-        setDay(new Date().getDay())
-    }, [])
     console.log(day)
 
     //TEMP WAY TO GET ACCOUNT INFO
     const [data, setData] = useState([])
     const userID = useParams()
-  
+    /*
     useEffect(() => {
       // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0") temporary use of second api, should be removed during database implement
       axios('https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0')
@@ -59,11 +86,10 @@ const RecipeInfo = (props) => {
         })
         .catch(err => {
           console.error(err) 
-
         })
-    }, [userID])
+    }, [userID])*/
     
-    // Get the list of ing for each recipe
+    // Get the list of ing and price for each recipe
     //https://getbutterfly.com/generate-html-list-from-javascript-array/
     if(typeof recipes !== 'undefined' && recipes.length === 0)
     {
@@ -75,31 +101,53 @@ const RecipeInfo = (props) => {
     {
         return null
     }*/
-    const listIngMorn = Object.values(recipes[0].ingredients).map((ingredient) => (
-        <li key={ingredient.ingredientName}>{ingredient.ingredientName}</li>
-    ))
-    const listIngAft = Object.values(recipes[1].ingredients).map((ingredient) => (
-        <li key={ingredient.ingredientName}>{ingredient.ingredientName}</li>
-    ))
-    const listIngEve = Object.values(recipes[2].ingredients).map((ingredient) => (
-        <li key={ingredient.ingredientName}>{ingredient.ingredientName}</li>
-    ))
+    let listIngMorn;
+    let listIngAft;
+    let listIngEve;
 
-    // Get the price of each recipe
-    const totalPMorn = Object.values(recipes[0].ingredients).reduce((price, curr) => {
-        return price + (curr.ppu * curr.units)
-    }, 0).toFixed(2)
-    const totalPAft = Object.values(recipes[1].ingredients).reduce((price, curr) => {
-        return price + (curr.ppu * curr.units)
-    }, 0).toFixed(2)
-    const totalPEve = Object.values(recipes[2].ingredients).reduce((price, curr) => {
-        return price + (curr.ppu * curr.units)
-    }, 0).toFixed(2)
-    currSpent = (parseFloat(totalPMorn) + parseFloat(totalPAft) + parseFloat(totalPEve)).toFixed(2)
+    let totalPMorn;
+    let totalPAft;
+    let totalPEve;
+    if(recipes[0] === null)
+    {
+
+    }
+    else
+    {
+        listIngMorn = Object.values(recipes[0].ingredients).map((ingredient) => (
+            <li key={ingredient.ingredientString}>{ingredient.ingredientString}</li>
+        ))
+
+        totalPMorn = recipes[0].price
+    }
+    if(recipes[1] === null)
+    {
+
+    }
+    else
+    {
+        listIngAft = Object.values(recipes[1].ingredients).map((ingredient) => (
+            <li key={ingredient.ingredientString}>{ingredient.ingredientString}</li>
+        ))
+
+        totalPAft = recipes[1].price
+    }
+    if(recipes[2] === null)
+    {
+
+    }
+    else
+    {
+        listIngEve = Object.values(recipes[2].ingredients).map((ingredient) => (
+            <li key={ingredient.ingredientString}>{ingredient.ingredientString}</li>
+        ))
+
+        totalPEve = recipes[2].price
+    }
+
     //temp comment out for out of mockaroo req
-    currBudget = 200//parseFloat(data.weekly_budget.slice(1))
-    console.log(currSpent)
-    console.log(currBudget)
+    currBudget = budget
+    currSpent = spent
 
     return (
         <>
@@ -134,10 +182,10 @@ const RecipeInfo = (props) => {
             <div className="card-break">
                 <div className="meal-card-col1">
                     <div className="card-day">Breakfast</div>
-                    <div className="card-img"><img src={recipes[0].image} alt={recipes[0].recipeName}/></div>
+                    {recipes[0] !== null ? (<div className="card-img"><img src={recipes[0].image} alt={recipes[0].recipeName} width='100px' height='100px'/></div>) : <div className="card-img">No Image</div>}
                 </div>
                 <div className="meal-card-col2">
-                    <div className="card-name">{recipes[0].recipeName}</div>
+                    {recipes[0] !== null ? (<div className="card-name">{recipes[0].recipeName}</div>) : <p>No Recipe</p>}
                     <div className="card-ing">
                         <ul>
                         {listIngMorn}
@@ -159,10 +207,10 @@ const RecipeInfo = (props) => {
             <div className="card-lunch">
                 <div className="meal-card-col1">
                     <div className="card-day">Lunch</div>
-                    <div className="card-img"><img src={recipes[1].image} alt={recipes[1].recipeName}/></div>
+                    {recipes[1] !== null ? (<div className="card-img"><img src={recipes[1].image} alt={recipes[1].recipeName} width='100px' height='100px'/></div>) : <div className="card-img">No Image</div>}
                 </div>
                 <div className="meal-card-col2">
-                    <div className="card-name">{recipes[1].recipeName}</div>
+                    {recipes[1] !== null ? (<div className="card-name">{recipes[1].recipeName}</div>) : <p>No Recipe</p>}
                     <div className="card-ing">
                         <ul>
                         {listIngAft}
@@ -184,10 +232,10 @@ const RecipeInfo = (props) => {
             <div className="card-dinner">
                 <div className="meal-card-col1">
                     <div className="card-day">Dinner</div>
-                    <div className="card-img"><img src={recipes[2].image} alt={recipes[2].recipeName}/></div>
+                    {recipes[2] !== null ? (<div className="card-img"><img src={recipes[2].image} alt={recipes[2].recipeName} width='100px' height='100px'/></div>) : <div className="card-img">No Image</div>}
                 </div>
                 <div className="meal-card-col2">
-                    <div className="card-name">{recipes[2].recipeName}</div>
+                    {recipes[2] !== null ? (<div className="card-name">{recipes[2].recipeName}</div>) : <p>No Recipe</p>}
                     <div className="card-ing">
                         <ul>
                         {listIngEve}

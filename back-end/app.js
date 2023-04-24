@@ -150,10 +150,24 @@ app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
         console.log(dayOfWeek);
 
         let meal;
-        let breakfast;
-        let lunch;
-        let dinner;
+        let recipes = [null, null, null];
+        let spent = 0;
         const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
+        // Get total cost of meals
+        for (let i = 0; i <= 6; i++) {
+            const dayKey = i.toString();
+            if(mealPlan[dayKey] !== null)
+            {
+                meal = await Day.findOne({ mealPlan: mealPlanId });
+                if(meal.breakfast !== null || meal.lunch !== null || meal.dinner !== null)
+                {
+                    spent += await apiCall.getRecipeByID(meal.breakfast).price;
+                    spent += await apiCall.getRecipeByID(meal.lunch).price;
+                    spent += await apiCall.getRecipeByID(meal.dinner).price;
+                }
+            }
+        }
+        console.log(spent);
         // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
         if(mealPlan[dayOfWeek.toString()] === null)
         {
@@ -161,22 +175,33 @@ app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
         }
         else
         {
-            meal = await Day.findOne({ mealPlan: mealPlanId })
-            if(meal.breakfast !== null || meal.lunch !== null || meal.dinner !== null)
-            {
-                breakfast = await apiCall.getRecipeByID(meal.breakfast);
-                lunch = await apiCall.getRecipeByID(meal.lunch);
-                dinner = await apiCall.getRecipeByID(meal.dinner);
-            }
-            else
-            {
-                breakfast = null;
-                lunch = null;
-                dinner = null;
-            }
-
-            res.json({ budget: budget, dayOfWeek: dayOfWeek, breakfast: breakfast, lunch: lunch, dinner: dinner });
+            meal = await Day.findOne({ mealPlan: mealPlanId });
         }
+        if(meal.breakfast !== null)
+        {
+            recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
+        }
+        else
+        {
+            recipes[0] = null;
+        }
+        if(meal.lunch !== null)
+        {
+            recipes[1] = await apiCall.getRecipeByID(meal.lunch);
+        }
+        else
+        {
+            recipes[1] = null;
+        }
+        if(meal.dinner !== null)
+        {
+            recipes[2] = await apiCall.getRecipeByID(meal.dinner);
+        }
+        else
+        {
+            recipes[2] = null;
+        }
+        res.json({ budget: budget, spent: spent, dayOfWeek: dayOfWeek, recipes: recipes });
     } 
     catch (err) {
         console.error(err);
@@ -187,17 +212,13 @@ app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
 });
 
 // POST route for recipe homepage days of the week form
-app.post('/', (req, res) => {
-  console.log('Selected day: ' + req.body.day);
-  const day = parseInt(req.body.day);
-  if (isNaN(day) || day < 0 || day > 6) {
-    return res.status(400).json({
-      status: 'error',
-    });
+app.post('/', passport.authenticate("jwt", { session: false }), (req, res) => {
+  async function getDay(day) {
+    console.log('Selected day: ' + req.body.day);
+    req.user.dayOfWeek = day;
+    await req.user.save();
   }
-  return res.json({
-    status: 'ok',
-  });
+  getDay(req.body.day);
 });
 
 // GET route for homepage recipe edit page

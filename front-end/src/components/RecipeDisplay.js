@@ -5,7 +5,6 @@ import RecipeCard from './RecipeCard.js';
 import SearchBar from './SearchBar.js';
 
 const RecipeDisplay = (props) => {
-
     // State to store user input in the search bar
     const [searchQuery, setSearchQuery] = useState('');
     
