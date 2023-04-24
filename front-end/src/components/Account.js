@@ -43,9 +43,9 @@ const Account = (props) => {
           // extract the data from the server response
           // setFirstName(response.data[0].first_name)
           // setLastName(response.data[0].last_name)
-          setUsername(response.data[0].username)
-          setEmail(response.data[0].email)
-          setCurrentBudget(response.data[0].weekly_budget)
+          setUsername(response.data.username)
+          setEmail(response.data.email)
+          setCurrentBudget(response.weekly_budget)
         })
         .catch(err => {
           console.error(err) 

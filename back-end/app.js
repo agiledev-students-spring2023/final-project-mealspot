@@ -319,20 +319,11 @@ app.post('/addpage', (req, res) => {
 
 // GET route for account page
 app.get('/account', async (req, res) => {
-//   try {
-//     const { userID } = req.params;
-//     const response = await axios.get(
-//       'https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0'
-//     );
-//     const person = response.data;
-//     res.json(person);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send('Could not retrieve user');
-//   }
-    const user = await User.find({});
+    const user = await User.findOne({username:username});
+    //const user = await User.findOne({username: username}).exec();
     try {
         res.send(user);
+        console.log(user);
       } catch (error) {
         res.status(500).send(error);
         //console.log(error);
