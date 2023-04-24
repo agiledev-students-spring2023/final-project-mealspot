@@ -332,9 +332,10 @@ app.get('/account', async (req, res) => {
 //   }
     const user = await User.find({});
     try {
-        response.send(user);
+        res.send(user);
       } catch (error) {
         res.status(500).send(error);
+        //console.log(error);
       }
 });
 
