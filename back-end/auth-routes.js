@@ -11,6 +11,7 @@ const authenticationRouter = () => {
       const password = req.body.password
       const email = req.body.email
       const weeklyBudget = req.body.weeklyBudget
+      const dayOfWeek = 0
 
       if (!username || !password || !email) {
         res.status(401).json({
@@ -20,7 +21,7 @@ const authenticationRouter = () => {
       }
   
       try {
-        const user = await new User({ username, password, email, weeklyBudget, mealPlan: [] }).save()
+        const user = await new User({ username, password, email, weeklyBudget, dayOfWeek, mealPlan: [] }).save()
         const mealPlan = await new MealPlan({ user: user._id, 0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null }).save();
         user.mealPlan = mealPlan._id;
         await user.save();

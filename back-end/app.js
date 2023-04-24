@@ -142,46 +142,48 @@ app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
   //console.log(req.user.mealPlan[0]._id)
   //console.log(req.user._id)
   //console.log(req.user.weeklyBudget)
-  async function getRecipes(userId, budget, mealPlanId) {
+  async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
         console.log(userId);
-        //console.log(req.user.mealPlan[0])
-        console.log(mealPlanId);
         console.log(budget);
-        /*
-        // Find the MealPlan by _id and populate the 'user' field with the User model
+        console.log(mealPlanId);
+        console.log(dayOfWeek);
+
+        let meal;
+        let breakfast;
+        let lunch;
+        let dinner;
         const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
-        console.log(mealPlan)
-
-        if (!mealPlan) {
-        return res.status(404).send('MealPlan not found');
-        }
-
-        // Check if the mealPlan.user._id matches the userId parameter
-        if (mealPlan.user._id.toString() !== userId) {
-        return res.status(401).send('Unauthorized');
-        }
-
-        // Find the Day by 'mealPlan' field and populate the 'mealPlan' field with the MealPlan model
-        const meal = await Day.findOne({ mealPlan: mealPlan }).populate('mealPlan');
-
-        if (!meal) {
-        return res.status(404).send('Day not found');
-        }
-
         // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
-        const breakfast = await apiCall.getRecipeByID(meal.breakfast);
-        const lunch = await apiCall.getRecipeByID(meal.lunch);
-        const dinner = await apiCall.getRecipeByID(meal.dinner);
+        if(mealPlan[dayOfWeek.toString()] === null)
+        {
+            meal = await new Day({ mealPlan: mealPlanId, breakfast: null, lunch: null, dinner: null }).save();
+        }
+        else
+        {
+            meal = await Day.findOne({ mealPlan: mealPlanId })
+            if(meal.breakfast !== null || meal.lunch !== null || meal.dinner !== null)
+            {
+                breakfast = await apiCall.getRecipeByID(meal.breakfast);
+                lunch = await apiCall.getRecipeByID(meal.lunch);
+                dinner = await apiCall.getRecipeByID(meal.dinner);
+            }
+            else
+            {
+                breakfast = null;
+                lunch = null;
+                dinner = null;
+            }
 
-        res.json({ budget: budget, breakfast: breakfast, lunch: lunch, dinner: dinner });*/
+            res.json({ budget: budget, dayOfWeek: dayOfWeek, breakfast: breakfast, lunch: lunch, dinner: dinner });
+        }
     } 
     catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
   }
-  getRecipes(req.user._id, req.user.weeklyBudget, req.user.mealPlan[0]);
+  getRecipes(req.user._id, req.user.weeklyBudget, req.user.mealPlan[0], req.user.dayOfWeek);
 });
 
 // POST route for recipe homepage days of the week form

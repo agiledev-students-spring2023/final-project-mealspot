@@ -24,6 +24,10 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
   },
+  dayOfWeek: {
+    type: Number,
+    required: true,
+  },
   mealPlan: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MealPlan',
