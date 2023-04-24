@@ -67,6 +67,8 @@ const Account = (props) => {
     }
     
     const logoutOnClick = (event) => {
+      event.preventDefault()
+      console.log('removing')
       localStorage.removeItem("token")
     }
 
@@ -109,7 +111,7 @@ const Account = (props) => {
             </div>
         </div>}
         <br/><br/>
-          <Button sx={border} variant="outlined" href="/login" onSubmit={logoutOnClick}>Logout</Button>
+          <Button sx={border} type="submit" variant="outlined" onClick={logoutOnClick}>Logout</Button>
         </div> 
     )
   }
