@@ -283,22 +283,67 @@ app.post('/savedrecipes', passport.authenticate("jwt", { session: false }), (req
 // GET route for choose from saved recipes page
 app.get('/choosesavedrecipes', (req, res) => {
   async function getRecipes(recipesUrl, fridgeUrl) {
+    // try {
+    //   const recipes = await axios(recipesUrl);
+    //   // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
+    //   // that is, the second parameter of this async function should be able to be removed in the next sprint
+    //   const fridge = await axios(fridgeUrl);
+    //   console.log(fridge.data);
+    //   res.json({ recipes: recipes.data, fridge: fridge.data });
+    // } catch (err) {
+    //   console.log(err);
+    // }
     try {
-      const recipes = await axios(recipesUrl);
-      // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
-      // that is, the second parameter of this async function should be able to be removed in the next sprint
-      const fridge = await axios(fridgeUrl);
-      console.log(fridge.data);
-      res.json({ recipes: recipes.data, fridge: fridge.data });
-    } catch (err) {
-      console.log(err);
+        // Database interaction - get list of user's saved recipes ID from database
+        const savedRecipes = await Recipe.find({'_id': {$in: req.user.savedRecipes}});
+        // Map recipe IDs to actual recipes
+        if (savedRecipes.length !== 0) {
+          const allSavedRecipes = savedRecipes.map(async(recipe) => await apiCall.getRecipeByID(recipe.id));
+          // TODO test const allSavedRecipes = testRecipes;
+  
+          // Mark all the recipes 'saved'
+          allSavedRecipes.forEach((recipe) => { recipe.saved = true });
+  
+          // Database interaction - get user's fridge (just IDs is sufficient)
+          const fridgeIngredients = await Ingredient.find({'user': req.user._id, type: 'fridge'});
+          // TODO test const fridgeIngredients = testFridge.ingredients;
+          
+          // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
+          let recRecipes = [];
+          let otherRecipes = [];
+          // Check each saved recipe
+          allSavedRecipes.forEach((recipe) => {
+            // Loop through fridge ingredients
+            fridgeIngredients.every((fridgeIng) => {
+              // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
+              // Otherwise, push this recipe to the other recipes array
+              let matchFound = false;
+              recipe.ingredients.every((recipeIng) => {
+                if (fridgeIng.id === recipeIng.id) {
+                  recRecipes.push(recipe);
+                  matchFound = true;
+                  return false;
+                }
+              });
+              if (!matchFound) {
+                otherRecipes.push(recipe);
+              }
+            });
+          });
+  
+          res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes});
+        } else {
+          res.json({ recRecipes: [], otherRecipes: [] });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
-  }
-
-  getRecipes(
-    'https://my.api.mockaroo.com/recipe.json?key=8198c2b0',
-    'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
-  );
+    getRecipes(require('./testRecipes.json'), require('./testFridge.json'));
+//   getRecipes(
+//     'https://my.api.mockaroo.com/recipe.json?key=8198c2b0',
+//     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
+//   );
 });
 
 // POST route for choose from saved recipes page
@@ -315,6 +360,7 @@ app.get('/addpage', (req, res) => {
 // POST route for add your own recipes page
 app.post('/addpage', (req, res) => {
   // TODO
+  res.send(req.body);
 });
 
 // GET route for account page
