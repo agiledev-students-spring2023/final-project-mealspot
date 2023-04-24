@@ -1,7 +1,8 @@
-import { TextField, Box, Button } from '@mui/material'
+import { TextField, Box, Button, Link } from '@mui/material'
 import axios from 'axios'
 import React, { useState, useEffect } from "react"
 import { Navigate } from "react-router-dom"
+import './Register.css'
 
 const border = {
     border: 1.4,
@@ -12,6 +13,7 @@ const border = {
 
 const Register = () => {
     const [response, setResponse] = useState({})
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         if (response.success && response.token) {
@@ -37,6 +39,7 @@ const Register = () => {
             })
             .catch(function (error) {
             console.log(error);
+            setErrorMessage(error.response.data.message)
             });
     }
 
@@ -66,7 +69,7 @@ const Register = () => {
                         label="Password"
                         name="password"
                     ></TextField><br/>
-                    <br/>
+                    {errorMessage && (<p className="error"> {errorMessage} </p>)}
                     <br/>
                     <Button sx={border}
                         variant="outlined"
@@ -75,13 +78,9 @@ const Register = () => {
                         Register
                     </Button>
                     <br/>
-                    <br/>
-                    <Button sx={border}
-                        variant="outlined"
-                        href="/login"
-                    >
-                        Login
-                    </Button>
+                    <Link href="login" variant="body2">
+                        {"Have an account?"}
+                    </Link>
                 </Box>
             </div>
         )
