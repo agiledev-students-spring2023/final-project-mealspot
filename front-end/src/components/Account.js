@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import axios from 'axios';
 import { Button, InputLabel, FormControl, Box, Typography, Modal, InputAdornment, OutlinedInput} from '@mui/material';
 import './Account.css';
+import { Navigate } from "react-router-dom"
 
 const boxStyle = {
   position: 'absolute',
@@ -66,7 +67,20 @@ const Account = (props) => {
         console.log(err)
       }
       handleClose()
-    }  
+    }
+    
+    const logoutOnClick = (event) => {
+      event.preventDefault()
+      console.log('removing')
+      localStorage.removeItem("token")
+    }
+
+    // redirect if not logged in
+    const jwtToken = localStorage.getItem("token")
+    if (!jwtToken) {
+        console.log("user not logged in")
+        return <Navigate to="/login" />
+    }
 
     return (
       <div className="UserAccount">
@@ -110,7 +124,7 @@ const Account = (props) => {
             </div>
         </div>}
         <br/><br/>
-          <Button sx={border} variant="outlined" href="/login">Logout</Button>
+          <Button sx={border} type="submit" variant="outlined" onClick={logoutOnClick}>Logout</Button>
         </div> 
     )
   }

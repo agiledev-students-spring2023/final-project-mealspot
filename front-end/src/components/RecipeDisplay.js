@@ -3,6 +3,7 @@ import axios from 'axios';
 import './RecipeDisplay.css';
 import RecipeCard from './RecipeCard.js';
 import SearchBar from './SearchBar.js';
+import { Navigate } from "react-router-dom"
 
 const RecipeDisplay = (props) => {
 
@@ -89,6 +90,13 @@ const RecipeDisplay = (props) => {
             }
         }
     };
+
+    // redirect if not logged in
+    const jwtToken = localStorage.getItem("token")
+    if (!jwtToken) {
+        console.log("user not logged in")
+        return <Navigate to="/login" />
+    }
 
     // Return the final component, consisting of page header and the array of recipe cards
     return (
