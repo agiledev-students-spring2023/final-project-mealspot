@@ -15,6 +15,12 @@
       "no-restricted-globals": "off",
       "prefer-const": "off",
       "no-undef": "off",
-      "node/no-unpublished-require": "off"
+      "node/no-unpublished-require": "off",
+      "no-underscore-dangle": "off",
+      "consistent-return": "off",
+      "no-param-reassign": "off",
+      "no-return-await": "off",
+      "no-shadow": "off",
+      "array-callback-return": "off"
     }
   }

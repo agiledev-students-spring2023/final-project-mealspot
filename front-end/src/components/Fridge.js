@@ -1,5 +1,6 @@
-import {useState, React} from 'react';
-import {Modal, Box, Button, Typography, FormControl, TextField} from '@mui/material';
+import {useState, useEffect, React} from 'react';
+import axios from 'axios';
+import {Modal, Box, Button, Typography, FormControl, TextField, responsiveFontSizes} from '@mui/material';
 import {useStateValue} from '../StateManager.js';
 import './Fridge.css';
 import FridgeItem from './FridgeItem';
@@ -33,6 +34,9 @@ const Fridge = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const jwtToken = localStorage.getItem("token")
+    const authToken = 'jwt ' + jwtToken + ''
+    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/fridge';
     const addToFridge = () => {
         // tell StateManager to add it to the cart
         dispatch({
@@ -43,6 +47,17 @@ const Fridge = () => {
                 quantity: inputs.quantity
             }
         });
+        try{
+        axios.post(url, {
+            save: true,
+            postType: 'add',
+            name: inputs.name,
+            quantity: inputs.quantity,
+        }, {headers: { Authorization: authToken }})
+        }
+        catch(err){
+            console.log(err)
+        }
     }
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -56,6 +71,33 @@ const Fridge = () => {
             [e.target.name]: e.target.value,
         }))
     }
+
+    useEffect(() => {
+        async function getFridgeIngredients(){
+            try{
+                const response = await axios(url, {headers: { Authorization: authToken }});
+                dispatch({
+                    type: "CLEAR_FRIDGE"
+                })
+                response.data.forEach((ingredient) => {
+                    if(ingredient != null){
+                    dispatch({
+                        type: "ADD_TO_FRIDGE",
+                        item: {
+                            id: +new Date(),
+                            name: ingredient.ingredientName,
+                            quantity: ingredient.quantity
+                        }
+                    });
+                }
+                })
+            }
+            catch(err){
+                console.log(err)
+            }
+        }
+        getFridgeIngredients()
+    }, [])
 
     return (
         <div className="myFridgeDiv">
