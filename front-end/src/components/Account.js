@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import axios from 'axios';
 import { Button, InputLabel, FormControl, Box, Typography, Modal, InputAdornment, OutlinedInput} from '@mui/material';
 import './Account.css';
+import { Navigate } from "react-router-dom"
 
 const boxStyle = {
   position: 'absolute',
@@ -70,6 +71,13 @@ const Account = (props) => {
       event.preventDefault()
       console.log('removing')
       localStorage.removeItem("token")
+    }
+
+    // redirect if not logged in
+    const jwtToken = localStorage.getItem("token")
+    if (!jwtToken) {
+        console.log("user not logged in")
+        return <Navigate to="/login" />
     }
 
     return (
