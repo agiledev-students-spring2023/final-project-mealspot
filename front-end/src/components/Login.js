@@ -41,6 +41,13 @@ const Login = () => {
           });
     }
 
+    // redirect if logged in
+    const jwtToken = localStorage.getItem("token")
+    if (jwtToken) {
+        console.log("user logged in")
+        return <Navigate to="/" />
+    }
+
     if (!response.success) {
         return (
             <div className="login">
