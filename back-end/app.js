@@ -121,11 +121,10 @@ MealPlan.find()
   });
 */
 
-let testUser = User.findOne({username: 'test'});
-console.log(testUser.username);
-
 // GET route for recipe homepage
-app.get('/', (req, res) => {
+/*
+app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
+  console.log(req.user.username)
   async function getRecipes(url) {
     try {
       const response = await axios(url);
@@ -136,27 +135,32 @@ app.get('/', (req, res) => {
   }
 
   getRecipes('https://my.api.mockaroo.com/recipe.json?key=cf37bb40');
-  /*
-  // switch after authentication is implemented
-  //app.get('/:mealPlanId/:userId (req, res) => {
-  app.get('/ (req, res) => {
+});
+*/
+// switch after authentication is implemented
+app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
+  //console.log(req.user.mealPlan[0]._id)
+  //console.log(req.user._id)
+  //console.log(req.user.weeklyBudget)
   async function getRecipes(userId, budget, mealPlanId) {
-
-    const mealPlanId = req.params.mealPlanId;
-    const userId = req.params.userId;
     try {
+        console.log(userId);
+        //console.log(req.user.mealPlan[0])
+        console.log(mealPlanId);
+        console.log(budget);
+        /*
         // Find the MealPlan by _id and populate the 'user' field with the User model
-        const mealPlan = await MealPlan.findOne({ _id: mealPlanId }).populate('user');
+        const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
+        console.log(mealPlan)
 
         if (!mealPlan) {
         return res.status(404).send('MealPlan not found');
         }
 
         // Check if the mealPlan.user._id matches the userId parameter
-        // switch after authentication is implemented
-        //if (mealPlan.user._id.toString() !== userId) {
-        //return res.status(401).send('Unauthorized');
-        //}
+        if (mealPlan.user._id.toString() !== userId) {
+        return res.status(401).send('Unauthorized');
+        }
 
         // Find the Day by 'mealPlan' field and populate the 'mealPlan' field with the MealPlan model
         const meal = await Day.findOne({ mealPlan: mealPlan }).populate('mealPlan');
@@ -170,16 +174,14 @@ app.get('/', (req, res) => {
         const lunch = await apiCall.getRecipeByID(meal.lunch);
         const dinner = await apiCall.getRecipeByID(meal.dinner);
 
-        res.json({ budget: budget, breakfast: breakfast, lunch: lunch, dinner: dinner });
+        res.json({ budget: budget, breakfast: breakfast, lunch: lunch, dinner: dinner });*/
     } 
     catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
-    getRecipes(req.params.userId, req.params.mealPlanId, req.user.weeklyBudget)
   }
-});
-  */
+  getRecipes(req.user._id, req.user.weeklyBudget, req.user.mealPlan[0]);
 });
 
 // POST route for recipe homepage days of the week form

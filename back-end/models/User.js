@@ -24,10 +24,10 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
   },
-  mealPlan: {
+  mealPlan: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MealPlan',
-  },
+  }],
   // Saved recipes list is an array of Ingredients
   savedRecipes: [{
     type: mongoose.Schema.Types.ObjectId,

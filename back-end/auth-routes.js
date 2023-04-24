@@ -1,6 +1,7 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const User = require("./models/User.js")
+const MealPlan = require("./models/MealPlan.js")
 
 const authenticationRouter = () => {
     const router = express.Router()
@@ -19,7 +20,10 @@ const authenticationRouter = () => {
       }
   
       try {
-        const user = await new User({ username, password, email, weeklyBudget }).save()
+        const user = await new User({ username, password, email, weeklyBudget, mealPlan: [] }).save()
+        const mealPlan = await new MealPlan({ user: user._id, 0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null }).save();
+        user.mealPlan = mealPlan._id;
+        await user.save();
         console.error(`New user: ${user}`)
         const token = user.generateJWT()
         res.json({

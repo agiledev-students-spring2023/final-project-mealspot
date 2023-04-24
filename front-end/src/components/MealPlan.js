@@ -27,7 +27,10 @@ const RecipeInfo = (props) => {
                 await axios.post(url, {
                     day: day,
                 })
-                const response = await axios(url)
+                 // for authentication purposes
+                 const jwtToken = localStorage.getItem("token")
+                 const authToken = 'jwt ' + jwtToken + ''
+                 const response = await axios(url, {headers: { Authorization: authToken }});
                 setRecipes(response.data)
             } catch (err) {
                 console.log(err)
