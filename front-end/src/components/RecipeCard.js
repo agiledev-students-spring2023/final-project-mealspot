@@ -36,7 +36,7 @@ const RecipeCard = (props) => {
                     save: false,
                     recipeName: props.recipeDetails.recipeName,
                     id: props.recipeDetails.id,
-                })
+                }, {headers: { Authorization: authToken }})
             } catch (err) {
                 console.log(err);
             }

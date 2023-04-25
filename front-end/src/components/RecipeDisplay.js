@@ -39,6 +39,7 @@ const RecipeDisplay = (props) => {
                 // Default version of the page, before user uses search bar
                 else {
                 setRecRecipes(response.data.recRecipes);
+                console.log(response.data)
                 setOtherRecipes(response.data.otherRecipes);
                 }
             } catch (err) {
