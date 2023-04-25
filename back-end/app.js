@@ -178,21 +178,23 @@ app.get(
         const otherRecipes = await apiCall.getRandomRecipes(numOther);
 
         // Database interaction to determine if any recipe's ID is included in the user's saved recipe list
-        recRecipes.forEach(async (recipe) => {
-          const found = await Recipe.findOne({
+        recRecipes.forEach((recipe) => {
+          /*const found = await Recipe.findOne({
             user: req.user._id,
             id: recipe.id,
-          });
+          });*/
+          const found = req.user.savedRecipes.includes(recipe.id);
           if (found) {
             // Mark this recipe as saved, because it was found in the user's saved recipes list
             recipe.saved = true;
           }
         });
-        otherRecipes.forEach(async (recipe) => {
-          const found = await Recipe.findOne({
+        otherRecipes.forEach((recipe) => {
+          /*const found = await Recipe.findOne({
             user: req.user._id,
             id: recipe.id,
-          });
+          });*/
+          const found = req.user.savedRecipes.includes(recipe.id);
           if (found) {
             // Mark this recipe as saved, because it was found in the user's saved recipes list
             recipe.saved = true;
@@ -239,12 +241,19 @@ app.post(
     async function saveRecipe() {
       console.log('Saving the recipe: ' + req.body.recipeName);
       try {
+        /*
         const recipeToSave = new Recipe({
           user: req.user._id,
           id: req.body.id,
         });
         console.log(req);
-        await recipeToSave.save();
+        await recipeToSave.save();*/
+        const found = req.user.savedRecipes.includes(req.body.id);
+        if (found) {
+          throw new Error('already saved');
+        }
+        req.user.savedRecipes.push(req.body.id);
+        await req.user.save();
       } catch (err) {
         console.log(err);
       }
@@ -282,51 +291,55 @@ app.get(
     async function getRecipes(testRecipes, testFridge) {
       try {
         // Database interaction - get list of user's saved recipes ID from database
-        const savedRecipes = await Recipe.find({ user: { $in: req.user._id } });
+        const savedRecipes = req.user.savedRecipes;
+        console.log(savedRecipes)
         // Map recipe IDs to actual recipes
         if (savedRecipes.length !== 0) {
-          const allSavedRecipes = savedRecipes.map(
-            async (recipe) => await apiCall.getRecipeByID(recipe.id)
-          );
-          console.log(allSavedRecipes);
+          const allSavedRecipes = await Promise.all(
+              savedRecipes.map(async (recipe) => await apiCall.getRecipeByID(recipe))
+              );
           // for(let i = 0; i < allSavedRecipes.length; i++){
           // allSavedRecipes[i].then(response => console.log(response))
           // }
           // TODO test const allSavedRecipes = testRecipes;
-
+    
           // Mark all the recipes 'saved'
           allSavedRecipes.forEach((recipe) => {
             recipe.saved = true;
           });
-
           // Database interaction - get user's fridge (just IDs is sufficient)
           const fridgeIngredients = await Ingredient.find({
             user: req.user._id,
             type: 'fridge',
           });
           // TODO test const fridgeIngredients = testFridge.ingredients;
-
           // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
           const recRecipes = [];
           const otherRecipes = [];
           // Check each saved recipe
           allSavedRecipes.forEach((recipe) => {
             // Loop through fridge ingredients
-            fridgeIngredients.every((fridgeIng) => {
-              // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
-              // Otherwise, push this recipe to the other recipes array
-              let matchFound = false;
-              recipe.ingredients.every((recipeIng) => {
-                if (fridgeIng.id === recipeIng.id) {
-                  recRecipes.push(recipe);
-                  matchFound = true;
-                  return false;
+            if(fridgeIngredients.length !== 0)
+            {
+                fridgeIngredients.every((fridgeIng) => {
+                    console.log('hi')
+                // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
+                // Otherwise, push this recipe to the other recipes array
+                let matchFound = false;
+                recipe.ingredients.every((recipeIng) => {
+                    if (fridgeIng.id === recipeIng.id) {
+                    recRecipes.push(recipe);
+                    matchFound = true;
+                    return false;
+                    }
+                });
+                if (!matchFound) {
+                    otherRecipes.push(recipe);
                 }
-              });
-              if (!matchFound) {
+                });
+            } else {
                 otherRecipes.push(recipe);
-              }
-            });
+            }
           });
           res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes });
         } else {
@@ -354,11 +367,14 @@ app.post(
     async function unsaveRecipe() {
       console.log('Unsaving the recipe: ' + req.body.recipeName);
       try {
-        await Recipe.findOneAndDelete({ user: req.user._id, id: req.body.id });
+        //await Recipe.findOneAndDelete({ user: req.user._id, id: req.body.id });
+        req.user.savedRecipes = req.user.savedRecipes.filter(e => e !== req.body.id);
+        await req.user.save();
       } catch (err) {
         console.log(err);
       }
     }
+
     // Unsave a recipe
     if (req.body.save === false) {
       // Should always be true
