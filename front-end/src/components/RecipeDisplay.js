@@ -6,7 +6,6 @@ import SearchBar from './SearchBar.js';
 import { Navigate } from "react-router-dom"
 
 const RecipeDisplay = (props) => {
-
     // State to store user input in the search bar
     const [searchQuery, setSearchQuery] = useState('');
     
@@ -39,8 +38,8 @@ const RecipeDisplay = (props) => {
                 }
                 // Default version of the page, before user uses search bar
                 else {
-                    setRecRecipes(response.data.recRecipes);
-                    setOtherRecipes(response.data.otherRecipes);
+                setRecRecipes(response.data.recRecipes);
+                setOtherRecipes(response.data.otherRecipes);
                 }
             } catch (err) {
                 console.log(err);
@@ -76,11 +75,11 @@ const RecipeDisplay = (props) => {
         } else {
             // On the /savedrecipes route, display all saved recipes that match the query - no need to go to back end
             if (props.route === 'savedrecipes') {
-                const allRecipeCards = [...recRecipeCards, ...otherRecipeCards];
-                return allRecipeCards.filter((recipeCard) => {
-                    return recipeCard.props.recipeDetails.recipeName.toLowerCase().includes(query);
-                });
-            }
+            const allRecipeCards = [...recRecipeCards, ...otherRecipeCards];
+            return allRecipeCards.filter((recipeCard) => {
+                return recipeCard.props.recipeDetails.recipeName.toLowerCase().includes(query);
+            });
+        }
             // On the /recipesearch route, display the recipes from the API that match the search query
             else {
                 const searchResultsCards = searchResults.map((recipe) => {
