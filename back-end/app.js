@@ -56,7 +56,10 @@ mongoose
   .catch((err) => console.log(err));
 
 // GET route for recipe homepage
-app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.get(
+  '/', 
+  passport.authenticate("jwt", { session: false }), 
+  (req, res) => {
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
         let meal;
@@ -68,25 +71,28 @@ app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
             const dayKey = i.toString();
             if(mealPlan[dayKey] !== null)
             {
-                meal = await Day.findOne({ mealPlan: mealPlanId });
-                if(meal.breakfast !== null || meal.lunch !== null || meal.dinner !== null)
+                meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
+                if(meal !== null)
                 {
-                    spent += await apiCall.getRecipeByID(meal.breakfast).price;
-                    spent += await apiCall.getRecipeByID(meal.lunch).price;
-                    spent += await apiCall.getRecipeByID(meal.dinner).price;
+                    if(meal.breakfast !== null || meal.lunch !== null || meal.dinner !== null)
+                    {
+                        spent += await apiCall.getRecipeByID(meal.breakfast).price;
+                        spent += await apiCall.getRecipeByID(meal.lunch).price;
+                        spent += await apiCall.getRecipeByID(meal.dinner).price;
+                    }
                 }
             }
+            // if 
+            else
+            {
+                meal = await new Day({ mealPlan: mealPlanId, dayOfWeek: i, breakfast: null, lunch: null, dinner: null }).save();
+                mealPlan[i] = meal._id;
+                await mealPlan.save();
+            }
         }
-        
+
         // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
-        if(mealPlan[dayOfWeek.toString()] === null)
-        {
-            meal = await new Day({ mealPlan: mealPlanId, breakfast: null, lunch: null, dinner: null }).save();
-        }
-        else
-        {
-            meal = await Day.findOne({ mealPlan: mealPlanId });
-        }
+        meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
         if(meal.breakfast !== null)
         {
             recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
@@ -122,7 +128,10 @@ app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
 });
 
 // POST route for recipe homepage days of the week form
-app.post('/', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.post(
+  '/', 
+  passport.authenticate("jwt", { session: false }), 
+  (req, res) => {
   async function getDay(day) {
     console.log('Selected day: ' + req.body.day);
     req.user.dayOfWeek = day;
@@ -450,8 +459,11 @@ app.post('/addpage', (req, res) => {
 });
 
 // GET route for account page
-app.get('/account', async (req, res) => {
-    const user = await User.findOne({username:username});
+app.get(
+    '/account', 
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+    const user = await User.findOne({username: req.user});
     //const user = await User.findOne({username: username}).exec();
     try {
         res.send(user);

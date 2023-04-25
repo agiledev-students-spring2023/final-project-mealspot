@@ -11,7 +11,7 @@ const authenticationRouter = () => {
     const { password } = req.body;
     const { email } = req.body;
     const { weeklyBudget } = req.body;
-    const { dayOfWeek } = 0;
+    const dayOfWeek = 0;
 
     if (!username || !password || !email) {
       res.status(401).json({

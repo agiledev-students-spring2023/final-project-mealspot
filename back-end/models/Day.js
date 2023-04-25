@@ -10,6 +10,10 @@ const DaySchema = new Schema({
     ref: 'MealPlan',
     required: true,
   },
+  dayOfWeek: {
+    type: Number,
+    required: true,
+  },
   breakfast: {
     type: Number,
   },
