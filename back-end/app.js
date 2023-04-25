@@ -52,103 +52,10 @@ mongoose.connect(process.env.URI, mongooseOpts)
 .then(() => console.log("Connected Successfully!"))
 .catch((err) => console.log(err));
 
-//temp test data into db
-/*
-const userTest = new User({
-    username: 'test',
-    password: 'test',
-    email: 'test@gmail.com',
-    weeklyBudget: 200,
-});
-const dayTest = new Day({
-    mealPlan: 0,
-    breakfast: 1,
-    lunch: 1,
-    dinner: 1,
-});
-const mealTest = new MealPlan({
-    user: userTest._id,
-    0: dayTest._id
-});
-dayTest.mealPlan = mealTest._id
-userTest.save()
-  .then(() => {
-    console.log('User saved successfully');
-  })
-  .catch((err) => {
-    console.error('Failed to save User:', err);
-  });
-dayTest.save()
-  .then(() => {
-    console.log('Day saved successfully');
-  })
-  .catch((err) => {
-    console.error('Failed to save Day:', err);
-  });
-mealTest.save()
-  .then(() => {
-    console.log('MealPlan saved successfully');
-  })
-  .catch((err) => {
-    console.error('Failed to save MealPlan:', err);
-  });
-*/
-  //prints out what's in the temp db
-/*
-User.find()
-  .then((documents) => {
-    console.log('Users:');
-    console.log(documents); // Print the retrieved documents
-  })
-  .catch((err) => {
-    console.error('Failed to retrieve documents:', err);
-  });
-Day.find()
-  .then((documents) => {
-    console.log('Days:');
-    console.log(documents); // Print the retrieved documents
-  })
-  .catch((err) => {
-    console.error('Failed to retrieve documents:', err);
-  });
-MealPlan.find()
-  .then((documents) => {
-    console.log('MealPlans:');
-    console.log(documents); // Print the retrieved documents
-  })
-  .catch((err) => {
-    console.error('Failed to retrieve documents:', err);
-  });
-*/
-
 // GET route for recipe homepage
-/*
 app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
-  console.log(req.user.username)
-  async function getRecipes(url) {
-    try {
-      const response = await axios(url);
-      res.json(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  getRecipes('https://my.api.mockaroo.com/recipe.json?key=cf37bb40');
-});
-*/
-// switch after authentication is implemented
-app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
-  //console.log(req.user.mealPlan[0]._id)
-  //console.log(req.user._id)
-  //console.log(req.user.weeklyBudget)
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
-        console.log(userId);
-        console.log(budget);
-        console.log(mealPlanId);
-        console.log(dayOfWeek);
-
         let meal;
         let recipes = [null, null, null];
         let spent = 0;
@@ -167,7 +74,7 @@ app.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
                 }
             }
         }
-        console.log(spent);
+        
         // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
         if(mealPlan[dayOfWeek.toString()] === null)
         {

@@ -72,35 +72,13 @@ const RecipeInfo = (props) => {
     }, [day, props.apiLink])
     console.log(day)
 
-    //TEMP WAY TO GET ACCOUNT INFO
-    const [data, setData] = useState([])
-    const userID = useParams()
-    /*
-    useEffect(() => {
-      // axios("https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0") temporary use of second api, should be removed during database implement
-      axios('https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0')
-        .then(response => {
-          // extract the data from the server response
-          console.log(response.data[0])
-          setData(response.data[0])
-        })
-        .catch(err => {
-          console.error(err) 
-        })
-    }, [userID])*/
-    
     // Get the list of ing and price for each recipe
     //https://getbutterfly.com/generate-html-list-from-javascript-array/
     if(typeof recipes !== 'undefined' && recipes.length === 0)
     {
         return null
     }
-    //temp comment out for out of mockaroo req
-    /*
-    if(typeof data !== 'undefined' && data.length === 0)
-    {
-        return null
-    }*/
+
     let listIngMorn;
     let listIngAft;
     let listIngEve;
