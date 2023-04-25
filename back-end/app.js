@@ -393,6 +393,8 @@ app.post(
 
 // GET route for choose from saved recipes page
 app.get('/choosesavedrecipes', (req, res) => {
+    passport.authenticate("jwt", { session: false }), 
+    (req, res) => { 
   async function getRecipes(recipesUrl, fridgeUrl) {
     // try {
     //   const recipes = await axios(recipesUrl);
@@ -455,11 +457,12 @@ app.get('/choosesavedrecipes', (req, res) => {
 //     'https://my.api.mockaroo.com/recipe.json?key=8198c2b0',
 //     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
 //   );
-});
+}});
 
 // POST route for choose from saved recipes page
 app.post('/choosesavedrecipes', (req, res) => {
   // TODO
+  // add idto meal plan =>
   // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
 });
 
