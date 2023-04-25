@@ -25,10 +25,14 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
   },
-  mealPlan: {
+  dayOfWeek: {
+    type: Number,
+    required: true,
+  },
+  mealPlan: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MealPlan',
-  },
+  }],
   // Saved recipes list is an array of Ingredients
   savedRecipes: [
     {

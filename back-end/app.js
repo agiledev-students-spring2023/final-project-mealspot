@@ -56,32 +56,88 @@ mongoose
   .catch((err) => console.log(err));
 
 // GET route for recipe homepage
-app.get('/', (req, res) => {
-  async function getRecipes(url) {
+app.get(
+  '/', 
+  passport.authenticate("jwt", { session: false }), 
+  (req, res) => {
+  async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
-      const response = await axios(url);
-      res.json(response.data);
-    } catch (err) {
-      console.log(err);
+        let meal;
+        let recipes = [null, null, null];
+        let spent = 0;
+        const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
+        // Get total cost of meals
+        for (let i = 0; i <= 6; i++) {
+            const dayKey = i.toString();
+            if(mealPlan[dayKey] !== null)
+            {
+                meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
+                if(meal !== null)
+                {
+                    if(meal.breakfast !== null || meal.lunch !== null || meal.dinner !== null)
+                    {
+                        spent += await apiCall.getRecipeByID(meal.breakfast).price;
+                        spent += await apiCall.getRecipeByID(meal.lunch).price;
+                        spent += await apiCall.getRecipeByID(meal.dinner).price;
+                    }
+                }
+            }
+            // if 
+            else
+            {
+                meal = await new Day({ mealPlan: mealPlanId, dayOfWeek: i, breakfast: null, lunch: null, dinner: null }).save();
+                mealPlan[i] = meal._id;
+                await mealPlan.save();
+            }
+        }
+
+        // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
+        meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
+        if(meal.breakfast !== null)
+        {
+            recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
+        }
+        else
+        {
+            recipes[0] = null;
+        }
+        if(meal.lunch !== null)
+        {
+            recipes[1] = await apiCall.getRecipeByID(meal.lunch);
+        }
+        else
+        {
+            recipes[1] = null;
+        }
+        if(meal.dinner !== null)
+        {
+            recipes[2] = await apiCall.getRecipeByID(meal.dinner);
+        }
+        else
+        {
+            recipes[2] = null;
+        }
+        res.json({ budget: budget, spent: spent, dayOfWeek: dayOfWeek, recipes: recipes });
+    } 
+    catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
     }
   }
-
-  getRecipes('https://my.api.mockaroo.com/recipe.json?key=cf37bb40');
+  getRecipes(req.user._id, req.user.weeklyBudget, req.user.mealPlan[0], req.user.dayOfWeek);
 });
 
 // POST route for recipe homepage days of the week form
-app.post('/', (req, res) => {
-  // Unsave a recipe
-  console.log('Selected day: ' + req.body.day);
-  const day = parseInt(req.body.day);
-  if (isNaN(day) || day < 0 || day > 6) {
-    return res.status(400).json({
-      status: 'error',
-    });
+app.post(
+  '/', 
+  passport.authenticate("jwt", { session: false }), 
+  (req, res) => {
+  async function getDay(day) {
+    console.log('Selected day: ' + req.body.day);
+    req.user.dayOfWeek = day;
+    await req.user.save();
   }
-  return res.json({
-    status: 'ok',
-  });
+  getDay(req.body.day);
 });
 
 // GET route for homepage recipe edit page
@@ -403,6 +459,7 @@ app.post('/addpage', (req, res) => {
 });
 
 // GET route for account page
+<<<<<<< HEAD
 app.get('/account', 
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
@@ -410,6 +467,21 @@ app.get('/account',
             username: req.user.username, 
             email: req.user.email, 
             weeklyBudget: req.user.weeklyBudget})
+=======
+app.get(
+    '/account', 
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+    const user = await User.findOne({username: req.user});
+    //const user = await User.findOne({username: username}).exec();
+    try {
+        res.send(user);
+        console.log(user);
+      } catch (error) {
+        res.status(500).send(error);
+        //console.log(error);
+      }
+>>>>>>> f6ecdf7bcbf1a7e9b5ce2666f5e0b7d676b0b035
 });
 
 // POST route for account page
