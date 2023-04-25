@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
 
 // Mongoose model of a meal plan, which belongs to a specific user
 const MealPlanSchema = new Schema({
@@ -46,7 +47,7 @@ const MealPlanSchema = new Schema({
 })
 
 // create a model from this schema
-const MealPlan = mongoose.model("MealPlan", MealPlanSchema);
+const MealPlan = mongoose.model('MealPlan', MealPlanSchema);
 
 // export the model
 module.exports = MealPlan;

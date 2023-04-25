@@ -1,7 +1,8 @@
-import { TextField, Box, Button } from '@mui/material'
+import { TextField, Box, Button, Link } from '@mui/material'
 import axios from 'axios'
 import React, { useState, useEffect } from "react"
 import { Navigate } from "react-router-dom"
+import './Login.css'
 
 const border = {
     border: 1.4,
@@ -12,6 +13,7 @@ const border = {
 
 const Login = () => {
     const [response, setResponse] = useState({})
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         if (response.success && response.token) {
@@ -35,7 +37,15 @@ const Login = () => {
           })
           .catch(function (error) {
             console.log(error);
+            setErrorMessage(error.response.data.message)
           });
+    }
+
+    // redirect if logged in
+    const jwtToken = localStorage.getItem("token")
+    if (jwtToken) {
+        console.log("user logged in")
+        return <Navigate to="/" />
     }
 
     if (!response.success) {
@@ -57,20 +67,18 @@ const Login = () => {
                         label="Password"
                         name="password"
                     ></TextField><br/>
-                    <br/>
+                    {errorMessage && (<p className="error"> {errorMessage} </p>)}
                     <br/>
                     <Button sx={border}
                         variant="outlined"
                         type="submit"
                     >
                         Log In
-                    </Button><br/><br/>
-                    <Button sx={border}
-                        variant="outlined"
-                        href="/register"
-                    >
-                        Register
                     </Button>
+                    <br/>
+                    <Link href="register" variant="body2">
+                        {"No account? Register"}
+                    </Link>
                 </Box>
             </div>
         )

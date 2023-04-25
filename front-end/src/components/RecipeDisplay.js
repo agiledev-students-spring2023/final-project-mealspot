@@ -3,6 +3,7 @@ import axios from 'axios';
 import './RecipeDisplay.css';
 import RecipeCard from './RecipeCard.js';
 import SearchBar from './SearchBar.js';
+import { Navigate } from "react-router-dom"
 
 const RecipeDisplay = (props) => {
     // State to store user input in the search bar
@@ -31,7 +32,6 @@ const RecipeDisplay = (props) => {
                 const jwtToken = localStorage.getItem("token")
                 const authToken = 'jwt ' + jwtToken + ''
                 const response = await axios(url, {headers: { Authorization: authToken }});
-                console.log(response);
                 // Search results version of the page, after user uses search bar
                 if (response.data.searchResults) {
                     setSearchResults(response.data.searchResults);
@@ -89,6 +89,13 @@ const RecipeDisplay = (props) => {
             }
         }
     };
+
+    // redirect if not logged in
+    const jwtToken = localStorage.getItem("token")
+    if (!jwtToken) {
+        console.log("user not logged in")
+        return <Navigate to="/login" />
+    }
 
     // Return the final component, consisting of page header and the array of recipe cards
     return (

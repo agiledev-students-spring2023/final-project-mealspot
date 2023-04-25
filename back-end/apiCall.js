@@ -17,30 +17,6 @@ All functions that return a recipe return it as an object in this form:
   saved: boolean
 */
 
-
-// Get Random Recipes - used for the recipe search page
-async function getRandomRecipes(numRecipes) {
-  try {
-      // Get the raw recipes data from the Spoonacular API
-      const options = {
-          method: 'GET',
-          url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random',
-          params: {number: numRecipes},
-          headers: {
-          'X-RapidAPI-Key': process.env.API_KEY,
-          'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-          }
-      };      
-      const response = await axios(options);
-
-      // Box all the raw data into recipe objects, and return the array of them
-      // Note that all recipes are reduced to just 1 serving of the recipe
-      return await Promise.all(response.data.recipes.map(async(recipe) => simplifyRecipe(recipe)));
-  } catch (err) {
-      console.log(err);
-  }
-}
-
 // Helper function that gets only the necessary information for displaying a recipe in our app, e.g. on the recipe search, saved recipes, or meal plan page
 async function simplifyRecipe(recipe) {
   // Get information on this recipe's price and its ingredients
@@ -49,8 +25,8 @@ async function simplifyRecipe(recipe) {
     url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipe.id}/priceBreakdownWidget.json`,
     headers: {
       'X-RapidAPI-Key': process.env.API_KEY,
-      'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-    }
+      'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+    },
   };
   const response = await axios(options);
   const price = Number(response.data.totalCostPerServing / 100).toFixed(2);
@@ -73,10 +49,10 @@ async function simplifyRecipe(recipe) {
     ing.id = recipe.extendedIngredients[i].id;
   })
   */
-  
+
   // TODO for testing purposes, only do one ingredient
   const ing = response.data.ingredients[0];
-  const name = ing.name;
+  const { name } = ing;
   let amount = ing.amount.us.value / recipe.servings;
   if (countDecimals(amount) >= 2) {
     amount = Number(ing.amount.us.value / recipe.servings).toFixed(2);
@@ -86,10 +62,10 @@ async function simplifyRecipe(recipe) {
     {
       id: ing.id,
       ingredientString: `${amount} ${units} ${name}`,
-    }
-  ]
-  
-  const image = recipe.image ? recipe.image : "";
+    },
+  ];
+
+  const image = recipe.image ? recipe.image : '';
 
   return {
     id: recipe.id,
@@ -99,48 +75,43 @@ async function simplifyRecipe(recipe) {
     ingredients: ingredients,
     price: price,
     saved: false, // defaults to false, is updated in the route in app.js
+  };
+}
+
+// Get Random Recipes - used for the recipe search page
+async function getRandomRecipes(numRecipes) {
+  try {
+    // Get the raw recipes data from the Spoonacular API
+    const options = {
+      method: 'GET',
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random',
+      params: { number: numRecipes },
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host':
+          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+      },
+    };
+    const response = await axios(options);
+
+    // Box all the raw data into recipe objects, and return the array of them
+    // Note that all recipes are reduced to just 1 serving of the recipe
+    return await Promise.all(
+      response.data.recipes.map(async (recipe) => simplifyRecipe(recipe))
+    );
+  } catch (err) {
+    console.log(err);
   }
-};
+}
 
 // Helper function for ingredient amounts
 // Code attribution: Nikhilesh Aleti, https://www.tutorialspoint.com/decimal-count-of-a-number-in-javascript
 function countDecimals(num) {
   const str = num.toString();
   if (str.includes('.')) {
-     return str.split('.')[1].length;
-  };
-  return 0;
-}
-
-// Find an ingredient by a search query, returns the ID of the cheapest matching ingredient, or -1 if this ingredient is not recognized
-// To be used for the fridge POST and grocery list POST
-async function getIngredientByName(ingredientName) {
-  try {
-    const options = {
-      method: 'GET',
-      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/search',
-      params: {
-        query: ingredientName,
-        sort: 'price',
-        sortDirection: 'asc',
-        number: '1',
-      },
-      headers: {
-        'X-RapidAPI-Key': process.env.API_KEY,
-        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-      }
-    };
-    
-    const response = await axios(options);
-
-    if (response.data.results.length === 0) { // Ingredient not recognized - no results for this query
-      return -1;
-    } else { // Ingredient recognized - 1 result for this query
-      return getIngredientByID(response.data.results[0].id);
-    }
-  } catch (err) {
-    console.log(err);
+    return str.split('.')[1].length;
   }
+  return 0;
 }
 
 // Takes the ID number and quantity of an ingredient
@@ -152,26 +123,57 @@ async function getIngredientByID(ingredientID, quantity) {
     const options = {
       method: 'GET',
       url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/${ingredientID}/information`,
-      params: {amount: quantity},
+      params: { amount: quantity },
       headers: {
         'X-RapidAPI-Key': process.env.API_KEY,
-        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-      }
+        'X-RapidAPI-Host':
+          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+      },
+    };
+
+    const response = await axios(options);
+    if (response.status === 'failure' && response.code === 404) {
+      // Given ID doesn't have a corresponding ingredient
+      return {
+        status: 'failure',
+      };
+    } // Found the corresponding ingredient
+    return {
+      id: ingredientID,
+      ingredientName: response.data.name,
+      quantity: quantity,
+      // price: Number(response.data.estimatedCost.value / 100).toFixed(2),
+    };
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// Find an ingredient by a search query, returns the ID of the cheapest matching ingredient, or -1 if this ingredient is not recognized
+// To be used for the fridge POST and grocery list POST
+async function getIngredientByName(ingredientName) {
+  try {
+    const options = {
+      method: 'GET',
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/search',
+      params: {
+        query: ingredientName,
+        number: '1',
+      },
+      headers: {
+        'X-RapidAPI-Key': process.env.API_KEY,
+        'X-RapidAPI-Host':
+          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+      },
     };
 
     const response = await axios(options);
 
-    if (response.status === 'failure' && response.code === 404) { // Given ID doesn't have a corresponding ingredient
-      return {
-        status: 'failure',
-      }
-    } else { // Found the corresponding ingredient
-      return {
-        id: ingredientID,
-        ingredientName: response.data.name,
-        price: Number(response.data.estimatedCost.value / 100).toFixed(2),
-      }
-    }
+    if (response.data.results.length === 0) {
+      // Ingredient not recognized - no results for this query
+      return -1;
+    } // Ingredient recognized - 1 result for this query
+    return getIngredientByID(response.data.results[0].id);
   } catch (err) {
     console.log(err);
   }
@@ -188,21 +190,22 @@ async function getRecipeByID(recipeID) {
       url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipeID}/information`,
       headers: {
         'X-RapidAPI-Key': process.env.API_KEY,
-        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-      }
+        'X-RapidAPI-Host':
+          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+      },
     };
 
     const response = await axios(options);
 
-    if (response.status === 'failure' && response.code === 404) { // Given ID doesn't have a corresponding recipe
+    if (response.status === 'failure' && response.code === 404) {
+      // Given ID doesn't have a corresponding recipe
       return {
         status: 'failure',
-      }
-    } else { // Found the corresponding recipe - simplify it to just the info that we need, and return it
-      return simplifyRecipe(response.data);
-    }
+      };
+    } // Found the corresponding recipe - simplify it to just the info that we need, and return it
+    return simplifyRecipe(response.data);
   } catch (err) {
-   console.log(err);
+    console.log(err);
   }
 }
 
@@ -211,9 +214,10 @@ async function getRecipeByID(recipeID) {
 // To be used for recommendation feature in saved recipes GET and recipe search GET
 async function getRecipesByIngredients(numRecipes, ingredients) {
   try {
-    const commaSep = ingredients.reduce((accum, curr) => {
-      return accum + curr + ',';
-    }, '');
+    const commaSep = ingredients.reduce(
+      (accum, curr) => accum + curr + ',',
+      ''
+    );
 
     const options = {
       method: 'GET',
@@ -222,19 +226,22 @@ async function getRecipesByIngredients(numRecipes, ingredients) {
         ingredients: commaSep,
         number: numRecipes,
         ignorePantry: 'true',
-        ranking: '1'
+        ranking: '1',
       },
       headers: {
         'X-RapidAPI-Key': process.env.API_KEY,
-        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-      }
+        'X-RapidAPI-Host':
+          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+      },
     };
-    
+
     // The data returned by the API here is an array of recipes
     const response = await axios(options);
 
     // Map that array into an array of those recipes, but simplified to just the info we need
-    const recipes = await Promise.all(response.data.map(async(recipe) => { return await getRecipeByID(recipe.id); }));
+    const recipes = await Promise.all(
+      response.data.map(async (recipe) => await getRecipeByID(recipe.id))
+    );
 
     return recipes;
   } catch (err) {
@@ -256,18 +263,23 @@ async function searchRecipes(searchQuery, numResults) {
       },
       headers: {
         'X-RapidAPI-Key': process.env.API_KEY,
-        'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
-      }
+        'X-RapidAPI-Host':
+          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+      },
     };
-    
+
     const response = await axios(options);
 
-    if (response.data.results.length === 0) { // No recipes found that match this query
+    if (response.data.results.length === 0) {
+      // No recipes found that match this query
       return -1;
-    } else { // Return the matching recipes that were found
-      const recipes = await Promise.all(response.data.results.map(async(recipe) => { return await getRecipeByID(recipe.id); }));
-      return recipes;
-    }
+    } // Return the matching recipes that were found
+    const recipes = await Promise.all(
+      response.data.results.map(
+        async (recipe) => await getRecipeByID(recipe.id)
+      )
+    );
+    return recipes;
   } catch (err) {
     console.log(err);
   }
@@ -280,4 +292,4 @@ module.exports = {
   getRecipeByID: getRecipeByID,
   getRecipesByIngredients: getRecipesByIngredients,
   searchRecipes: searchRecipes,
-}
+};
