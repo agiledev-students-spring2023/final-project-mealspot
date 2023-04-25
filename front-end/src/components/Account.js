@@ -26,8 +26,6 @@ const border = {
 }
 
 const Account = (props) => {
-    // const [firstName, setFirstName] = useState('')
-    // const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [newBudget, setNewBudget] = useState(0.0)
@@ -36,9 +34,7 @@ const Account = (props) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    //const[user, setUser] = useState(''); //EDIT 
-    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/auth/account'
-
+  
     useEffect(() => {
       const jwtToken = localStorage.getItem("token")
       const authToken = 'jwt ' + jwtToken + ''
