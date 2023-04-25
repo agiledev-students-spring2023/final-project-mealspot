@@ -392,78 +392,88 @@ app.post(
 );
 
 // GET route for choose from saved recipes page
-app.get('/choosesavedrecipes', (req, res) => {
+app.get('/choosesavedrecipes',
     passport.authenticate("jwt", { session: false }), 
     (req, res) => { 
-  async function getRecipes(recipesUrl, fridgeUrl) {
-    // try {
-    //   const recipes = await axios(recipesUrl);
-    //   // TODO: database interaction here that gets the data of what's in the fridge - for now I'm using mockaroo
-    //   // that is, the second parameter of this async function should be able to be removed in the next sprint
-    //   const fridge = await axios(fridgeUrl);
-    //   console.log(fridge.data);
-    //   res.json({ recipes: recipes.data, fridge: fridge.data });
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    try {
-        // Database interaction - get list of user's saved recipes ID from database
-        const savedRecipes = await Recipe.find({'_id': {$in: req.user.savedRecipes}});
-        // Map recipe IDs to actual recipes
-        if (savedRecipes.length !== 0) {
-          const allSavedRecipes = savedRecipes.map(async(recipe) => await apiCall.getRecipeByID(recipe.id));
-          // TODO test const allSavedRecipes = testRecipes;
-  
-          // Mark all the recipes 'saved'
-          allSavedRecipes.forEach((recipe) => { recipe.saved = true });
-  
-          // Database interaction - get user's fridge (just IDs is sufficient)
-          const fridgeIngredients = await Ingredient.find({'user': req.user._id, type: 'fridge'});
-          // TODO test const fridgeIngredients = testFridge.ingredients;
-          
-          // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
-          let recRecipes = [];
-          let otherRecipes = [];
-          // Check each saved recipe
-          allSavedRecipes.forEach((recipe) => {
-            // Loop through fridge ingredients
-            fridgeIngredients.every((fridgeIng) => {
-              // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
-              // Otherwise, push this recipe to the other recipes array
-              let matchFound = false;
-              recipe.ingredients.every((recipeIng) => {
-                if (fridgeIng.id === recipeIng.id) {
-                  recRecipes.push(recipe);
-                  matchFound = true;
-                  return false;
-                }
-              });
-              if (!matchFound) {
-                otherRecipes.push(recipe);
+      async function getRecipes(testRecipes, testFridge) {
+        try {
+          // Database interaction - get list of user's saved recipes ID from database
+          const savedRecipes = req.user.savedRecipes;
+          console.log(savedRecipes)
+          // Map recipe IDs to actual recipes
+          if (savedRecipes.length !== 0) {
+            const allSavedRecipes = await Promise.all(
+                savedRecipes.map(async (recipe) => await apiCall.getRecipeByID(recipe))
+                );
+            // for(let i = 0; i < allSavedRecipes.length; i++){
+            // allSavedRecipes[i].then(response => console.log(response))
+            // }
+            // TODO test const allSavedRecipes = testRecipes;
+      
+            // Mark all the recipes 'saved'
+            allSavedRecipes.forEach((recipe) => {
+              recipe.saved = true;
+            });
+            // Database interaction - get user's fridge (just IDs is sufficient)
+            const fridgeIngredients = await Ingredient.find({
+              user: req.user._id,
+              type: 'fridge',
+            });
+            // TODO test const fridgeIngredients = testFridge.ingredients;
+            // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
+            const recRecipes = [];
+            const otherRecipes = [];
+            // Check each saved recipe
+            allSavedRecipes.forEach((recipe) => {
+              // Loop through fridge ingredients
+              if(fridgeIngredients.length !== 0)
+              {
+                  fridgeIngredients.every((fridgeIng) => {
+                      console.log('hi')
+                  // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
+                  // Otherwise, push this recipe to the other recipes array
+                  let matchFound = false;
+                  recipe.ingredients.every((recipeIng) => {
+                      if (fridgeIng.id === recipeIng.id) {
+                      recRecipes.push(recipe);
+                      matchFound = true;
+                      return false;
+                      }
+                  });
+                  if (!matchFound) {
+                      otherRecipes.push(recipe);
+                  }
+                  });
+              } else {
+                  otherRecipes.push(recipe);
               }
             });
-          });
-  
-          res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes});
-        } else {
-          res.json({ recRecipes: [], otherRecipes: [] });
+            res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes });
+          } else {
+            res.json({ recRecipes: [], otherRecipes: [] });
+          }
+        } catch (err) {
+          console.log(err);
         }
-      } catch (err) {
-        console.log(err);
       }
-    }
     getRecipes(require('./testRecipes.json'), require('./testFridge.json'));
 //   getRecipes(
 //     'https://my.api.mockaroo.com/recipe.json?key=8198c2b0',
 //     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
 //   );
-}});
+});
 
 // POST route for choose from saved recipes page
 app.post('/choosesavedrecipes', (req, res) => {
   // TODO
-  // add idto meal plan =>
   // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
+  /*async function chooseRecipe() {
+    const mealPlan = await MealPlan.findOne({ user: req.user._id });
+    const meal = await Day.findOne({ mealPlan: mealPlan._id, dayOfWeek: req.user.dayOfWeek });
+    meal[req.user.timeOfDay] = req.body.id;
+    await meal.save();
+  }
+  chooseRecipe();*/
 });
 
 // GET route for add your own recipes page

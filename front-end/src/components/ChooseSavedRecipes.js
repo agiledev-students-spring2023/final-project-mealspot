@@ -20,15 +20,9 @@ const style = {
   };
   
 const ChooseSavedRecipes = () => {
-    let now = new Date()
-    let today = now.getDay()
-    const [items, addItem] = useState("")
-    const [open, setOpen] = useState(false)
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
     const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/choosesavedrecipes`;
     return (
-        <div class = "popup"> 
+        <div className = "popup"> 
             <div>
                 <Link to="/choosepage" className="link-edit">
                     <IconContext.Provider value={{ className: "navbar-icon" }}>
@@ -38,48 +32,11 @@ const ChooseSavedRecipes = () => {
             </div>
             <div className="popupInner">
                 <h1>Edit Meal</h1>
-                <FormControl fullWidth>
-                    <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                        Day of the Week:
-                    </InputLabel>
-                     <NativeSelect
-                        defaultValue={today}
-                        inputProps={{
-                        name: 'days',
-                        id: 'uncontrolled-native',
-                        }}
-                    >
-                        <option value={1}>Monday</option>
-                        <option value={2}>Tuesday</option>
-                        <option value={3}>Wednesday</option>
-                        <option value={4}>Thursday</option>
-                        <option value={5}>Friday</option>
-                        <option value={6}>Saturday</option>
-                        <option value={0}>Sunday</option>
-                    </NativeSelect>
-                </FormControl>
-                <FormControl fullWidth>
-                    <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                        Time of Day:
-                    </InputLabel>
-                     <NativeSelect
-                        defaultValue={today}
-                        inputProps={{
-                        name: 'timeOfDay',
-                        id: 'uncontrolled-native',
-                        }}
-                    >
-                        <option value={1}>Breakfast</option>
-                        <option value={2}>Lunch</option>
-                        <option value={3}>Dinner</option>
-                    </NativeSelect>
-                </FormControl>
                 <p className='choose'>Choose From Saved</p>
                 <div>
                     {/* <RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' /> */}
                     <RecipeDisplay route='choosesavedrecipes' apiLink={apiLink} />
                  </div>
-            <button onClick={handleClose}>Close</button>
             </div>
         </div>
     );
