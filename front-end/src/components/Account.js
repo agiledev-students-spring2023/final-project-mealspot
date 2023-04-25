@@ -44,7 +44,7 @@ const Account = (props) => {
           // extract the data from the server response
           setUsername(response.data.username)
           setEmail(response.data.email)
-          setCurrentBudget(response.weekly_budget)
+          setCurrentBudget(response.data.weeklyBudget)
         })
         .catch(err => {
           console.error(err) 
@@ -56,9 +56,11 @@ const Account = (props) => {
       e.preventDefault() // prevent normal browser submit behavior
   
       try {
-        const res = await axios.post(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`, { budget: newBudget })
+        const jwtToken = localStorage.getItem("token")
+        const authToken = 'jwt ' + jwtToken + ''
+        const res = await axios.post(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`, { budget: newBudget }, {headers: {Authorization: authToken}})
         // update current budget
-        setCurrentBudget(res.data.budget)
+        setCurrentBudget(res.data.weeklyBudget)
         // clear form
         setNewBudget(0.0)
       } catch(err) {
@@ -92,7 +94,8 @@ const Account = (props) => {
                 {/* <p>Weekly budget: {currentBudget}</p> */}
                 <p className="profileAttribute">Name: {username}</p>
                 <p className="profileAttribute">Email: {email}</p>
-                {currentBudget === 0 ? <p className="profileAttribute">Weekly Budget: $37.65</p> : <p className="profileAttribute">Weekly Budget: {currentBudget}</p>}
+                {currentBudget === 0 ? <p className="profileAttribute">Weekly Budget: $37.65</p> : <p className="profileAttribute">Weekly Budget: ${currentBudget}
+                </p>}
                 <Button sx={border} variant="outlined" onClick={handleOpen}>Edit Budget</Button>
                 <Modal
                 open={open}
