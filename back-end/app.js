@@ -459,34 +459,31 @@ app.post('/addpage', (req, res) => {
 });
 
 // GET route for account page
-app.get(
-    '/account', 
+app.get('/account', 
     passport.authenticate('jwt', { session: false }),
-    async (req, res) => {
-    const user = await User.findOne({username: req.user});
-    //const user = await User.findOne({username: username}).exec();
-    try {
-        res.send(user);
-        console.log(user);
-      } catch (error) {
-        res.status(500).send(error);
-        //console.log(error);
-      }
+    (req, res) => {
+        res.json({
+            username: req.user.username, 
+            email: req.user.email, 
+            weeklyBudget: req.user.weeklyBudget})
 });
 
 // POST route for account page
-app.post('/account', (req, res) => {
-  // Change this user's budget
-  if (req.body.budget && !isNaN(req.body.budget)) {
-    // Make sure budget is a number
-    // TODO: database interaction here that updates the user's budget in the database
-    const budgetNumber = Number(req.body.budget).toFixed(2);
-    res.json({ budget: '$' + budgetNumber });
-  } else {
-    // Invalid input
-    res.status(400);
-    res.json({ msg: 'invalid input' });
-  }
+app.post('/account', 
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+        // Change this user's budget
+        // Make sure budget is a number
+        if (req.body.budget && !isNaN(req.body.budget)) {
+            req.user.weeklyBudget = req.body.budget;
+            await req.user.save();
+            res.json({weeklyBudget: req.user.weeklyBudget});
+            console.log(req.user.weeklyBudget);
+        } else {
+            // Invalid input
+            res.status(400);
+            res.json({ msg: 'invalid input' });
+        }
 });
 
 // GET route for my fridge page
