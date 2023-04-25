@@ -403,16 +403,28 @@ app.post('/addpage', (req, res) => {
 });
 
 // GET route for account page
-app.get('/account', async (req, res) => {
-    const user = await User.findOne({username:username});
-    //const user = await User.findOne({username: username}).exec();
-    try {
-        res.send(user);
-        console.log(user);
-      } catch (error) {
-        res.status(500).send(error);
-        //console.log(error);
-      }
+app.get('/account', 
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        res.json({
+            username: req.user.username, 
+            email: req.user.email, 
+            weeklyBudget: req.user.weeklyBudget})
+        //const user = await User.findOne({}); //EDIT (pass query params into backend)
+        //console.log(user)
+        //const user = await User.findOne({username: username}).exec();
+        // const user = req.user;
+        // try {
+        //     //res.send(user);
+        //     //console.log(user);
+        //     res.json(req.user.username);
+        //     res.json(req.user.email);
+        //     res.json(req.user.budget);
+        //     console.log(req.user.username);
+        // } catch (error) {
+        //     res.status(500).send(error);
+        //     //console.log(error);
+        // }
 });
 
 // POST route for account page

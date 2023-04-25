@@ -36,14 +36,16 @@ const Account = (props) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    
-  
+    //const[user, setUser] = useState(''); //EDIT 
+    const url = process.env.REACT_APP_SERVER_HOSTNAME + '/auth/account'
+
     useEffect(() => {
-      axios(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`)
+      const jwtToken = localStorage.getItem("token")
+      const authToken = 'jwt ' + jwtToken + ''
+
+      axios(`${process.env.REACT_APP_SERVER_HOSTNAME}/account`, {headers: {Authorization: authToken}})
         .then(response => {
           // extract the data from the server response
-          // setFirstName(response.data[0].first_name)
-          // setLastName(response.data[0].last_name)
           setUsername(response.data.username)
           setEmail(response.data.email)
           setCurrentBudget(response.weekly_budget)
@@ -67,7 +69,7 @@ const Account = (props) => {
         console.log(err)
       }
       handleClose()
-    }
+    }  
     
     const logoutOnClick = (event) => {
       event.preventDefault()
