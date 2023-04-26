@@ -64,21 +64,30 @@ app.get(
     try {
         let meal;
         let recipes = [null, null, null];
-        let spent = 0;
+        let spent = 0.00;
         const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
         // Get total cost of meals
         for (let i = 0; i <= 6; i++) {
             const dayKey = i.toString();
             if(mealPlan[dayKey] !== null)
             {
-                meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
+                meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: i });
                 if(meal !== null)
                 {
-                    if(meal.breakfast !== null || meal.lunch !== null || meal.dinner !== null)
+                    if(meal.breakfast !== null)
                     {
-                        spent += await apiCall.getRecipeByID(meal.breakfast).price;
-                        spent += await apiCall.getRecipeByID(meal.lunch).price;
-                        spent += await apiCall.getRecipeByID(meal.dinner).price;
+                      const recipe = await apiCall.getRecipeByID(meal.breakfast);
+                      spent += Number(recipe.price);
+                    }
+                    if(meal.lunch !== null)
+                    {
+                      const recipe = await apiCall.getRecipeByID(meal.lunch);
+                      spent += Number(recipe.price);
+                    }
+                    if(meal.dinner !== null)
+                    {
+                      const recipe = await apiCall.getRecipeByID(meal.dinner);
+                      spent += Number(recipe.price);
                     }
                 }
             }
@@ -90,6 +99,7 @@ app.get(
                 await mealPlan.save();
             }
         }
+        spent = spent.toFixed(2)
 
         // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
         meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
@@ -117,7 +127,7 @@ app.get(
         {
             recipes[2] = null;
         }
-        res.json({ budget: budget, spent: spent, dayOfWeek: dayOfWeek, recipes: recipes });
+        res.json({ budget: budget, spent: spent, recipes: recipes, dayOfWeek: dayOfWeek });
     } 
     catch (err) {
         console.error(err);
@@ -131,13 +141,45 @@ app.get(
 app.post(
   '/', 
   passport.authenticate("jwt", { session: false }), 
-  (req, res) => {
-  async function getDay(day) {
-    console.log('Selected day: ' + req.body.day);
-    req.user.dayOfWeek = day;
+  async (req, res) => {
+    if (!req.body.time) {
+      console.log('Selected day: ' + req.body.day);
+      req.user.dayOfWeek = req.body.day;
+      let recipes = [null, null, null];
+      meal = await Day.findOne({ mealPlan: req.user.mealPlan, dayOfWeek: req.body.day });
+      if(meal !== null)
+      {
+        if(meal.breakfast !== null)
+        {
+            recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
+        }
+        else
+        {
+            recipes[0] = null;
+        }
+        if(meal.lunch !== null)
+        {
+            recipes[1] = await apiCall.getRecipeByID(meal.lunch);
+        }
+        else
+        {
+            recipes[1] = null;
+        }
+        if(meal.dinner !== null)
+        {
+            recipes[2] = await apiCall.getRecipeByID(meal.dinner);
+        }
+        else
+        {
+            recipes[2] = null;
+        }
+    }
+    res.json({dayOfWeek: req.user.dayOfWeek, recipes: recipes})
+    } else {
+      console.log('Time of day: ' + req.body.time);
+      req.user.timeOfDay = req.body.time;
+    }
     await req.user.save();
-  }
-  getDay(req.body.day);
 });
 
 // GET route for homepage recipe edit page
@@ -464,16 +506,18 @@ app.get('/choosesavedrecipes',
 });
 
 // POST route for choose from saved recipes page
-app.post('/choosesavedrecipes', (req, res) => {
+app.post('/choosesavedrecipes', 
+passport.authenticate("jwt", { session: false }), 
+(req, res) => {
   // TODO
   // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
-  /*async function chooseRecipe() {
+  async function chooseRecipe() {
     const mealPlan = await MealPlan.findOne({ user: req.user._id });
     const meal = await Day.findOne({ mealPlan: mealPlan._id, dayOfWeek: req.user.dayOfWeek });
     meal[req.user.timeOfDay] = req.body.id;
     await meal.save();
   }
-  chooseRecipe();*/
+  chooseRecipe();
 });
 
 // GET route for add your own recipes page

@@ -31,7 +31,6 @@ const UserSchema = new Schema({
   },
   timeOfDay: {
     type: String,
-    required: true,
   },
   mealPlan: [{
     type: mongoose.Schema.Types.ObjectId,

@@ -72,9 +72,10 @@ const RecipeCard = (props) => {
             } catch (err) {
                 console.log(err);
             }
-            buttonText = 'Unsave Recipe';
         }
+        buttonText = 'Unsave Recipe';
     }
+}
 
     // Star icon - fill if this recipe is favorited, outline if not
     let starIcon = saved ? <AiFillStar /> : <AiOutlineStar />;
