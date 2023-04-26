@@ -3,10 +3,6 @@ import axios from 'axios';
 import RecipeDisplay from './RecipeDisplay.js';
 import './SavedRecipes.css';
 
-
-// testing this out
-const DataContext = React.createContext();
-
 const SavedRecipes = () => {
     // State to store data fetched from the back-end
     const [data, setData] = useState({});
@@ -45,16 +41,11 @@ const SavedRecipes = () => {
             <>
             <h1>Saved Recipes</h1>
             <div>
-                <DataContext.Provider data={data}>
-                    <RecipeDisplay route='savedrecipes' />
-                </DataContext.Provider>
+                <RecipeDisplay route='savedrecipes' data={data} />
             </div>
             </>
         );
     }
 }
 
-export {
-    SavedRecipes,
-    DataContext,
-}
+export default SavedRecipes;

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { DataContext } from './SavedRecipes.js';
+import React, { useState, useEffect } from 'react';
 import './RecipeDisplay.css';
 import RecipeCard from './RecipeCard.js';
 import SearchBar from './SearchBar.js';
@@ -24,21 +23,18 @@ const RecipeDisplay = (props) => {
     // State to store card version of non-recommended recipes
     const [otherRecipeCards, setOtherRecipeCards] = useState([]);
 
-    // Use data from parent component's context
-    const data = useContext(DataContext);
-
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
     useEffect(() => {
         // Search results version of the page, after user uses search bar
-        if (data.searchResults) {
-            setSearchResults(data.searchResults);
+        if (props.data.searchResults) {
+            setSearchResults(props.data.searchResults);
         }
         // Default version of the page, before user uses search bar
         else {
-        setRecRecipes(data.recRecipes);
-        setOtherRecipes(data.otherRecipes);
+        setRecRecipes(props.data.recRecipes);
+        setOtherRecipes(props.data.otherRecipes);
         }
-    }, [data]);
+    }, [props.data]);
 
     // Create recipe cards for the recommended and other recipes
     useEffect(() => {
