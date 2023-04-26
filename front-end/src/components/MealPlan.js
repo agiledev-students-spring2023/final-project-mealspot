@@ -5,7 +5,7 @@ import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect } from '@mui/material';
 import { IconContext } from "react-icons";
 import { AiFillEdit } from "react-icons/ai";
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link useNavigate } from 'react-router-dom';
 import './MealPlan.css';
 
 //keep track of current money spent and budget, will be changed by user
@@ -41,7 +41,6 @@ const RecipeInfo = (props) => {
                 // for authentication purposes              
                 const response = await axios(url, {headers: { Authorization: authToken }})
                 console.log(response)
-                console.log('hi')
                 setRecipes(response.data.recipes)
                 setBudget(response.data.budget)
                 setSpent(response.data.spent)
