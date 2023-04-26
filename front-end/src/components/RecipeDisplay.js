@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './RecipeDisplay.css';
 import RecipeCard from './RecipeCard.js';
 import SearchBar from './SearchBar.js';
@@ -26,29 +25,16 @@ const RecipeDisplay = (props) => {
 
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
     useEffect(() => {
-        async function getRecipes(url) {
-            try {
-                // for authentication purposes
-                const jwtToken = localStorage.getItem("token")
-                const authToken = 'jwt ' + jwtToken + ''
-                const response = await axios(url, {headers: { Authorization: authToken }});
-                // Search results version of the page, after user uses search bar
-                if (response.data.searchResults) {
-                    setSearchResults(response.data.searchResults);
-                }
-                // Default version of the page, before user uses search bar
-                else {
-                setRecRecipes(response.data.recRecipes);
-                console.log(response.data)
-                setOtherRecipes(response.data.otherRecipes);
-                }
-            } catch (err) {
-                console.log(err);
-            }
+        // Search results version of the page, after user uses search bar
+        if (props.data.searchResults) {
+            setSearchResults(props.data.searchResults);
         }
-
-        getRecipes(props.apiLink);
-    }, [props.apiLink]);
+        // Default version of the page, before user uses search bar
+        else {
+            setRecRecipes(props.data.recRecipes);
+            setOtherRecipes(props.data.otherRecipes);
+        }
+    }, [props.data]);
 
     // Create recipe cards for the recommended and other recipes
     useEffect(() => {
@@ -75,7 +61,7 @@ const RecipeDisplay = (props) => {
             </>
         } else {
             // On the /savedrecipes route, display all saved recipes that match the query - no need to go to back end
-            if (props.route === 'savedrecipes' || props.route === 'choosesavedrecipes' ) {
+            if (props.route === 'savedrecipes' || props.route === 'choosesavedrecipes') {
             const allRecipeCards = [...recRecipeCards, ...otherRecipeCards];
             return allRecipeCards.filter((recipeCard) => {
                 return recipeCard.props.recipeDetails.recipeName.toLowerCase().includes(query);
@@ -84,7 +70,7 @@ const RecipeDisplay = (props) => {
             // On the /recipesearch route, display the recipes from the API that match the search query
             else {
                 const searchResultsCards = searchResults.map((recipe) => {
-                    return <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route} />
+                    return <RecipeCard key={recipe.id} recipeDetails={recipe} route={props.route}  />
                 });
                 return searchResultsCards;
             }

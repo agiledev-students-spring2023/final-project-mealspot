@@ -20,9 +20,9 @@ const style = {
 const ChooseSavedRecipes = () => {
     const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/choosesavedrecipes`;
     return (
-        <div class = "popup"> 
+        <div className = "popup"> 
             <div>
-                <Link to="/choosepage" className="link-edit">
+                <Link to="/" className="link-edit">
                     <IconContext.Provider value={{ className: "navbar-icon" }}>
                         <div><AiFillCloseCircle /></div>
                  </IconContext.Provider>

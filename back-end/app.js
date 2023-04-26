@@ -221,10 +221,6 @@ app.get(
 
         // Database interaction to determine if any recipe's ID is included in the user's saved recipe list
         recRecipes.forEach((recipe) => {
-          /*const found = await Recipe.findOne({
-            user: req.user._id,
-            id: recipe.id,
-          });*/
           const found = req.user.savedRecipes.includes(recipe.id);
           if (found) {
             // Mark this recipe as saved, because it was found in the user's saved recipes list
@@ -232,10 +228,6 @@ app.get(
           }
         });
         otherRecipes.forEach((recipe) => {
-          /*const found = await Recipe.findOne({
-            user: req.user._id,
-            id: recipe.id,
-          });*/
           const found = req.user.savedRecipes.includes(recipe.id);
           if (found) {
             // Mark this recipe as saved, because it was found in the user's saved recipes list
@@ -254,6 +246,14 @@ app.get(
         searchQuery,
         numResults
       );
+      // Database interaction to determine if any recipe's ID is included in the user's saved recipe list
+      searchResults.forEach((recipe) => {
+        const found = req.user.savedRecipes.includes(recipe.id);
+        if (found) {
+          // Mark this recipe as saved, because it was found in the user's saved recipes list
+          recipe.saved = true;
+        }
+      });
       res.json({ searchResults: searchResults });
     }
 

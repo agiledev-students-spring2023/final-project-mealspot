@@ -219,7 +219,7 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
-                        <Link to="/choosepage" className="link-edit" onClick={editClickBreak}>
+                        <Link to="/choosesavedrecipes" className="link-edit" onClick={editClickBreak}>
                             <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
                             <div><AiFillEdit /></div>
                             </IconContext.Provider>
@@ -244,7 +244,7 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
-                        <Link to="/choosepage" className="link-edit" onClick={editClickLunch}>
+                        <Link to="/choosesavedrecipes" className="link-edit" onClick={editClickLunch}>
                             <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
                             <div><AiFillEdit /></div>
                             </IconContext.Provider>
@@ -269,7 +269,7 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
-                        <Link to="/choosepage" className="link-edit" onClick={editClickDinner}>
+                        <Link to="/choosesavedrecipes" className="link-edit" onClick={editClickDinner}>
                             <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
                             <div><AiFillEdit /></div>
                             </IconContext.Provider>
