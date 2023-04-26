@@ -12,11 +12,6 @@ import './MealPlan.css';
 let currSpent = 0
 let currBudget = 0
 
-// for authentication purposes
-const jwtToken = localStorage.getItem("token")
-const authToken = 'jwt ' + jwtToken + ''
-
-
 //<RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
 const RecipeInfo = (props) => {
     // State to store the recipes fetched from the database
@@ -38,7 +33,9 @@ const RecipeInfo = (props) => {
     useEffect(() => {
         async function getRecipes(url) {
             try {
-                // for authentication purposes              
+                // for authentication purposes    
+                const jwtToken = localStorage.getItem("token")
+                const authToken = 'jwt ' + jwtToken + ''           
                 const response = await axios(url, {headers: { Authorization: authToken }})
                 console.log(response)
                 console.log('hi')
@@ -77,6 +74,8 @@ const RecipeInfo = (props) => {
         async function getRecipesAgain(url) {
             try {
                 // for authentication purposes
+                const jwtToken = localStorage.getItem("token")
+                const authToken = 'jwt ' + jwtToken + ''
                 const response = await axios.post(url, {
                     day: day,
                 }, {headers: { Authorization: authToken }})
@@ -148,6 +147,8 @@ const RecipeInfo = (props) => {
     // onClick events that save timeOfDay for user schema
     const editClickBreak = () => {
         const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        const jwtToken = localStorage.getItem("token")
+        const authToken = 'jwt ' + jwtToken + ''
         try {
             axios.post(url, {
                 time: "breakfast"
@@ -158,6 +159,8 @@ const RecipeInfo = (props) => {
     }
     const editClickLunch = () => {
         const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        const jwtToken = localStorage.getItem("token")
+        const authToken = 'jwt ' + jwtToken + ''
         try {
             axios.post(url, {
                 time: "lunch"
@@ -168,6 +171,8 @@ const RecipeInfo = (props) => {
     }
     const editClickDinner = () => {
         const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        const jwtToken = localStorage.getItem("token")
+        const authToken = 'jwt ' + jwtToken + ''
         try {
             axios.post(url, {
                 time: "dinner"
