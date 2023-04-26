@@ -14,29 +14,31 @@ const RecipeCard = (props) => {
     // Function to run when the star button is clicked on this recipe card
     let onClick;
     if (!props.recipeDetails.saved) { // Save a recipe
-        onClick = (e) => {
+        onClick = async(e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
             // Send a post request to the server, indicating that it should add this recipe to the user's saved recipes list in the database
             try {
-                axios.post(url, {
+                await axios.post(url, {
                     save: true,
                     recipeName: props.recipeDetails.recipeName,
                     id: props.recipeDetails.id,
-                }, {headers: { Authorization: authToken }})
+                }, {headers: { Authorization: authToken }});
+                window.location.reload(false);
             } catch (err) {
                 console.log(err);
             }
         }
     } else { // Unsave a recipe
-        onClick = (e) => {
+        onClick = async(e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
             // Send a post request to the server, indicating that it should remove this recipe from the user's saved recipes list in the database
             try {
-                axios.post(url, {
+                await axios.post(url, {
                     save: false,
                     recipeName: props.recipeDetails.recipeName,
                     id: props.recipeDetails.id,
-                }, {headers: { Authorization: authToken }})
+                }, {headers: { Authorization: authToken }});
+                window.location.reload(false);
             } catch (err) {
                 console.log(err);
             }
