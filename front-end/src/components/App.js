@@ -7,7 +7,7 @@ import ChoosePage from './ChoosePage.js';
 import ChooseSavedRecipes from './ChooseSavedRecipes.js';
 import AddPage from './AddPage.js'
 import RecipeSearch from './RecipeSearch.js';
-import SavedRecipes from './SavedRecipes.js';
+import { SavedRecipes } from './SavedRecipes.js';
 import Fridge from './Fridge.js';
 import GroceryList from './GroceryList.js';
 import Account from './Account.js';

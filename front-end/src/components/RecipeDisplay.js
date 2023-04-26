@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
+import { DataContext } from './SavedRecipes.js';
 import './RecipeDisplay.css';
 import RecipeCard from './RecipeCard.js';
 import SearchBar from './SearchBar.js';
@@ -24,31 +24,21 @@ const RecipeDisplay = (props) => {
     // State to store card version of non-recommended recipes
     const [otherRecipeCards, setOtherRecipeCards] = useState([]);
 
+    // Use data from parent component's context
+    const data = useContext(DataContext);
+
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
     useEffect(() => {
-        async function getRecipes(url) {
-            try {
-                // for authentication purposes
-                const jwtToken = localStorage.getItem("token")
-                const authToken = 'jwt ' + jwtToken + ''
-                const response = await axios(url, {headers: { Authorization: authToken }});
-                // Search results version of the page, after user uses search bar
-                if (response.data.searchResults) {
-                    setSearchResults(response.data.searchResults);
-                }
-                // Default version of the page, before user uses search bar
-                else {
-                setRecRecipes(response.data.recRecipes);
-                console.log(response.data)
-                setOtherRecipes(response.data.otherRecipes);
-                }
-            } catch (err) {
-                console.log(err);
-            }
+        // Search results version of the page, after user uses search bar
+        if (data.searchResults) {
+            setSearchResults(data.searchResults);
         }
-
-        getRecipes(props.apiLink);
-    }, [props.apiLink]);
+        // Default version of the page, before user uses search bar
+        else {
+        setRecRecipes(data.recRecipes);
+        setOtherRecipes(data.otherRecipes);
+        }
+    }, [data]);
 
     // Create recipe cards for the recommended and other recipes
     useEffect(() => {
