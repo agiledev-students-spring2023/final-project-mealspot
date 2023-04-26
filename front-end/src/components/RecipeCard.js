@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import { IconContext } from "react-icons";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
@@ -7,36 +7,49 @@ import {Modal, Box, List, ListItemText, Button, IconButton, Divider} from '@mui/
 import CloseIcon from '@mui/icons-material/Close';
 
 const RecipeCard = (props) => {
+    // State for whether the recipe on this card is saved or not
+    const [saved, setSaved] = useState(props.recipeDetails.saved);
+
     // for authenticated users
     const jwtToken = localStorage.getItem("token")
     const authToken = 'jwt ' + jwtToken + ''
 
     // Function to run when the star button is clicked on this recipe card
     let onClick;
-    if (!props.recipeDetails.saved) { // Save a recipe
-        onClick = (e) => {
+    if (!saved) { // Save a recipe
+        onClick = async(e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
             // Send a post request to the server, indicating that it should add this recipe to the user's saved recipes list in the database
             try {
-                axios.post(url, {
+                await axios.post(url, {
                     save: true,
                     recipeName: props.recipeDetails.recipeName,
                     id: props.recipeDetails.id,
-                }, {headers: { Authorization: authToken }})
+                }, {headers: { Authorization: authToken }});
+                if (props.route === 'savedrecipes') {
+                    window.location.reload(false);
+                } else {
+                    setSaved(true);
+                }
             } catch (err) {
                 console.log(err);
             }
         }
     } else { // Unsave a recipe
-        onClick = (e) => {
+        onClick = async(e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
             // Send a post request to the server, indicating that it should remove this recipe from the user's saved recipes list in the database
             try {
-                axios.post(url, {
+                await axios.post(url, {
                     save: false,
                     recipeName: props.recipeDetails.recipeName,
                     id: props.recipeDetails.id,
-                }, {headers: { Authorization: authToken }})
+                }, {headers: { Authorization: authToken }});
+                if (props.route === 'savedrecipes') {
+                    window.location.reload(false);
+                } else {
+                    setSaved(false);
+                }
             } catch (err) {
                 console.log(err);
             }
@@ -44,8 +57,8 @@ const RecipeCard = (props) => {
     }
 
     // Star icon - fill if this recipe is favorited, outline if not
-    const starIcon = props.recipeDetails.saved ? <AiFillStar /> : <AiOutlineStar />;
-    const buttonText = props.recipeDetails.saved ? 'Unsave Recipe' : 'Save recipe';
+    let starIcon = saved ? <AiFillStar /> : <AiOutlineStar />;
+    const buttonText = saved ? 'Unsave Recipe' : 'Save recipe';
 
     // for modal implementation for details
     const [open, setOpen] = React.useState(false);
