@@ -52,7 +52,7 @@ async function simplifyRecipe(recipe) {
 
   // TODO for testing purposes, only do one ingredient
   const ing = response.data.ingredients[0];
-  const { name } = ing;
+  const name = ing.name;
   let amount = ing.amount.us.value / recipe.servings;
   if (countDecimals(amount) >= 2) {
     amount = Number(ing.amount.us.value / recipe.servings).toFixed(2);
@@ -60,10 +60,14 @@ async function simplifyRecipe(recipe) {
   const units = ing.amount.us.unit;
   const ingredients = [
     {
-      id: ing.id,
       ingredientString: `${amount} ${units} ${name}`,
     },
   ];
+
+  // Include ingredient IDs in the ingredients
+  ingredients.forEach((ing, i) => {
+    ing.id = recipe.extendedIngredients[i].id;
+  })
 
   const image = recipe.image ? recipe.image : '';
 
@@ -214,10 +218,9 @@ async function getRecipeByID(recipeID) {
 // To be used for recommendation feature in saved recipes GET and recipe search GET
 async function getRecipesByIngredients(numRecipes, ingredients) {
   try {
-    const commaSep = ingredients.reduce(
-      (accum, curr) => accum + curr + ',',
-      ''
-    );
+    const commaSep = ingredients.reduce((accum, curr) => {
+      return accum + curr.ingredientName + ',';
+    }, '');
 
     const options = {
       method: 'GET',
