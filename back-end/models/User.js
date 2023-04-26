@@ -29,6 +29,9 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
   },
+  timeOfDay: {
+    type: String,
+  },
   mealPlan: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MealPlan',

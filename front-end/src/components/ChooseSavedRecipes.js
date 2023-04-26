@@ -1,8 +1,7 @@
-import {useState, React} from 'react';
-import {Modal, Box, Button, Typography, FormControl, NativeSelect, TextField, Grid} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { IconContext } from "react-icons";
 import { AiFillCloseCircle } from "react-icons/ai";
-import InputLabel from '@mui/material/InputLabel';
 import { Link } from 'react-router-dom';
 import RecipeDisplay from './RecipeDisplay.js';
 import './ChooseSavedRecipes.css';
@@ -20,17 +19,43 @@ const style = {
   };
   
 const ChooseSavedRecipes = () => {
-    let now = new Date()
-    let today = now.getDay()
-    const [items, addItem] = useState("")
-    const [open, setOpen] = useState(false)
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-    const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/choosesavedrecipes`;
-    return (
-        <div class = "popup"> 
+     // State to store data fetched from the back-end
+     const [data, setData] = useState({});
+     // State to indicate whether we are still waiting on the data fetch
+     const [isLoading, setLoading] = useState(true);
+ 
+     const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/choosesavedrecipes`;
+ 
+     // Pull the saved recipes from the database
+     useEffect(() => {
+         async function getRecipes(url) {
+             try {
+                 // for authentication purposes
+                 const jwtToken = localStorage.getItem("token")
+                 const authToken = 'jwt ' + jwtToken + ''
+                 const response = await axios(url, {headers: { Authorization: authToken }});
+                 // Set the data state to the JSON data axios GETs from the back-end
+                 setData(response.data);
+                 setLoading(false);
+             } catch (err) {
+                 console.log(err);
+             }
+         }
+         getRecipes(apiLink);
+     }, [apiLink]);
+ 
+     // Return the final component, consisting of page header and the array of recipe cards
+     if (isLoading) {
+         return (
+             <>
+             <h2 className='loadingText'>Loading...</h2>
+             </>
+         );
+     } else {
+         return (
+        <div className = "popup"> 
             <div>
-                <Link to="/choosepage" className="link-edit">
+                <Link to="/" className="link-edit">
                     <IconContext.Provider value={{ className: "navbar-icon" }}>
                         <div><AiFillCloseCircle /></div>
                  </IconContext.Provider>
@@ -38,51 +63,15 @@ const ChooseSavedRecipes = () => {
             </div>
             <div className="popupInner">
                 <h1>Edit Meal</h1>
-                <FormControl fullWidth>
-                    <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                        Day of the Week:
-                    </InputLabel>
-                     <NativeSelect
-                        defaultValue={today}
-                        inputProps={{
-                        name: 'days',
-                        id: 'uncontrolled-native',
-                        }}
-                    >
-                        <option value={1}>Monday</option>
-                        <option value={2}>Tuesday</option>
-                        <option value={3}>Wednesday</option>
-                        <option value={4}>Thursday</option>
-                        <option value={5}>Friday</option>
-                        <option value={6}>Saturday</option>
-                        <option value={0}>Sunday</option>
-                    </NativeSelect>
-                </FormControl>
-                <FormControl fullWidth>
-                    <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                        Time of Day:
-                    </InputLabel>
-                     <NativeSelect
-                        defaultValue={today}
-                        inputProps={{
-                        name: 'timeOfDay',
-                        id: 'uncontrolled-native',
-                        }}
-                    >
-                        <option value={1}>Breakfast</option>
-                        <option value={2}>Lunch</option>
-                        <option value={3}>Dinner</option>
-                    </NativeSelect>
-                </FormControl>
                 <p className='choose'>Choose From Saved</p>
                 <div>
                     {/* <RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' /> */}
-                    <RecipeDisplay route='choosesavedrecipes' apiLink={apiLink} />
+                    <RecipeDisplay route='choosesavedrecipes' data={data} />
                  </div>
-            <button onClick={handleClose}>Close</button>
             </div>
         </div>
     );
+     }
 }
 
 export default ChooseSavedRecipes;
