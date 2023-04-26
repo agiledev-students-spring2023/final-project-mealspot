@@ -17,13 +17,8 @@ const RecipeCard = (props) => {
     // Function to run when the star button is clicked on this recipe card
     let onClick;
     let buttonText;
-<<<<<<< HEAD
-    if (!props.recipeDetails.saved) { // Save a recipe
-        onClick = (e) => {
-=======
     if (!saved) { // Save a recipe
         onClick = async(e) => {
->>>>>>> master
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
             // Send a post request to the server, indicating that it should add this recipe to the user's saved recipes list in the database
             try {
@@ -60,20 +55,6 @@ const RecipeCard = (props) => {
         }
         else
         {
-<<<<<<< HEAD
-            onClick = (e) => {
-                const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
-                // Send a post request to the server, indicating that it should remove this recipe from the user's saved recipes list in the database
-                try {
-                    axios.post(url, {
-                        save: false,
-                        recipeName: props.recipeDetails.recipeName,
-                        id: props.recipeDetails.id,
-                    }, {headers: { Authorization: authToken }})
-                } catch (err) {
-                    console.log(err);
-                }
-=======
             onClick = async(e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
             // Send a post request to the server, indicating that it should remove this recipe from the user's saved recipes list in the database
@@ -90,20 +71,15 @@ const RecipeCard = (props) => {
                 }
             } catch (err) {
                 console.log(err);
->>>>>>> master
             }
-            buttonText = 'Unsave Recipe';
         }
+        buttonText = 'Unsave Recipe';
     }
+}
 
     // Star icon - fill if this recipe is favorited, outline if not
-<<<<<<< HEAD
-    const starIcon = props.recipeDetails.saved ? <AiFillStar /> : <AiOutlineStar />;
-    //const buttonText = props.recipeDetails.saved ? 'Unsave Recipe' : 'Save recipe';
-=======
     let starIcon = saved ? <AiFillStar /> : <AiOutlineStar />;
     //const buttonText = saved ? 'Unsave Recipe' : 'Save recipe';
->>>>>>> master
 
     // for modal implementation for details
     const [open, setOpen] = React.useState(false);
