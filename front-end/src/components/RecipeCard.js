@@ -4,6 +4,7 @@ import { IconContext } from "react-icons";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import './RecipeCard.css';
 import {Modal, Box, List, ListItemText, Button, IconButton, Divider} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 
 const RecipeCard = (props) => {
@@ -17,6 +18,7 @@ const RecipeCard = (props) => {
     // Function to run when the star button is clicked on this recipe card
     let onClick;
     let buttonText;
+    const navigate = useNavigate();
     if (!saved) { // Save a recipe
         onClick = async(e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
@@ -47,6 +49,7 @@ const RecipeCard = (props) => {
                         recipeName: props.recipeDetails.recipeName,
                         id: props.recipeDetails.id,
                     }, {headers: { Authorization: authToken }})
+                    navigate('/login');
                 } catch (err) {
                     console.log(err);
                 }
