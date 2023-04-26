@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import RecipeDisplay from './RecipeDisplay.js';
 import './SavedRecipes.css';
+import { useNavigate } from 'react-router-dom';
 
 const SavedRecipes = () => {
     // State to store data fetched from the back-end
     const [data, setData] = useState({});
+    const navigate = useNavigate()
     // State to indicate whether we are still waiting on the data fetch
     const [isLoading, setLoading] = useState(true);
 
@@ -18,6 +20,10 @@ const SavedRecipes = () => {
                 // for authentication purposes
                 const jwtToken = localStorage.getItem("token")
                 const authToken = 'jwt ' + jwtToken + ''
+                if (!jwtToken) {
+                    console.log("user not logged in")
+                    navigate('/login')
+                }
                 const response = await axios(url, {headers: { Authorization: authToken }});
                 // Set the data state to the JSON data axios GETs from the back-end
                 setData(response.data);
