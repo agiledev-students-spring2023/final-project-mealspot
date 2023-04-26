@@ -205,9 +205,9 @@ app.get(
         // Database interaction that gets the ingredients in the fridge
         const fridgeIngredients = await Ingredient.find({ user: req.user._id });
         // Then map it to an array of ingredient names
-        const ingredients = fridgeIngredients.map(
-          async (ing) => await apiCall.getIngredientByID(ing.id)
-        );
+        const ingredients = await Promise.all(fridgeIngredients.map(async(ing) => {
+          return await apiCall.getIngredientByID(ing.id);
+        }));
         // TODO test const ingredients = ['egg','butter','lemon','sugar'];
 
         // Get recommended recipes that match the ingredients in the user's fridge
@@ -334,51 +334,45 @@ app.get(
       try {
         // Database interaction - get list of user's saved recipes ID from database
         const savedRecipes = req.user.savedRecipes;
-        console.log(savedRecipes)
         // Map recipe IDs to actual recipes
         if (savedRecipes.length !== 0) {
           const allSavedRecipes = await Promise.all(
-              savedRecipes.map(async (recipe) => await apiCall.getRecipeByID(recipe))
-              );
-          // for(let i = 0; i < allSavedRecipes.length; i++){
-          // allSavedRecipes[i].then(response => console.log(response))
-          // }
+            savedRecipes.map(async (recipe) => await apiCall.getRecipeByID(recipe))
+          );
           // TODO test const allSavedRecipes = testRecipes;
     
           // Mark all the recipes 'saved'
           allSavedRecipes.forEach((recipe) => {
             recipe.saved = true;
           });
-          // Database interaction - get user's fridge (just IDs is sufficient)
-          const fridgeIngredients = await Ingredient.find({
-            user: req.user._id,
-            type: 'fridge',
-          });
+
+          // Database interaction that gets the ingredients in the fridge (just IDs is sufficient)
+          const fridgeIngredients = await Ingredient.find({ user: req.user._id });
           // TODO test const fridgeIngredients = testFridge.ingredients;
+
           // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
           const recRecipes = [];
           const otherRecipes = [];
-          // Check each saved recipe
+          // Check each saved recipe to see if it includes a fridge ingredient and thus should be recommended
           allSavedRecipes.forEach((recipe) => {
             // Loop through fridge ingredients
             if(fridgeIngredients.length !== 0)
             {
-                fridgeIngredients.every((fridgeIng) => {
-                    console.log('hi')
+              fridgeIngredients.every((fridgeIng) => {
                 // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
                 // Otherwise, push this recipe to the other recipes array
                 let matchFound = false;
                 recipe.ingredients.every((recipeIng) => {
-                    if (fridgeIng.id === recipeIng.id) {
+                  if (fridgeIng.id === recipeIng.id) {
                     recRecipes.push(recipe);
                     matchFound = true;
                     return false;
-                    }
+                  }
                 });
                 if (!matchFound) {
-                    otherRecipes.push(recipe);
+                  otherRecipes.push(recipe);
                 }
-                });
+              });
             } else {
                 otherRecipes.push(recipe);
             }
