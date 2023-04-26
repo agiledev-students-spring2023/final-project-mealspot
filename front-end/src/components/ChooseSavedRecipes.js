@@ -24,7 +24,7 @@ const ChooseSavedRecipes = () => {
     return (
         <div className = "popup"> 
             <div>
-                <Link to="/choosepage" className="link-edit">
+                <Link to="/" className="link-edit">
                     <IconContext.Provider value={{ className: "navbar-icon" }}>
                         <div><AiFillCloseCircle /></div>
                  </IconContext.Provider>
