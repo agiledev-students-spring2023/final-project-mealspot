@@ -124,7 +124,7 @@ const Account = (props) => {
             </div>
         </div>}
         <br/><br/>
-          <Button sx={border} type="submit" variant="outlined" onClick={logoutOnClick}>Logout</Button>
+        <Button sx={border} type="submit" variant="outlined" onClick={logoutOnClick}><Link to="/login">Logout</Link></Button>
         </div> 
     )
   }
