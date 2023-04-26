@@ -75,7 +75,7 @@ const RecipeDisplay = (props) => {
             </>
         } else {
             // On the /savedrecipes route, display all saved recipes that match the query - no need to go to back end
-            if (props.route === 'savedrecipes') {
+            if (props.route === 'savedrecipes' || props.route === 'choosesavedrecipes' ) {
             const allRecipeCards = [...recRecipeCards, ...otherRecipeCards];
             return allRecipeCards.filter((recipeCard) => {
                 return recipeCard.props.recipeDetails.recipeName.toLowerCase().includes(query);

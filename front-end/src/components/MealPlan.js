@@ -12,6 +12,10 @@ import './MealPlan.css';
 let currSpent = 0
 let currBudget = 0
 
+// for authentication purposes
+const jwtToken = localStorage.getItem("token")
+const authToken = 'jwt ' + jwtToken + ''
+
 //<RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
 const RecipeInfo = (props) => {
     // State to store the recipes fetched from the database
@@ -28,47 +32,58 @@ const RecipeInfo = (props) => {
 
     console.log(props)
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
+    let initialRender = true;
     useEffect(() => {
         async function getRecipes(url) {
             try {
                 // for authentication purposes
-                const jwtToken = localStorage.getItem("token")
-                const authToken = 'jwt ' + jwtToken + ''
                 const response = await axios(url, {headers: { Authorization: authToken }})
                 console.log(response)
                 console.log('hi')
                 setRecipes(response.data.recipes)
                 setBudget(response.data.budget)
                 setSpent(response.data.spent)
+                setDay(response.data.dayOfWeek)
+                /*const response2 = await axios.post(url, {
+                    day: day,
+                }, {headers: { Authorization: authToken }})
+                setDay(response2.data.dayOfWeek)
+                setRecipes(response2.data.recipes)*/
             } catch (err) {
                 console.log(err)
             }
         }
-        getRecipes(props.apiLink)
+        if (!initialRender) {
+            console.log('test1')
+            getRecipes(props.apiLink);
+          } else {
+            initialRender = false;
+          }
     }, [props.apiLink])//[day, props.apiLink])
     console.log(recipes)
     console.log(budget)
     console.log(spent)
     console.log(day)
-
+    
     //setting day
     useEffect(() => {
-        async function getRecipes(url) {
+        async function getRecipesAgain(url) {
             try {
                 // for authentication purposes
-                const jwtToken = localStorage.getItem("token")
-                const authToken = 'jwt ' + jwtToken + ''
-                const response = await axios(url, {headers: { Authorization: authToken }})
-                console.log(response)
-                await axios.post(url, {
+                const response = await axios.post(url, {
                     day: day,
                 }, {headers: { Authorization: authToken }})
+                console.log('bye')
                 setDay(response.data.dayOfWeek)
+                setRecipes(response.data.recipes)
             } catch (err) {
                 console.log(err)
             }
         }
-        getRecipes(props.apiLink)
+        if (initialRender && day !== null) {
+            console.log('test2')
+            getRecipesAgain(props.apiLink);
+        }
     }, [day, props.apiLink])
     console.log(day)
 
@@ -123,6 +138,38 @@ const RecipeInfo = (props) => {
         totalPEve = recipes[2].price
     }
 
+    // onClick events that save timeOfDay for user schema
+    const editClickBreak = () => {
+        const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        try {
+            axios.post(url, {
+                time: "breakfast"
+            }, {headers: { Authorization: authToken }})
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    const editClickLunch = () => {
+        const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        try {
+            axios.post(url, {
+                time: "lunch"
+            }, {headers: { Authorization: authToken }})
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    const editClickDinner = () => {
+        const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        try {
+            axios.post(url, {
+                time: "dinner"
+            }, {headers: { Authorization: authToken }})
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     //temp comment out for out of mockaroo req
     currBudget = budget
     currSpent = spent
@@ -172,7 +219,7 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
-                        <Link to="/choosepage" className="link-edit">
+                        <Link to="/choosepage" className="link-edit" onClick={editClickBreak}>
                             <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
                             <div><AiFillEdit /></div>
                             </IconContext.Provider>
@@ -197,7 +244,7 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
-                        <Link to="/choosepage" className="link-edit">
+                        <Link to="/choosepage" className="link-edit" onClick={editClickLunch}>
                             <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
                             <div><AiFillEdit /></div>
                             </IconContext.Provider>
@@ -222,7 +269,7 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
-                        <Link to="/choosepage" className="link-edit">
+                        <Link to="/choosepage" className="link-edit" onClick={editClickDinner}>
                             <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
                             <div><AiFillEdit /></div>
                             </IconContext.Provider>
