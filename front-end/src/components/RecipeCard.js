@@ -16,6 +16,7 @@ const RecipeCard = (props) => {
 
     // Function to run when the star button is clicked on this recipe card
     let onClick;
+    let buttonText;
     if (!saved) { // Save a recipe
         onClick = async(e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
@@ -35,8 +36,26 @@ const RecipeCard = (props) => {
                 console.log(err);
             }
         }
+        buttonText = 'Save Recipe';
     } else { // Unsave a recipe
-        onClick = async(e) => {
+        if (props.route === 'choosesavedrecipes') {
+            onClick = (e) => {
+                const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
+                // Send a post request to the server, indicating that it should add this recipe to the user's saved recipes list in the database
+                try {
+                    axios.post(url, {
+                        recipeName: props.recipeDetails.recipeName,
+                        id: props.recipeDetails.id,
+                    }, {headers: { Authorization: authToken }})
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+            buttonText = 'Choose Recipe';
+        }
+        else
+        {
+            onClick = async(e) => {
             const url = process.env.REACT_APP_SERVER_HOSTNAME + '/' + props.route;
             // Send a post request to the server, indicating that it should remove this recipe from the user's saved recipes list in the database
             try {
@@ -53,12 +72,13 @@ const RecipeCard = (props) => {
             } catch (err) {
                 console.log(err);
             }
+            buttonText = 'Unsave Recipe';
         }
     }
 
     // Star icon - fill if this recipe is favorited, outline if not
     let starIcon = saved ? <AiFillStar /> : <AiOutlineStar />;
-    const buttonText = saved ? 'Unsave Recipe' : 'Save recipe';
+    //const buttonText = saved ? 'Unsave Recipe' : 'Save recipe';
 
     // for modal implementation for details
     const [open, setOpen] = React.useState(false);
