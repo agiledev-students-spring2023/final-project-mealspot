@@ -4,6 +4,7 @@ import {Modal, Box, Button, Typography, FormControl, TextField, responsiveFontSi
 import {useStateValue} from '../StateManager.js';
 import './Fridge.css';
 import FridgeItem from './FridgeItem';
+import { useNavigate } from 'react-router-dom'
 
 const boxStyle = {
     position: 'absolute',
@@ -34,6 +35,7 @@ const Fridge = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const navigate = useNavigate()
     const jwtToken = localStorage.getItem("token")
     const authToken = 'jwt ' + jwtToken + ''
     const url = process.env.REACT_APP_SERVER_HOSTNAME + '/fridge';
@@ -73,6 +75,10 @@ const Fridge = () => {
     }
 
     useEffect(() => {
+        if (!jwtToken) {
+            console.log("user not logged in")
+            navigate('/login')
+        }
         async function getFridgeIngredients(){
             try{
                 const response = await axios(url, {headers: { Authorization: authToken }});

@@ -5,21 +5,18 @@ import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect } from '@mui/material';
 import { IconContext } from "react-icons";
 import { AiFillEdit } from "react-icons/ai";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './MealPlan.css';
 
 //keep track of current money spent and budget, will be changed by user
 let currSpent = 0
 let currBudget = 0
 
-// for authentication purposes
-const jwtToken = localStorage.getItem("token")
-const authToken = 'jwt ' + jwtToken + ''
-
 //<RecipeDisplay apiLink='https://my.api.mockaroo.com/recipe.json?key=8198c2b0' />
 const RecipeInfo = (props) => {
     // State to store the recipes fetched from the database
     const [recipes, setRecipes] = useState([])
+    const navigate = useNavigate()
 
     // State to store day fetched from the database
     const [day, setDay] = useState(new Date().getDay())
@@ -36,7 +33,9 @@ const RecipeInfo = (props) => {
     useEffect(() => {
         async function getRecipes(url) {
             try {
-                // for authentication purposes
+                // for authentication purposes    
+                const jwtToken = localStorage.getItem("token")
+                const authToken = 'jwt ' + jwtToken + ''           
                 const response = await axios(url, {headers: { Authorization: authToken }})
                 console.log(response)
                 setRecipes(response.data.recipes)
@@ -66,9 +65,16 @@ const RecipeInfo = (props) => {
     
     //setting day
     useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (!token) {
+            console.log("user not logged in")
+            navigate('/login')
+        }  
         async function getRecipesAgain(url) {
             try {
                 // for authentication purposes
+                const jwtToken = localStorage.getItem("token")
+                const authToken = 'jwt ' + jwtToken + ''
                 const response = await axios.post(url, {
                     day: day,
                 }, {headers: { Authorization: authToken }})
@@ -140,6 +146,8 @@ const RecipeInfo = (props) => {
     // onClick events that save timeOfDay for user schema
     const editClickBreak = () => {
         const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        const jwtToken = localStorage.getItem("token")
+        const authToken = 'jwt ' + jwtToken + ''
         try {
             axios.post(url, {
                 time: "breakfast"
@@ -150,6 +158,8 @@ const RecipeInfo = (props) => {
     }
     const editClickLunch = () => {
         const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        const jwtToken = localStorage.getItem("token")
+        const authToken = 'jwt ' + jwtToken + ''
         try {
             axios.post(url, {
                 time: "lunch"
@@ -160,6 +170,8 @@ const RecipeInfo = (props) => {
     }
     const editClickDinner = () => {
         const url = process.env.REACT_APP_SERVER_HOSTNAME + '/';
+        const jwtToken = localStorage.getItem("token")
+        const authToken = 'jwt ' + jwtToken + ''
         try {
             axios.post(url, {
                 time: "dinner"

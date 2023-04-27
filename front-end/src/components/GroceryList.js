@@ -4,6 +4,7 @@ import {Modal, Box, Button, Typography, FormControl, TextField} from '@mui/mater
 import {useStateValue} from '../StateManager.js';
 import './GroceryList.css';
 import GroceryListItem from './GroceryListItem';
+import { useNavigate } from 'react-router-dom'
 
 const boxStyle = {
     position: 'absolute',
@@ -38,6 +39,7 @@ const GroceryList = () => {
     const jwtToken = localStorage.getItem("token")
     const authToken = 'jwt ' + jwtToken + ''
     const url = process.env.REACT_APP_SERVER_HOSTNAME + '/groceryList';
+    const navigate = useNavigate()
 
     const addToGroceryList = () => {
         // tell StateManager to add it to the cart
@@ -76,6 +78,10 @@ const GroceryList = () => {
     }
 
     useEffect(() => {
+        if (!jwtToken) {
+            console.log("user not logged in")
+            navigate('/login')
+        }
         async function getGroceryListIngredients(){
             try{
                 const response = await axios(url, {headers: { Authorization: authToken }});
