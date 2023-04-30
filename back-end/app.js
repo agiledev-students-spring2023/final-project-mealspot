@@ -429,11 +429,7 @@ app.get('/choosesavedrecipes',
             const allSavedRecipes = await Promise.all(
                 savedRecipes.map(async (recipe) => await apiCall.getRecipeByID(recipe))
                 );
-            // for(let i = 0; i < allSavedRecipes.length; i++){
-            // allSavedRecipes[i].then(response => console.log(response))
-            // }
-            // TODO test const allSavedRecipes = testRecipes;
-      
+            
             // Mark all the recipes 'saved'
             allSavedRecipes.forEach((recipe) => {
               recipe.saved = true;
@@ -443,7 +439,7 @@ app.get('/choosesavedrecipes',
               user: req.user._id,
               type: 'fridge',
             });
-            // TODO test const fridgeIngredients = testFridge.ingredients;
+
             // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
             const recRecipes = [];
             const otherRecipes = [];
@@ -481,17 +477,12 @@ app.get('/choosesavedrecipes',
         }
       }
     getRecipes(require('./testRecipes.json'), require('./testFridge.json'));
-//   getRecipes(
-//     'https://my.api.mockaroo.com/recipe.json?key=8198c2b0',
-//     'https://my.api.mockaroo.com/fridge.json?key=8198c2b0'
-//   );
 });
 
 // POST route for choose from saved recipes page
 app.post('/choosesavedrecipes', 
 passport.authenticate("jwt", { session: false }), 
 (req, res) => {
-  // TODO
   // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
   async function chooseRecipe() {
     const mealPlan = await MealPlan.findOne({ user: req.user._id });
