@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { NativeSelect } from '@mui/material';
-import { IconContext } from "react-icons";
-import { AiFillEdit } from "react-icons/ai";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './MealPlan.css';
+import MealCard from './MealCard.js';
 import { CircularProgress, FormControl, InputLabel } from '@mui/material';
 
 //keep track of current money spent and budget, will be changed by user
@@ -191,69 +190,33 @@ const RecipeInfo = (props) => {
                     <option value={0}>Sunday</option>
                 </NativeSelect>
             </FormControl>
-            <div className="meal-card">
-                <div className="card-break">
-                    <div className="meal-card-col1">
-                        <div className="card-day">Breakfast</div>
-                        {recipes[0] !== null ? (<div className="card-img"><img src={recipes[0].image} alt={recipes[0].recipeName} width='100px' height='100px'/></div>) : <div className="card-img">No Image</div>}
-                    </div>
-                    <div className="meal-card-col2">
-                        {recipes[0] !== null ? (<div className="card-name">{recipes[0].recipeName}</div>) : <p>No Recipe</p>}
-                    </div>
-                    <div className="meal-card-col3">
-                        <div className="card-edit">
-                            <Link to="/choosesavedrecipes" className="link-edit" onClick={editClickBreak}>
-                                <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
-                                <div><AiFillEdit /></div>
-                                </IconContext.Provider>
-                                Edit
-                            </Link>
-                        </div>
-                        <div className="card-cost">${totalPMorn}</div>
-                    </div>
-                </div>
-                <div className="card-lunch">
-                    <div className="meal-card-col1">
-                        <div className="card-day">Lunch</div>
-                        {recipes[1] !== null ? (<div className="card-img"><img src={recipes[1].image} alt={recipes[1].recipeName} width='100px' height='100px'/></div>) : <div className="card-img">No Image</div>}
-                    </div>
-                    <div className="meal-card-col2">
-                        {recipes[1] !== null ? (<div className="card-name">{recipes[1].recipeName}</div>) : <p>No Recipe</p>}
-                    </div>
-                    <div className="meal-card-col3">
-                        <div className="card-edit">
-                            <Link to="/choosesavedrecipes" className="link-edit" onClick={editClickLunch}>
-                                <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
-                                <div><AiFillEdit /></div>
-                                </IconContext.Provider>
-                                Edit
-                            </Link>
-                        </div>
-                        <div className="card-cost">${totalPAft}</div>
-                    </div>
-                </div>
-                <div className="card-dinner">
-                    <div className="meal-card-col1">
-                        <div className="card-day">Dinner</div>
-                        {recipes[2] !== null ? (<div className="card-img"><img src={recipes[2].image} alt={recipes[2].recipeName} width='100px' height='100px'/></div>) : <div className="card-img">No Image</div>}
-                    </div>
-                    <div className="meal-card-col2">
-                        {recipes[2] !== null ? (<div className="card-name">{recipes[2].recipeName}</div>) : <p>No Recipe</p>}
-                    </div>
-                    <div className="meal-card-col3">
-                        <div className="card-edit">
-                            <Link to="/choosesavedrecipes" className="link-edit" onClick={editClickDinner}>
-                                <IconContext.Provider value={{ className: "navbar-icon-edit" }}>
-                                <div><AiFillEdit /></div>
-                                </IconContext.Provider>
-                                Edit
-                            </Link>
-                        </div>
-                        <div className="card-cost">${totalPEve}</div>
-                    </div>
-                </div>
+            <div className="meals">
+                <MealCard
+                    noSelection={recipes[0]===null}
+                    meal="Breakfast"
+                    src={recipes[0] !== null ? recipes[0].image : ''}
+                    recipeName={recipes[0] !== null ? recipes[0].recipeName : ''}
+                    cost={totalPMorn}
+                    onClick={editClickBreak}
+                />
+                <MealCard
+                    noSelection={recipes[1]===null}
+                    meal="Lunch"
+                    src={recipes[1] !== null ? recipes[1].image : ''}
+                    recipeName={recipes[1] !== null ? recipes[1].recipeName : ''}
+                    cost={totalPAft}
+                    onClick={editClickLunch}
+                />
+                <MealCard
+                    noSelection={recipes[2]===null}
+                    meal="Dinner"
+                    src={recipes[2] !== null ? recipes[2].image : ''}
+                    recipeName={recipes[2] !== null ? recipes[2].recipeName : ''}
+                    cost={totalPEve}
+                    onClick={editClickDinner}
+                />
             </div>
-            </>
+        </>
         )
     }
 }
