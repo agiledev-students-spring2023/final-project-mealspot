@@ -52,12 +52,14 @@ const RecipeDisplay = (props) => {
             return otherRecipeCards;
         }
         else if (!query) {
-            return <>
+            return (
+                <>
                 <h3 className="titleText">Recommended</h3>
                 {recRecipeCards}
-                <h3 className="titleText">More Recipes</h3>
+                <h3 className="titleText">More recipes</h3>
                 {otherRecipeCards}
-            </>
+                </>
+            );
         } else {
             // On the /savedrecipes route, display all saved recipes that match the query - no need to go to back end
             if (props.route === 'savedrecipes' || props.route === 'choosesavedrecipes') {
