@@ -161,7 +161,7 @@ const RecipeInfo = (props) => {
     if (isLoading) {
         return (
             <>
-            <CircularProgress />
+            <div className='loadingSpinner'><CircularProgress /></div>
             </>
         );
     } else {

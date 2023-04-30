@@ -47,7 +47,7 @@ const ChooseSavedRecipes = () => {
                 <div className="popupInner">
                     <h1>Edit Meal</h1>
                     <div>
-                        <CircularProgress />
+                        <div className='loadingSpinner'><CircularProgress /></div>
                     </div>
                 </div>
             </div>

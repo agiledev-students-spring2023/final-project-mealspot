@@ -3,8 +3,8 @@
 }
 
 .select {
-    margin-left: 2.5%;
-    width: 95%;
+    margin-left: 15px;
+    width: 92%;
     font-size: 1.2em;
 }
 
@@ -31,7 +31,7 @@
     position: relative;
     margin: 5px 0;
     height: 30px;
-    width: 95%;
+    width: 93%;
     overflow: hidden;
 }
 

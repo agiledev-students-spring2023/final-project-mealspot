@@ -41,7 +41,7 @@ const SavedRecipes = () => {
         return (
             <>
             <h1>Recipe Search</h1>
-            <CircularProgress />
+            <div className='loadingSpinner'><CircularProgress /></div>
             </>
         );
     } else {
