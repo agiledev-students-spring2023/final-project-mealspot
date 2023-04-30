@@ -1,6 +1,6 @@
 import {useState, useEffect, React} from 'react';
 import axios from 'axios';
-import {Modal, Box, Button, Typography, FormControl, TextField} from '@mui/material';
+import {Modal, Box, Button, Typography, FormControl, TextField } from '@mui/material';
 import {useStateValue} from '../StateManager.js';
 import './GroceryList.css';
 import GroceryListItem from './GroceryListItem';
