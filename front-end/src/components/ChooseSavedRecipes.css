@@ -1,11 +1,11 @@
-.popup {
-    height: auto;
-}
-
 .backButton {
     position: fixed;
-    top: 100px;
-    /* left: 20px; */
-    right: 20px;
+    top: 80px;
+    right: 15px;
     z-index: 5;
+}
+
+.backIcon {
+    color: black;
+    font-size: 2.5em;
 }
