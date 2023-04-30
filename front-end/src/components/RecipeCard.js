@@ -139,7 +139,7 @@ const RecipeCard = (props) => {
                     <p className="detailsText">{props.recipeDetails.instructions}</p>
                 </Box>
             </Modal>
-            <h1 className="recipeName">{props.recipeDetails.recipeName}</h1>
+            <h2 className="recipeName">{props.recipeDetails.recipeName}</h2>
             <h2 className="totalPrice">${props.recipeDetails.price}</h2>
         </div>
     );

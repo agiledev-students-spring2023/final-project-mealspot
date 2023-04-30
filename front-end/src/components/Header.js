@@ -15,6 +15,7 @@ const Header = () => {
         <img src={logo} className="logo" alt="logo" />
       </Link>
       }
+      <h4 className="headerTitle blueText">Mealspot</h4>
       <Link to="/account">
         <div className="accountIcon">
           <IconContext.Provider value={{ className: "icon blueText" }}>

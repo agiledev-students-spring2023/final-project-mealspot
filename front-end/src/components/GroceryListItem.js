@@ -4,7 +4,6 @@ import './GroceryListItem.css';
 import axios from 'axios';
 
 const buttonStyle = {
-  border: 1.4,
   height: 30,
   marginTop: '18px',
   left: '75%'
@@ -33,13 +32,13 @@ function GroceryListItem({id, name, quantity}){
         }
     }
 
-    return (
-        <div className="groceryListItemDiv">
-            <p className="groceryListItemName">{name}</p>
-            <p className="groceryListItemQuantity">{quantity}</p>
-            <Button sx={buttonStyle} variant="outlined" onClick={removeFromCart}>Remove</Button>
-        </div>
-    );
+  return (
+      <div className="groceryListItemDiv">
+        <p className="groceryListItemName">{name}</p>
+        <p className="groceryListItemQuantity">{quantity}</p>
+        <Button sx={buttonStyle} variant="contained" onClick={removeFromCart}>Remove</Button>
+      </div>
+  );
 }
 
 export default GroceryListItem;
