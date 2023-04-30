@@ -4,13 +4,16 @@
     width: 175px;
     height: 250px;
     margin: 6px;
-    background-color: lightgray;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .recipeImg {
     width: 175px;
     height: 175px;
     object-fit: cover;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
 }
 
 .recipeName {
@@ -21,8 +24,9 @@
 }
 
 .totalPrice {
-    font-size: 1em;
+    font-size: 1.2em;
     margin-right: 0.5em;
+    margin-bottom: 5px;
     text-align: right;
 }
 
@@ -41,4 +45,36 @@
 
 .star {
     font-size: 35px;
+}
+
+.detailsTitle{
+    font-size: 2em;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.center {
+    text-align: center;
+}
+
+.detailsHeader {
+    font-size: 1.5em;
+    margin-bottom: 0;
+    margin-top: 8px;
+    margin-left: 8px;
+}
+
+.detailsImage {
+    width: 325px;
+    height: 325px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.detailsText {
+    margin-left: 10px;
+    margin-right: 10px;
 }

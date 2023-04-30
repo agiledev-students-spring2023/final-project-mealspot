@@ -12,6 +12,10 @@
   color: rgb(72, 139, 226);
 }
 
+.grayBackground {
+  background-color: rgb(235, 235, 235);
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
 }

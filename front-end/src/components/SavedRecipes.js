@@ -3,6 +3,7 @@ import axios from 'axios';
 import RecipeDisplay from './RecipeDisplay.js';
 import './SavedRecipes.css';
 import { useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 
 const SavedRecipes = () => {
     // State to store data fetched from the back-end
@@ -39,7 +40,8 @@ const SavedRecipes = () => {
     if (isLoading) {
         return (
             <>
-            <h2 className='loadingText'>Loading...</h2>
+            <h1>Recipe Search</h1>
+            <CircularProgress />
             </>
         );
     } else {

@@ -85,11 +85,11 @@ const Account = (props) => {
     return (
       <div className="UserAccount">
         <h1 className='titleText'>My Account</h1>
-        {<div className='account'>
+        {<div className='account grayBackground'>
             <div>
                 <p className="profileAttribute">Name: {username}</p>
                 <p className="profileAttribute">Email: {email}</p>
-                {currentBudget === 0 ? <p className="profileAttribute">Weekly budget: $0</p> : <p className="profileAttribute">Weekly Budget: ${currentBudget}</p>}
+                {currentBudget === 0 ? <p className="profileAttribute">Weekly budget: $0</p> : <p className="profileAttribute">Weekly budget: ${currentBudget}</p>}
                 <Button sx={border} variant="outlined" onClick={handleOpen}>Edit Budget</Button>
                 <Modal
                   open={open}

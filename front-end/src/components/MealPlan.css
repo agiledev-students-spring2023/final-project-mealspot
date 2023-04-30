@@ -2,6 +2,12 @@
     box-sizing: border-box;
 }
 
+.select {
+    margin-left: 2.5%;
+    width: 95%;
+    font-size: 1.2em;
+}
+
 .tracker-text {
     font-size: 22px;
     margin: 0;
@@ -103,7 +109,6 @@
     flex-direction: row;
     flex-wrap: nowrap;
 }
-
 
 .card-dinner {
     background-color: #f4f4f4;

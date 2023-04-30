@@ -2,6 +2,7 @@ import React from "react";
 import axios from 'axios';
 import './SearchBar.css';
 import { IconButton, TextField } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
 import { AiOutlineSearch } from "react-icons/ai";
 
 // Citation - code is based off this tutorial by Marianna: https://dev.to/mar1anna/create-a-search-bar-with-react-and-material-ui-4he
@@ -34,18 +35,24 @@ const SearchBar = (props) => {
 
     // Return the search bar component
     return (
-        <form onSubmit={onSubmit}>
+        <form className="form" onSubmit={onSubmit}>
             <TextField
                 id="searchBar"
-                className="text"
+                className="text searchBar grayBackground"
                 onInput={onInput}
                 label= "Search"
                 variant="outlined"
                 size="small"
+                InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton type={submitType} aria-label="search">
+                            <AiOutlineSearch />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                }}
             />
-            <IconButton type={submitType} aria-label="search">
-                <AiOutlineSearch />
-            </IconButton>
         </form>
     );
 }
