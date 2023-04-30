@@ -31,7 +31,6 @@ async function simplifyRecipe(recipe) {
   const response = await axios(options);
   const price = Number(response.data.totalCostPerServing / 100).toFixed(2);
 
-  /*
   const ingredients = response.data.ingredients.map((ing) => {
     const name = ing.name;
     let amount = ing.amount.us.value / recipe.servings;
@@ -44,12 +43,7 @@ async function simplifyRecipe(recipe) {
     }
   });
 
-  // Include ingredient IDs in the ingredients
-  ingredients.forEach((ing, i) => {
-    ing.id = recipe.extendedIngredients[i].id;
-  })
-  */
-
+  /*
   // TODO for testing purposes, only do one ingredient
   const ing = response.data.ingredients[0];
   const name = ing.name;
@@ -63,6 +57,7 @@ async function simplifyRecipe(recipe) {
       ingredientString: `${amount} ${units} ${name}`,
     },
   ];
+  */
 
   // Include ingredient IDs in the ingredients
   ingredients.forEach((ing, i) => {

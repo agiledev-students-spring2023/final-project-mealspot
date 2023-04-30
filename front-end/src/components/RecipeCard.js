@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import { IconContext } from "react-icons";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { AiOutlineStar, AiFillStar, AiOutlinePlusCircle } from "react-icons/ai";
 import './RecipeCard.css';
 import {Modal, Box, List, ListItemText, Button, IconButton, Divider} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -82,7 +82,9 @@ const RecipeCard = (props) => {
 
     // Star icon - fill if this recipe is favorited, outline if not
     let starIcon = saved ? <AiFillStar /> : <AiOutlineStar />;
-    //const buttonText = saved ? 'Unsave Recipe' : 'Save recipe';
+    if (props.route === 'choosesavedrecipes') {
+        starIcon = <AiOutlinePlusCircle />;
+    }
 
     // for modal implementation for details
     const [open, setOpen] = React.useState(false);
@@ -95,7 +97,7 @@ const RecipeCard = (props) => {
 
     // Return the final component, consisting of the recipe name, image, and the list of ingredients
     return (
-        <div className="recipeCard">
+        <div className="recipeCard grayBackground">
             <div className="relative">
                 <button onClick={onClick} className="button">
                     <IconContext.Provider value={{ className: "star" }}>
@@ -121,18 +123,20 @@ const RecipeCard = (props) => {
                     <IconButton onClick={handleClose} sx={{float: "right"}}>
                         <CloseIcon />
                     </IconButton>
-                    <h1>{props.recipeDetails.recipeName}</h1>
-                    <img src={props.recipeDetails.image} alt="aa"></img>
-                    <Divider variant="middle" />
-                    <h2>Ingredients</h2>
+                    <div className="center">
+                        <img src={props.recipeDetails.image} alt={props.recipeDetails.recipeName} className="detailsImage"></img>
+                    </div>
+                    <h2 className="detailsTitle">{props.recipeDetails.recipeName}</h2>
+                    <div className="center">
+                        <Button variant="contained" onClick={onClick} sx={{margin: '1%'}}>{buttonText}</Button>
+                    </div>
+                    <h4 className="detailsHeader">Ingredients</h4>
                     <List>
-                        <ListItemText primary={ingredients}/>
+                        <ListItemText className="detailsText" primary={ingredients}/>
                     </List>
                     <Divider variant="middle" />
-                    <h2>Instructions</h2>
-                    <p>{props.recipeDetails.instructions}</p>
-                    <Divider variant="middle" />
-                    <Button variant="contained" onClick={onClick} sx={{margin: '1%'}}>{buttonText}</Button>
+                    <h4 className="detailsHeader">Instructions</h4>
+                    <p className="detailsText">{props.recipeDetails.instructions}</p>
                 </Box>
             </Modal>
             <h1 className="recipeName">{props.recipeDetails.recipeName}</h1>

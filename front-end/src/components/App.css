@@ -12,6 +12,21 @@
   color: rgb(72, 139, 226);
 }
 
+.grayBackground {
+  background-color: rgb(235, 235, 235);
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+  font-size: 2.5em;
+  text-align: left;
+  margin-left: 15px;
+  margin-bottom: 5px;
+}
+
+.loadingSpinner {
+  margin-top: 50px;
 }

@@ -208,7 +208,6 @@ app.get(
         const ingredients = await Promise.all(fridgeIngredients.map(async(ing) => {
           return await apiCall.getIngredientByID(ing.id);
         }));
-        // TODO test const ingredients = ['egg','butter','lemon','sugar'];
 
         // Get recommended recipes that match the ingredients in the user's fridge
         const recRecipes = await apiCall.getRecipesByIngredients(
@@ -257,6 +256,7 @@ app.get(
       res.json({ searchResults: searchResults });
     }
 
+    // TODO: update these numbers to be higher before submitting the finished app - all 1 to save on API calls during testing (we have limited calls per day)
     const numRec = '1';
     const numOther = '1';
     const numSearchResults = '1';
@@ -283,13 +283,6 @@ app.post(
     async function saveRecipe() {
       console.log('Saving the recipe: ' + req.body.recipeName);
       try {
-        /*
-        const recipeToSave = new Recipe({
-          user: req.user._id,
-          id: req.body.id,
-        });
-        console.log(req);
-        await recipeToSave.save();*/
         const found = req.user.savedRecipes.includes(req.body.id);
         if (found) {
           throw new Error('already saved');
@@ -330,7 +323,7 @@ app.get(
   '/savedrecipes',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    async function getRecipes(testRecipes, testFridge) {
+    async function getRecipes() {
       try {
         // Database interaction - get list of user's saved recipes ID from database
         const savedRecipes = req.user.savedRecipes;
@@ -339,7 +332,6 @@ app.get(
           const allSavedRecipes = await Promise.all(
             savedRecipes.map(async (recipe) => await apiCall.getRecipeByID(recipe))
           );
-          // TODO test const allSavedRecipes = testRecipes;
     
           // Mark all the recipes 'saved'
           allSavedRecipes.forEach((recipe) => {
@@ -348,7 +340,6 @@ app.get(
 
           // Database interaction that gets the ingredients in the fridge (just IDs is sufficient)
           const fridgeIngredients = await Ingredient.find({ user: req.user._id });
-          // TODO test const fridgeIngredients = testFridge.ingredients;
 
           // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
           const recRecipes = [];
@@ -386,9 +377,7 @@ app.get(
       }
     }
 
-    // TODO: using JSONs for testing purposes
-    // note to self, switch this out for the database interaction and send back whatever was grabbed from the DB instead
-    getRecipes(require('./testRecipes.json'), require('./testFridge.json'));
+    getRecipes();
   }
 );
 
@@ -403,7 +392,6 @@ app.post(
     async function unsaveRecipe() {
       console.log('Unsaving the recipe: ' + req.body.recipeName);
       try {
-        //await Recipe.findOneAndDelete({ user: req.user._id, id: req.body.id });
         req.user.savedRecipes = req.user.savedRecipes.filter(e => e !== req.body.id);
         await req.user.save();
       } catch (err) {
