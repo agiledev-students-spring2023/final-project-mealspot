@@ -99,10 +99,6 @@ const RecipeInfo = (props) => {
         return null
     }
 
-    let listIngMorn;
-    let listIngAft;
-    let listIngEve;
-
     let totalPMorn;
     let totalPAft;
     let totalPEve;
@@ -112,10 +108,6 @@ const RecipeInfo = (props) => {
     }
     else
     {
-        listIngMorn = Object.values(recipes[0].ingredients).map((ingredient) => (
-            <li key={ingredient.ingredientString}>{ingredient.ingredientString}</li>
-        ))
-
         totalPMorn = recipes[0].price
     }
     if(recipes[1] === null)
@@ -124,10 +116,6 @@ const RecipeInfo = (props) => {
     }
     else
     {
-        listIngAft = Object.values(recipes[1].ingredients).map((ingredient) => (
-            <li key={ingredient.ingredientString}>{ingredient.ingredientString}</li>
-        ))
-
         totalPAft = recipes[1].price
     }
     if(recipes[2] === null)
@@ -136,10 +124,6 @@ const RecipeInfo = (props) => {
     }
     else
     {
-        listIngEve = Object.values(recipes[2].ingredients).map((ingredient) => (
-            <li key={ingredient.ingredientString}>{ingredient.ingredientString}</li>
-        ))
-
         totalPEve = recipes[2].price
     }
 
@@ -188,8 +172,8 @@ const RecipeInfo = (props) => {
     return (
         <>
         <div className="progress-area">
-        <p>Budget Tracker</p>
-        <Progress done={currSpent} budget={currBudget}/>
+            <p className="tracker-text">Budget Tracker</p>
+            <Progress done={currSpent} budget={currBudget}/>
         </div>
         <FormControl fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -222,11 +206,6 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col2">
                     {recipes[0] !== null ? (<div className="card-name">{recipes[0].recipeName}</div>) : <p>No Recipe</p>}
-                    <div className="card-ing">
-                        <ul>
-                        {listIngMorn}
-                        </ul>
-                        </div>
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
@@ -247,11 +226,6 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col2">
                     {recipes[1] !== null ? (<div className="card-name">{recipes[1].recipeName}</div>) : <p>No Recipe</p>}
-                    <div className="card-ing">
-                        <ul>
-                        {listIngAft}
-                        </ul>
-                        </div>
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
@@ -272,11 +246,6 @@ const RecipeInfo = (props) => {
                 </div>
                 <div className="meal-card-col2">
                     {recipes[2] !== null ? (<div className="card-name">{recipes[2].recipeName}</div>) : <p>No Recipe</p>}
-                    <div className="card-ing">
-                        <ul>
-                        {listIngEve}
-                        </ul>
-                        </div>
                 </div>
                 <div className="meal-card-col3">
                     <div className="card-edit">
@@ -298,7 +267,7 @@ const RecipeInfo = (props) => {
 
 //later change <Progress done="70"/> change to 
 const Progress = (props) => {
-    let progress = `$${props.done}/$${props.budget}` //$ spent/budget
+    let progress = `$${props.done} spent out of $${props.budget}`
     let width = ((props.done/props.budget)*100).toString()
     return (
         <>
@@ -309,7 +278,7 @@ const Progress = (props) => {
             }}>
             </div>
         </div>
-        <div>
+        <div className="progress-text">
             {progress}
         </div>
         </>

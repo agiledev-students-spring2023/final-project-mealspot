@@ -2,8 +2,15 @@
     box-sizing: border-box;
 }
 
+.tracker-text {
+    font-size: 22px;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+    padding-left: 15px;
+}
+
 .progress-area {
-    background-color: #f4f4f4;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
     display: flex;
@@ -14,11 +21,11 @@
 
 .progress {
     background-color: #d8d8d8;
-    border-radius: 20px;
+    border-radius: 15px;
     position: relative;
     margin: 5px 0;
     height: 30px;
-    width: 300px;
+    width: 95%;
     overflow: hidden;
 }
 
@@ -48,6 +55,15 @@
     width: 0;
     opacity: 0;
     transition: 1s ease 0.3s;
+}
+
+.progress-text {
+    font-size: 14px;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+    padding-left: 15px;
+    padding-bottom: 15px;
 }
 
 .link-edit {

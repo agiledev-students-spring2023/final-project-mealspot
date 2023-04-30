@@ -84,23 +84,18 @@ const Account = (props) => {
 
     return (
       <div className="UserAccount">
-        <div className='profilepic'>
-            <p>Profile Picture</p>
-        </div>
+        <h1 className='titleText'>My Account</h1>
         {<div className='account'>
             <div>
-                {/* <p>Name: {firstName} {lastName}</p> */}
-                {/* <p>Email: {email}</p> */}
-                {/* <p>Weekly budget: {currentBudget}</p> */}
                 <p className="profileAttribute">Name: {username}</p>
                 <p className="profileAttribute">Email: {email}</p>
-                {currentBudget === 0 ? <p className="profileAttribute">Weekly Budget: $37.65</p> : <p className="profileAttribute">Weekly Budget: ${currentBudget}</p>}
+                {currentBudget === 0 ? <p className="profileAttribute">Weekly budget: $0</p> : <p className="profileAttribute">Weekly Budget: ${currentBudget}</p>}
                 <Button sx={border} variant="outlined" onClick={handleOpen}>Edit Budget</Button>
                 <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
                 >
                 <Box sx={boxStyle}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">Enter New Budget</Typography>
