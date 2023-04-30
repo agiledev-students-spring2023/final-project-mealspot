@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { IconContext } from "react-icons";
 import { BsFillArrowLeftCircleFill } from "react-icons/bs";
+import { BsXCircleFill } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import RecipeDisplay from './RecipeDisplay.js';
 import './ChooseSavedRecipes.css';
@@ -40,7 +41,8 @@ const ChooseSavedRecipes = () => {
                 <div>
                     <Link to="/" className="backButton">
                         <IconContext.Provider value={{ size: "3em", color: "black" }}>
-                            <div><BsFillArrowLeftCircleFill /></div>
+                            {/* <div><BsFillArrowLeftCircleFill /></div> */}
+                            <div><BsXCircleFill /></div>
                         </IconContext.Provider>
                     </Link>
                 </div>
@@ -58,7 +60,8 @@ const ChooseSavedRecipes = () => {
             <div>
                 <Link to="/" className="backButton">
                     <IconContext.Provider value={{ size: "3em", color: "black"}}>
-                        <div><BsFillArrowLeftCircleFill /></div>
+                        {/* <div><BsFillArrowLeftCircleFill /></div> */}
+                        <div><BsXCircleFill /></div>
                     </IconContext.Provider>
                 </Link>
             </div>
