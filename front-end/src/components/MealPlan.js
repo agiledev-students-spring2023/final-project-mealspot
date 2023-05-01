@@ -43,17 +43,23 @@ const RecipeInfo = (props) => {
                 setBudget(response.data.budget)
                 setSpent(response.data.spent)
                 setDay(response.data.dayOfWeek)
+                setLoading(false);
                 props.setInfoLoading(false);
+                console.log('1')
             } catch (err) {
                 console.log(err)
             }
         }
-        if (initialRender) {
+        if (!initialRender) {
+            console.log("2")
+            console.log('false?')
+            console.log(initialRender + '1')
+            getRecipes(props.apiLink);
+          } else {
+            console.log('where')
             initialRender = false;
-            getRecipes(props.apiLink);
-        } else {
-            getRecipes(props.apiLink);
-        }
+            console.log(initialRender + '2')
+          }
     }, [props.apiLink])
     
     //setting day
@@ -73,7 +79,6 @@ const RecipeInfo = (props) => {
                 }, {headers: { Authorization: authToken }})
                 setDay(response.data.dayOfWeek)
                 setRecipes(response.data.recipes)
-                setLoading(false);
                 console.log(isLoading)
                 console.log("3")
             } catch (err) {
@@ -81,6 +86,7 @@ const RecipeInfo = (props) => {
             }
         }
         if (initialRender && day !== null) {
+            console.log('here')
             getRecipesAgain(props.apiLink);
         }
     }, [day, props.apiLink])
