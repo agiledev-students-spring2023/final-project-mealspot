@@ -182,18 +182,6 @@ app.post(
     await req.user.save();
 });
 
-// GET route for homepage recipe edit page
-app.get('/choosepage', (req, res) => {
-  // change later
-  res.send(req.body);
-});
-
-// GET route for homepage recipe edit page
-app.get('/choosepage', (req, res) => {
-  // change later
-  res.send(req.body);
-});
-
 // GET route for recipe search page
 app.get(
   '/recipesearch',
@@ -493,17 +481,6 @@ passport.authenticate("jwt", { session: false }),
   chooseRecipe();
 });
 
-// GET route for add your own recipes page
-app.get('/addpage', (req, res) => {
-  // No data is needed for this page.
-});
-
-// POST route for add your own recipes page
-app.post('/addpage', (req, res) => {
-  // TODO
-  res.send(req.body);
-});
-
 // GET route for account page
 app.get('/account', 
     passport.authenticate('jwt', { session: false }),
@@ -537,8 +514,7 @@ app.get(
   '/fridge',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // This method will later be populated with code that retrieves the user's fridge items from the database.
-    // Will be implemented in sprint 3
+    // Retrieves the user's fridge items from the database.
     try {
       let response = await User.findOne({ username: req.user.username });
       const promises = response.fridge.map(async (ingredient) => {
@@ -565,8 +541,7 @@ app.get(
   '/grocerylist',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // This method will later be populated with code that retrieves the user's grocery list items from the database.
-    // Will be implemented with database in sprint 3
+    // Retrieves the user's grocery list items from the database.
     try {
       let response = await User.findOne({ username: req.user.username });
       const promises = response.groceryList.map(async (ingredient) => {
@@ -592,8 +567,7 @@ app.post(
   '/fridge',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // This method will later be populated with code that adds an ingredient into the user's fridge in the database
-    // Will be implemented with database in sprint 3
+    // Adds an ingredient into the user's fridge in the database
     if (req.body.postType === 'add') {
       try {
         const ingredientId = await apiCall.getIngredientByName(req.body.name);
@@ -636,8 +610,7 @@ app.post(
   '/grocerylist',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // This method will later be populated with code that adds an ingredient into the user's grocery list in the database
-    // Will be implemented with database in sprint 3
+    // Adds an ingredient into the user's grocery list in the database
     if (req.body.postType === 'add') {
       try {
         const ingredientId = await apiCall.getIngredientByName(req.body.name);
