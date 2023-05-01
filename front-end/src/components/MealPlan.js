@@ -42,14 +42,18 @@ const RecipeInfo = (props) => {
                 setBudget(response.data.budget)
                 setSpent(response.data.spent)
                 setDay(response.data.dayOfWeek)
+                console.log(isLoading)
+                console.log("1")
             } catch (err) {
                 console.log(err)
             }
         }
-        if (!initialRender) {
+        if (initialRender) {
+            console.log("2")
+            initialRender = false;
             getRecipes(props.apiLink);
           } else {
-            initialRender = false;
+            getRecipes(props.apiLink);
           }
     }, [props.apiLink])
     
@@ -71,6 +75,8 @@ const RecipeInfo = (props) => {
                 setDay(response.data.dayOfWeek)
                 setRecipes(response.data.recipes)
                 setLoading(false);
+                console.log(isLoading)
+                console.log("3")
             } catch (err) {
                 console.log(err)
             }
