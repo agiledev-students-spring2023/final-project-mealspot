@@ -74,6 +74,8 @@ const RecipeInfo = (props) => {
                 setDay(response.data.dayOfWeek)
                 setRecipes(response.data.recipes)
                 setLoading(false);
+                console.log(isLoading)
+                console.log("3")
             } catch (err) {
                 console.log(err)
             }
