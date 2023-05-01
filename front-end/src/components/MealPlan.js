@@ -4,7 +4,7 @@ import { NativeSelect } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './MealPlan.css';
 import MealCard from './MealCard.js';
-import { CircularProgress, FormControl, InputLabel } from '@mui/material';
+import { CircularProgress, FormControl } from '@mui/material';
 
 //keep track of current money spent and budget, will be changed by user
 let currSpent = 0
@@ -15,8 +15,8 @@ const RecipeInfo = (props) => {
     const [recipes, setRecipes] = useState([])
     const navigate = useNavigate()
 
-    // State to indicate whether we are still waiting on the data fetch
-    const [isLoading, setLoading] = useState(true);
+    // State that stores if we are waiting for API calls to return
+    const [isLoading, setLoading] = useState([])
 
     // State to store day fetched from the database
     const [day, setDay] = useState(new Date().getDay())
@@ -30,6 +30,7 @@ const RecipeInfo = (props) => {
     console.log(props)
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
     let initialRender = true;
+
     useEffect(() => {
         async function getRecipes(url) {
             try {
@@ -42,19 +43,17 @@ const RecipeInfo = (props) => {
                 setBudget(response.data.budget)
                 setSpent(response.data.spent)
                 setDay(response.data.dayOfWeek)
-                console.log(isLoading)
-                console.log("1")
+                props.setInfoLoading(false);
             } catch (err) {
                 console.log(err)
             }
         }
         if (initialRender) {
-            console.log("2")
             initialRender = false;
             getRecipes(props.apiLink);
-          } else {
+        } else {
             getRecipes(props.apiLink);
-          }
+        }
     }, [props.apiLink])
     
     //setting day
@@ -162,68 +161,66 @@ const RecipeInfo = (props) => {
     //temp comment out for out of mockaroo req
     currBudget = budget
     currSpent = spent
-
+    
     if (isLoading) {
         return (
-            <>
-            <div className='loadingSpinner'><CircularProgress /></div>
-            </>
-        );
-    } else {
-        return (
-            <>
-            <div className="progress-area">
-                <p className="tracker-text">Budget Tracker</p>
-                <Progress done={currSpent} budget={currBudget}/>
-            </div>
-            <FormControl fullWidth>
-                <NativeSelect
-                    className = "select"
-                    defaultValue={day}
-                    inputProps={{
-                    name: 'days',
-                    }}
-                    onChange={(event) =>
-                        setDay(event.target.value)
-                    }
-                >
-                    <option value={1}>Monday</option>
-                    <option value={2}>Tuesday</option>
-                    <option value={3}>Wednesday</option>
-                    <option value={4}>Thursday</option>
-                    <option value={5}>Friday</option>
-                    <option value={6}>Saturday</option>
-                    <option value={0}>Sunday</option>
-                </NativeSelect>
-            </FormControl>
-            <div className="meals">
-                <MealCard
-                    noSelection={recipes[0]===null}
-                    meal="Breakfast"
-                    src={recipes[0] !== null ? recipes[0].image : ''}
-                    recipeName={recipes[0] !== null ? recipes[0].recipeName : ''}
-                    cost={totalPMorn}
-                    onClick={editClickBreak}
-                />
-                <MealCard
-                    noSelection={recipes[1]===null}
-                    meal="Lunch"
-                    src={recipes[1] !== null ? recipes[1].image : ''}
-                    recipeName={recipes[1] !== null ? recipes[1].recipeName : ''}
-                    cost={totalPAft}
-                    onClick={editClickLunch}
-                />
-                <MealCard
-                    noSelection={recipes[2]===null}
-                    meal="Dinner"
-                    src={recipes[2] !== null ? recipes[2].image : ''}
-                    recipeName={recipes[2] !== null ? recipes[2].recipeName : ''}
-                    cost={totalPEve}
-                    onClick={editClickDinner}
-                />
-            </div>
-        </>
+           <div className="loadingSpinner"><CircularProgress /></div>
         )
+    } else {
+    return (
+        <>
+        <div className="progress-area">
+            <p className="tracker-text">Budget Tracker</p>
+            <Progress done={currSpent} budget={currBudget}/>
+        </div>
+        <FormControl fullWidth>
+            <NativeSelect
+                className = "select"
+                defaultValue={day}
+                inputProps={{
+                name: 'days',
+                }}
+                onChange={(event) =>
+                    setDay(event.target.value)
+                }
+            >
+                <option value={1}>Monday</option>
+                <option value={2}>Tuesday</option>
+                <option value={3}>Wednesday</option>
+                <option value={4}>Thursday</option>
+                <option value={5}>Friday</option>
+                <option value={6}>Saturday</option>
+                <option value={0}>Sunday</option>
+            </NativeSelect>
+        </FormControl>
+        <div className="meals">
+            <MealCard
+                noSelection={recipes[0]===null}
+                meal="Breakfast"
+                src={recipes[0] !== null ? recipes[0].image : ''}
+                recipeName={recipes[0] !== null ? recipes[0].recipeName : ''}
+                cost={totalPMorn}
+                onClick={editClickBreak}
+            />
+            <MealCard
+                noSelection={recipes[1]===null}
+                meal="Lunch"
+                src={recipes[1] !== null ? recipes[1].image : ''}
+                recipeName={recipes[1] !== null ? recipes[1].recipeName : ''}
+                cost={totalPAft}
+                onClick={editClickLunch}
+            />
+            <MealCard
+                noSelection={recipes[2]===null}
+                meal="Dinner"
+                src={recipes[2] !== null ? recipes[2].image : ''}
+                recipeName={recipes[2] !== null ? recipes[2].recipeName : ''}
+                cost={totalPEve}
+                onClick={editClickDinner}
+            />
+        </div>
+    </>
+    )
     }
 }
 
@@ -249,14 +246,28 @@ const Progress = (props) => {
 
 //use https://my.api.mockaroo.com/account_mock_data.json?key=c5fab7e0 for weekly_budget
 const MealPlan = () => {
+    const [infoLoading, setInfoLoading] = useState(true);
+
     const apiLink = `${process.env.REACT_APP_SERVER_HOSTNAME}/`
 
-    return (
-        <>
-        <h1>My Meal Plan</h1>
-        <RecipeInfo route='/' apiLink={apiLink}/>
-        </>
-    )
+    if (infoLoading) {
+        return (
+            <>
+            <h1>My Meal Plan</h1>
+            <div className='loadingSpinner'><CircularProgress /></div>
+            <div className='recipeInfo'><RecipeInfo route='/' apiLink={apiLink} setInfoLoading={setInfoLoading}/></div>
+            </>
+        )
+
+    } else {
+        return (
+            <>
+            <h1>My Meal Plan</h1>
+            <div className='recipeInfo'><RecipeInfo route='/' apiLink={apiLink} setInfoLoading={setInfoLoading}/></div>
+            </>
+        )
+
+    }
 }
 
 export default MealPlan;
