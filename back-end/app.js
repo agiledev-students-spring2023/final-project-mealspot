@@ -59,41 +59,59 @@ mongoose
 app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
-      let meal;
-      let recipes = [null, null, null];
-      let spent = 0.0;
-      const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
-      // Get total cost of meals
-      for (let i = 0; i <= 6; i++) {
-        const dayKey = i.toString();
-        if (mealPlan[dayKey] !== null) {
-          meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: i });
-          if (meal !== null) {
-            if (meal.breakfast !== null) {
-              const recipe = await apiCall.getRecipeByID(meal.breakfast);
-              spent += Number(recipe.price);
-            }
-            if (meal.lunch !== null) {
-              const recipe = await apiCall.getRecipeByID(meal.lunch);
-              spent += Number(recipe.price);
-            }
-            if (meal.dinner !== null) {
-              const recipe = await apiCall.getRecipeByID(meal.dinner);
-              spent += Number(recipe.price);
-            }
+        let meal;
+        let recipes = [null, null, null];
+        let spent = 0.00;
+        const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
+        // Get total cost of meals
+        for (let i = 0; i <= 6; i++) {
+          const dayKey = i.toString();
+          if(mealPlan[dayKey] !== null) {
+              meal = await Day.findOne({ mealPlan: req.user.mealPlan[0], dayOfWeek: i });
+              if(meal !== null) {
+                  const recipeIds = [meal.breakfast, meal.lunch, meal.dinner];
+                    for (const recipeId of recipeIds.filter(Boolean)) {
+                      const recipe = await apiCall.getRecipeByID(recipeId);
+                      if (recipe !== null) {
+                        spent += Number(recipe.price);
+                      }
+                    }
+              }
           }
+          else
+          {
+              meal = await new Day({ mealPlan: mealPlanId, dayOfWeek: i, breakfast: null, lunch: null, dinner: null }).save();
+              mealPlan[i] = meal._id;
+              await mealPlan.save();
+          }
+      }
+      spent = spent.toFixed(2);
+
+        // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
+        meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
+        if(meal.breakfast !== null)
+        {
+            recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
         }
-        // if
-        else {
-          meal = await new Day({
-            mealPlan: mealPlanId,
-            dayOfWeek: i,
-            breakfast: null,
-            lunch: null,
-            dinner: null,
-          }).save();
-          mealPlan[i] = meal._id;
-          await mealPlan.save();
+        else
+        {
+            recipes[0] = null;
+        }
+        if(meal.lunch !== null)
+        {
+            recipes[1] = await apiCall.getRecipeByID(meal.lunch);
+        }
+        else
+        {
+            recipes[1] = null;
+        }
+        if(meal.dinner !== null)
+        {
+            recipes[2] = await apiCall.getRecipeByID(meal.dinner);
+        }
+        else
+        {
+            recipes[2] = null;
         }
       }
       spent = spent.toFixed(2);
