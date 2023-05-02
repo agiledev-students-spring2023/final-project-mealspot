@@ -62,34 +62,12 @@ app.get(
   (req, res) => {
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
-        //let meal
-        let meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });;
+        let meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
         let recipes = [null, null, null];
-        let spent = req.user.totalSpent;
         const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
         // Get total cost of meals
-        /*for (let i = 0; i <= 6; i++) {
-          const dayKey = i.toString();
-          if(mealPlan[dayKey] !== null) {
-              meal = await Day.findOne({ mealPlan: req.user.mealPlan[0], dayOfWeek: i });
-              if(meal !== null) {
-                  const recipeIds = [meal.breakfast, meal.lunch, meal.dinner];
-                    for (const recipeId of recipeIds.filter(Boolean)) {
-                      const recipe = await apiCall.getRecipeByID(recipeId);
-                      if (recipe !== null) {
-                        spent += Number(recipe.price);
-                      }
-                    }
-              }
-          }
-          else
-          {
-              meal = await new Day({ mealPlan: mealPlanId, dayOfWeek: i, breakfast: null, lunch: null, dinner: null }).save();
-              mealPlan[i] = meal._id;
-              await mealPlan.save();
-          }
-      }*/
-      spent = spent.toFixed(2);
+        let spent = req.user.totalSpent;
+        spent = spent.toFixed(2);
 
       // check if Day schema at current dayOfWeek is instantiated
       if(!meal) {
@@ -99,7 +77,6 @@ app.get(
       }
 
       // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
-      //meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
       if (meal.breakfast !== null) {
         recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
       } else {
