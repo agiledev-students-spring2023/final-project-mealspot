@@ -90,40 +90,40 @@ app.get(
       }
       spent = spent.toFixed(2);
 
-        // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
-        meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
-        if(meal.breakfast !== null)
-        {
-            recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
-        }
-        else
-        {
-            recipes[0] = null;
-        }
-        if(meal.lunch !== null)
-        {
-            recipes[1] = await apiCall.getRecipeByID(meal.lunch);
-        }
-        else
-        {
-            recipes[1] = null;
-        }
-        if(meal.dinner !== null)
-        {
-            recipes[2] = await apiCall.getRecipeByID(meal.dinner);
-        }
-        else
-        {
-            recipes[2] = null;
-        }
-        res.json({ budget: budget, spent: spent, recipes: recipes, dayOfWeek: dayOfWeek });
-    } 
-    catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
+      // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
+      meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
+      if (meal.breakfast !== null) {
+        recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
+      } else {
+        recipes[0] = null;
+      }
+      if (meal.lunch !== null) {
+        recipes[1] = await apiCall.getRecipeByID(meal.lunch);
+      } else {
+        recipes[1] = null;
+      }
+      if (meal.dinner !== null) {
+        recipes[2] = await apiCall.getRecipeByID(meal.dinner);
+      } else {
+        recipes[2] = null;
+      }
+      res.json({
+        budget: budget,
+        spent: spent,
+        recipes: recipes,
+        dayOfWeek: dayOfWeek,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
     }
   }
-  getRecipes(req.user._id, req.user.weeklyBudget, req.user.mealPlan[0], req.user.dayOfWeek);
+  getRecipes(
+    req.user._id,
+    req.user.weeklyBudget,
+    req.user.mealPlan[0],
+    req.user.dayOfWeek
+  );
 });
 
 // POST route for recipe homepage days of the week form
