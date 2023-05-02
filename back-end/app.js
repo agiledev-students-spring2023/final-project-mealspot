@@ -214,10 +214,9 @@ app.get(
       res.json({ searchResults: searchResults });
     }
 
-    // TODO: update these numbers to be higher before submitting the finished app - all 1 to save on API calls during testing (we have limited calls per day)
-    const numRec = '1';
-    const numOther = '1';
-    const numSearchResults = '1';
+    const numRec = '4';
+    const numOther = '6';
+    const numSearchResults = '6';
 
     // Default recipe display: user hasn't used the search bar
     if (!req.query.searchQuery) {
