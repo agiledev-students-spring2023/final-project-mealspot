@@ -570,18 +570,41 @@ app.post(
     // Adds an ingredient into the user's fridge in the database
     if (req.body.postType === 'add') {
       try {
-        const ingredientId = await apiCall.getIngredientByName(req.body.name);
-        const ingredient = new Ingredient({
-          user: req.user._id,
-          type: 'fridge',
-          id: ingredientId.id,
-          quantity: req.body.quantity,
-        });
-        await ingredient.save();
         let response = await User.findOne({ username: req.user.username });
-        response.fridge.push(ingredient);
-        response.save();
-        res.send(req.body);
+        const ingredientId = await apiCall.getIngredientByName(req.body.name);
+        if(ingredientId === -1){
+          res.send("error");
+        }
+        else{
+        const promises = response.fridge.map(async (ingredient) => {
+          const ing = await Ingredient.findOne({
+            user: req.user._id,
+            _id: ingredient,
+          });
+          if (ing != null) {
+            if(ing.id === ingredientId.id){
+              return "error"
+            }
+          }
+          return "noerror"
+        });
+        Promise.all(promises).then(async (dupeChecking) => {
+          if(dupeChecking.includes("error")){
+            res.send("error");
+          }
+          else{
+            const ingredient = new Ingredient({
+              user: req.user._id,
+              type: 'fridge',
+              id: ingredientId.id,
+              quantity: req.body.quantity,
+            });
+            await ingredient.save();
+            response.fridge.push(ingredient);
+            response.save();
+            res.send("noerror");
+        }});
+      }
       } catch (err) {
         console.log(err);
       }
@@ -603,6 +626,17 @@ app.post(
         console.log(err);
       }
     }
+    else if(req.body.postType === 'removeAll'){
+      try{
+      const test = await User.findOneAndUpdate(
+        { username: req.user.username },
+        { $set: { fridge: [] } }
+      );
+    }
+    catch(err){
+      console.log(err);
+    }
+    }
   }
 );
 
@@ -613,18 +647,41 @@ app.post(
     // Adds an ingredient into the user's grocery list in the database
     if (req.body.postType === 'add') {
       try {
-        const ingredientId = await apiCall.getIngredientByName(req.body.name);
-        const ingredient = new Ingredient({
-          user: req.user._id,
-          type: 'grocery',
-          id: ingredientId.id,
-          quantity: req.body.quantity,
-        });
-        await ingredient.save();
         let response = await User.findOne({ username: req.user.username });
-        response.groceryList.push(ingredient);
-        response.save();
-        res.send(req.body);
+        const ingredientId = await apiCall.getIngredientByName(req.body.name);
+        if(ingredientId === -1){
+          res.send("error");
+        }
+        else{
+        const promises = response.groceryList.map(async (ingredient) => {
+          const ing = await Ingredient.findOne({
+            user: req.user._id,
+            _id: ingredient,
+          });
+          if (ing != null) {
+            if(ing.id === ingredientId.id){
+              return "error"
+            }
+          }
+          return "noerror"
+        });
+        Promise.all(promises).then(async (dupeChecking) => {
+          if(dupeChecking.includes("error")){
+            res.send("error");
+          }
+          else{
+            const ingredient = new Ingredient({
+              user: req.user._id,
+              type: 'grocery',
+              id: ingredientId.id,
+              quantity: req.body.quantity,
+            });
+            await ingredient.save();
+            response.groceryList.push(ingredient);
+            response.save();
+            res.send("noerror");
+        }});
+      }
       } catch (err) {
         console.log(err);
       }
@@ -645,6 +702,17 @@ app.post(
       } catch (err) {
         console.log(err);
       }
+    }
+    else if(req.body.postType === 'removeAll'){
+      try{
+      const test = await User.findOneAndUpdate(
+        { username: req.user.username },
+        { $set: { groceryList: [] } }
+      );
+    }
+    catch(err){
+      console.log(err);
+    }
     }
   }
 );
