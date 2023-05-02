@@ -11,6 +11,7 @@ const authenticationRouter = () => {
     const { password } = req.body;
     const { email } = req.body;
     const { weeklyBudget } = req.body;
+    const totalSpent = 0.00;
     const dayOfWeek = 0;
 
     if (!username || !password || !email) {
@@ -26,6 +27,7 @@ const authenticationRouter = () => {
         password,
         email,
         weeklyBudget,
+        totalSpent,
         dayOfWeek,
         mealPlan: [],
       }).save();
