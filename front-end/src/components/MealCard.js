@@ -1,8 +1,11 @@
-import {React} from 'react';
+import React, {useState} from 'react';
 import { IconContext } from "react-icons";
-import { AiFillEdit } from "react-icons/ai";
+import { AiFillEdit, AiOutlineStar, AiFillStar, AiOutlinePlusCircle } from "react-icons/ai";
 import { Link } from 'react-router-dom';
+import {Modal, Box, List, ListItemText, Button, IconButton, Divider} from '@mui/material';
+import './RecipeCard.css';
 import './MealCard.css';
+import CloseIcon from '@mui/icons-material/Close';
 
 const MealCard = (props) => {
     let content;
