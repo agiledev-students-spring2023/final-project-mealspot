@@ -17,6 +17,16 @@ All functions that return a recipe return it as an object in this form:
   saved: boolean
 */
 
+// Helper function for ingredient amounts
+// Code attribution: Nikhilesh Aleti, https://www.tutorialspoint.com/decimal-count-of-a-number-in-javascript
+function countDecimals(num) {
+  const str = num.toString();
+  if (str.includes('.')) {
+    return str.split('.')[1].length;
+  }
+  return 0;
+}
+
 // Helper function that gets only the necessary information for displaying a recipe in our app, e.g. on the recipe search, saved recipes, or meal plan page
 async function simplifyRecipe(recipe) {
   // Get information on this recipe's price and its ingredients
@@ -32,7 +42,7 @@ async function simplifyRecipe(recipe) {
   const price = Number(response.data.totalCostPerServing / 100).toFixed(2);
 
   const ingredients = response.data.ingredients.map((ing) => {
-    const name = ing.name;
+    const { name } = ing;
     let amount = ing.amount.us.value / recipe.servings;
     if (countDecimals(amount) >= 2) {
       amount = Number(ing.amount.us.value / recipe.servings).toFixed(2);
@@ -40,7 +50,7 @@ async function simplifyRecipe(recipe) {
     const units = ing.amount.us.unit;
     return {
       ingredientString: `${amount} ${units} ${name}`,
-    }
+    };
   });
 
   /*
@@ -62,7 +72,7 @@ async function simplifyRecipe(recipe) {
   // Include ingredient IDs in the ingredients
   ingredients.forEach((ing, i) => {
     ing.id = recipe.extendedIngredients[i].id;
-  })
+  });
 
   const image = recipe.image ? recipe.image : '';
 
@@ -101,16 +111,6 @@ async function getRandomRecipes(numRecipes) {
   } catch (err) {
     console.log(err);
   }
-}
-
-// Helper function for ingredient amounts
-// Code attribution: Nikhilesh Aleti, https://www.tutorialspoint.com/decimal-count-of-a-number-in-javascript
-function countDecimals(num) {
-  const str = num.toString();
-  if (str.includes('.')) {
-    return str.split('.')[1].length;
-  }
-  return 0;
 }
 
 // Takes the ID number and quantity of an ingredient
@@ -213,9 +213,10 @@ async function getRecipeByID(recipeID) {
 // To be used for recommendation feature in saved recipes GET and recipe search GET
 async function getRecipesByIngredients(numRecipes, ingredients) {
   try {
-    const commaSep = ingredients.reduce((accum, curr) => {
-      return accum + curr.ingredientName + ',';
-    }, '');
+    const commaSep = ingredients.reduce(
+      (accum, curr) => accum + curr.ingredientName + ',',
+      ''
+    );
 
     const options = {
       method: 'GET',
