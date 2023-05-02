@@ -25,6 +25,10 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
   },
+  totalSpent: {
+    type: Number,
+    required: true,
+  },
   dayOfWeek: {
     type: Number,
     required: true,

@@ -62,36 +62,21 @@ app.get(
   (req, res) => {
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
-        let meal;
+        let meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
         let recipes = [null, null, null];
-        let spent = 0.00;
         const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
         // Get total cost of meals
-        for (let i = 0; i <= 6; i++) {
-          const dayKey = i.toString();
-          if(mealPlan[dayKey] !== null) {
-              meal = await Day.findOne({ mealPlan: req.user.mealPlan[0], dayOfWeek: i });
-              if(meal !== null) {
-                  const recipeIds = [meal.breakfast, meal.lunch, meal.dinner];
-                    for (const recipeId of recipeIds.filter(Boolean)) {
-                      const recipe = await apiCall.getRecipeByID(recipeId);
-                      if (recipe !== null) {
-                        spent += Number(recipe.price);
-                      }
-                    }
-              }
-          }
-          else
-          {
-              meal = await new Day({ mealPlan: mealPlanId, dayOfWeek: i, breakfast: null, lunch: null, dinner: null }).save();
-              mealPlan[i] = meal._id;
-              await mealPlan.save();
-          }
+        let spent = req.user.totalSpent;
+        spent = spent.toFixed(2);
+
+      // check if Day schema at current dayOfWeek is instantiated
+      if(!meal) {
+        meal = await new Day({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek, breakfast: null, lunch: null, dinner: null }).save();
+        mealPlan[dayOfWeek] = meal._id;
+        await mealPlan.save();
       }
-      spent = spent.toFixed(2);
 
       // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
-      meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
       if (meal.breakfast !== null) {
         recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
       } else {
@@ -229,10 +214,9 @@ app.get(
       res.json({ searchResults: searchResults });
     }
 
-    // TODO: update these numbers to be higher before submitting the finished app - all 1 to save on API calls during testing (we have limited calls per day)
-    const numRec = '1';
-    const numOther = '1';
-    const numSearchResults = '1';
+    const numRec = '4';
+    const numOther = '6';
+    const numSearchResults = '6';
 
     // Default recipe display: user hasn't used the search bar
     if (!req.query.searchQuery) {
@@ -467,6 +451,9 @@ app.post(
   (req, res) => {
     // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
     async function chooseRecipe() {
+      req.user.totalSpent += Number(req.body.price);
+      req.user.totalSpent = req.user.totalSpent.toFixed(2);
+      await req.user.save();
       const mealPlan = await MealPlan.findOne({ user: req.user._id });
       const meal = await Day.findOne({
         mealPlan: mealPlan._id,

@@ -54,7 +54,7 @@ const Register = () => {
   if (!response.success) {
     return (
       <div className="register">
-        <h1>Register</h1>
+        <h1 className="register-header">Register</h1>
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
             required

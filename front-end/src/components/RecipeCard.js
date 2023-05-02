@@ -48,6 +48,7 @@ const RecipeCard = (props) => {
                     axios.post(url, {
                         recipeName: props.recipeDetails.recipeName,
                         id: props.recipeDetails.id,
+                        price: props.recipeDetails.price,
                     }, {headers: { Authorization: authToken }})
                     navigate('/login');
                 } catch (err) {

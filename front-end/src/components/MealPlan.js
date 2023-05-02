@@ -29,19 +29,26 @@ const RecipeInfo = (props) => {
 
     console.log(props)
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
-    let initialRender = true;
 
     useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (!token) {
+            console.log("user not logged in")
+            navigate('/login')
+        }  
         async function getRecipes(url) {
             try {
                 // for authentication purposes    
                 const jwtToken = localStorage.getItem("token")
                 const authToken = 'jwt ' + jwtToken + ''           
-                const response = await axios(url, {headers: { Authorization: authToken }})
-                console.log(response)
-                setRecipes(response.data.recipes)
+                let response = await axios(url, {headers: { Authorization: authToken }})
                 setBudget(response.data.budget)
                 setSpent(response.data.spent)
+                response = await axios.post(url, {
+                    day: day,
+                }, {headers: { Authorization: authToken }})
+                console.log(response)
+                setRecipes(response.data.recipes)
                 setDay(response.data.dayOfWeek)
                 setLoading(false);
                 props.setInfoLoading(false);
@@ -50,44 +57,8 @@ const RecipeInfo = (props) => {
                 console.log(err)
             }
         }
-        if (!initialRender) {
-            console.log("2")
-            console.log('false?')
-            console.log(initialRender + '1')
+        if(day !== null) {
             getRecipes(props.apiLink);
-          } else {
-            console.log('where')
-            initialRender = false;
-            console.log(initialRender + '2')
-          }
-    }, [props.apiLink])
-    
-    //setting day
-    useEffect(() => {
-        const token = localStorage.getItem("token")
-        if (!token) {
-            console.log("user not logged in")
-            navigate('/login')
-        }  
-        async function getRecipesAgain(url) {
-            try {
-                // for authentication purposes
-                const jwtToken = localStorage.getItem("token")
-                const authToken = 'jwt ' + jwtToken + ''
-                const response = await axios.post(url, {
-                    day: day,
-                }, {headers: { Authorization: authToken }})
-                setDay(response.data.dayOfWeek)
-                setRecipes(response.data.recipes)
-                console.log(isLoading)
-                console.log("3")
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        if (initialRender && day !== null) {
-            console.log('here')
-            getRecipesAgain(props.apiLink);
         }
     }, [day, props.apiLink])
 
