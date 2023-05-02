@@ -1,7 +1,7 @@
-const express = require("express")
-const mongoose = require("mongoose")
-const User = require("./models/User.js")
-const MealPlan = require("./models/MealPlan.js")
+const express = require('express');
+const mongoose = require('mongoose');
+const User = require('./models/User');
+const MealPlan = require('./models/MealPlan');
 
 const authenticationRouter = () => {
   const router = express.Router();
@@ -29,15 +29,15 @@ const authenticationRouter = () => {
         dayOfWeek,
         mealPlan: [],
       }).save();
-      const mealPlan = await new MealPlan({ 
-        user: user._id, 
-        0: null, 
-        1: null, 
-        2: null, 
-        3: null, 
-        4: null, 
-        5: null, 
-        6: null 
+      const mealPlan = await new MealPlan({
+        user: user._id,
+        0: null,
+        1: null,
+        2: null,
+        3: null,
+        4: null,
+        5: null,
+        6: null,
       }).save();
       user.mealPlan = mealPlan._id;
       await user.save();

@@ -56,10 +56,7 @@ mongoose
   .catch((err) => console.log(err));
 
 // GET route for recipe homepage
-app.get(
-  '/', 
-  passport.authenticate("jwt", { session: false }), 
-  (req, res) => {
+app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
         let meal;
@@ -116,60 +113,83 @@ app.get(
         {
             recipes[2] = null;
         }
-        res.json({ budget: budget, spent: spent, recipes: recipes, dayOfWeek: dayOfWeek });
-    } 
-    catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
+      }
+      spent = spent.toFixed(2);
+
+      // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
+      meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
+      if (meal.breakfast !== null) {
+        recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
+      } else {
+        recipes[0] = null;
+      }
+      if (meal.lunch !== null) {
+        recipes[1] = await apiCall.getRecipeByID(meal.lunch);
+      } else {
+        recipes[1] = null;
+      }
+      if (meal.dinner !== null) {
+        recipes[2] = await apiCall.getRecipeByID(meal.dinner);
+      } else {
+        recipes[2] = null;
+      }
+      res.json({
+        budget: budget,
+        spent: spent,
+        recipes: recipes,
+        dayOfWeek: dayOfWeek,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
     }
   }
-  getRecipes(req.user._id, req.user.weeklyBudget, req.user.mealPlan[0], req.user.dayOfWeek);
+  getRecipes(
+    req.user._id,
+    req.user.weeklyBudget,
+    req.user.mealPlan[0],
+    req.user.dayOfWeek
+  );
 });
 
 // POST route for recipe homepage days of the week form
 app.post(
-  '/', 
-  passport.authenticate("jwt", { session: false }), 
+  '/',
+  passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     if (!req.body.time) {
       console.log('Selected day: ' + req.body.day);
       req.user.dayOfWeek = req.body.day;
       let recipes = [null, null, null];
-      meal = await Day.findOne({ mealPlan: req.user.mealPlan, dayOfWeek: req.body.day });
-      if(meal !== null)
-      {
-        if(meal.breakfast !== null)
-        {
-            recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
+      meal = await Day.findOne({
+        mealPlan: req.user.mealPlan,
+        dayOfWeek: req.body.day,
+      });
+      if (meal !== null) {
+        if (meal.breakfast !== null) {
+          recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
+        } else {
+          recipes[0] = null;
         }
-        else
-        {
-            recipes[0] = null;
+        if (meal.lunch !== null) {
+          recipes[1] = await apiCall.getRecipeByID(meal.lunch);
+        } else {
+          recipes[1] = null;
         }
-        if(meal.lunch !== null)
-        {
-            recipes[1] = await apiCall.getRecipeByID(meal.lunch);
+        if (meal.dinner !== null) {
+          recipes[2] = await apiCall.getRecipeByID(meal.dinner);
+        } else {
+          recipes[2] = null;
         }
-        else
-        {
-            recipes[1] = null;
-        }
-        if(meal.dinner !== null)
-        {
-            recipes[2] = await apiCall.getRecipeByID(meal.dinner);
-        }
-        else
-        {
-            recipes[2] = null;
-        }
-    }
-    res.json({dayOfWeek: req.user.dayOfWeek, recipes: recipes})
+      }
+      res.json({ dayOfWeek: req.user.dayOfWeek, recipes: recipes });
     } else {
       console.log('Time of day: ' + req.body.time);
       req.user.timeOfDay = req.body.time;
     }
     await req.user.save();
-});
+  }
+);
 
 // GET route for recipe search page
 app.get(
@@ -182,9 +202,11 @@ app.get(
         // Database interaction that gets the ingredients in the fridge
         const fridgeIngredients = await Ingredient.find({ user: req.user._id });
         // Then map it to an array of ingredient names
-        const ingredients = await Promise.all(fridgeIngredients.map(async(ing) => {
-          return await apiCall.getIngredientByID(ing.id);
-        }));
+        const ingredients = await Promise.all(
+          fridgeIngredients.map(
+            async (ing) => await apiCall.getIngredientByID(ing.id)
+          )
+        );
 
         // Get recommended recipes that match the ingredients in the user's fridge
         const recRecipes = await apiCall.getRecipesByIngredients(
@@ -303,20 +325,24 @@ app.get(
     async function getRecipes() {
       try {
         // Database interaction - get list of user's saved recipes ID from database
-        const savedRecipes = req.user.savedRecipes;
+        const { savedRecipes } = req.user;
         // Map recipe IDs to actual recipes
         if (savedRecipes.length !== 0) {
           const allSavedRecipes = await Promise.all(
-            savedRecipes.map(async (recipe) => await apiCall.getRecipeByID(recipe))
+            savedRecipes.map(
+              async (recipe) => await apiCall.getRecipeByID(recipe)
+            )
           );
-    
+
           // Mark all the recipes 'saved'
           allSavedRecipes.forEach((recipe) => {
             recipe.saved = true;
           });
 
           // Database interaction that gets the ingredients in the fridge (just IDs is sufficient)
-          const fridgeIngredients = await Ingredient.find({ user: req.user._id });
+          const fridgeIngredients = await Ingredient.find({
+            user: req.user._id,
+          });
 
           // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
           const recRecipes = [];
@@ -324,8 +350,7 @@ app.get(
           // Check each saved recipe to see if it includes a fridge ingredient and thus should be recommended
           allSavedRecipes.forEach((recipe) => {
             // Loop through fridge ingredients
-            if(fridgeIngredients.length !== 0)
-            {
+            if (fridgeIngredients.length !== 0) {
               fridgeIngredients.every((fridgeIng) => {
                 // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
                 // Otherwise, push this recipe to the other recipes array
@@ -342,7 +367,7 @@ app.get(
                 }
               });
             } else {
-                otherRecipes.push(recipe);
+              otherRecipes.push(recipe);
             }
           });
           res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes });
@@ -369,7 +394,9 @@ app.post(
     async function unsaveRecipe() {
       console.log('Unsaving the recipe: ' + req.body.recipeName);
       try {
-        req.user.savedRecipes = req.user.savedRecipes.filter(e => e !== req.body.id);
+        req.user.savedRecipes = req.user.savedRecipes.filter(
+          (e) => e !== req.body.id
+        );
         await req.user.save();
       } catch (err) {
         console.log(err);
@@ -393,110 +420,123 @@ app.post(
 );
 
 // GET route for choose from saved recipes page
-app.get('/choosesavedrecipes',
-    passport.authenticate("jwt", { session: false }), 
-    (req, res) => { 
-      async function getRecipes(testRecipes, testFridge) {
-        try {
-          // Database interaction - get list of user's saved recipes ID from database
-          const savedRecipes = req.user.savedRecipes;
-          console.log(savedRecipes)
-          // Map recipe IDs to actual recipes
-          if (savedRecipes.length !== 0) {
-            const allSavedRecipes = await Promise.all(
-                savedRecipes.map(async (recipe) => await apiCall.getRecipeByID(recipe))
-                );
-            
-            // Mark all the recipes 'saved'
-            allSavedRecipes.forEach((recipe) => {
-              recipe.saved = true;
-            });
-            // Database interaction - get user's fridge (just IDs is sufficient)
-            const fridgeIngredients = await Ingredient.find({
-              user: req.user._id,
-              type: 'fridge',
-            });
+app.get(
+  '/choosesavedrecipes',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    async function getRecipes(testRecipes, testFridge) {
+      try {
+        // Database interaction - get list of user's saved recipes ID from database
+        const { savedRecipes } = req.user;
+        console.log(savedRecipes);
+        // Map recipe IDs to actual recipes
+        if (savedRecipes.length !== 0) {
+          const allSavedRecipes = await Promise.all(
+            savedRecipes.map(
+              async (recipe) => await apiCall.getRecipeByID(recipe)
+            )
+          );
 
-            // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
-            const recRecipes = [];
-            const otherRecipes = [];
-            // Check each saved recipe
-            allSavedRecipes.forEach((recipe) => {
-              // Loop through fridge ingredients
-              if(fridgeIngredients.length !== 0)
-              {
-                  fridgeIngredients.every((fridgeIng) => {
-                      console.log('hi')
-                  // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
-                  // Otherwise, push this recipe to the other recipes array
-                  let matchFound = false;
-                  recipe.ingredients.every((recipeIng) => {
-                      if (fridgeIng.id === recipeIng.id) {
-                      recRecipes.push(recipe);
-                      matchFound = true;
-                      return false;
-                      }
-                  });
-                  if (!matchFound) {
-                      otherRecipes.push(recipe);
+          // Mark all the recipes 'saved'
+          allSavedRecipes.forEach((recipe) => {
+            recipe.saved = true;
+          });
+          // Database interaction - get user's fridge (just IDs is sufficient)
+          const fridgeIngredients = await Ingredient.find({
+            user: req.user._id,
+            type: 'fridge',
+          });
+
+          // Partition all saved recipes into recommended (ones whose ingredients match any of the fridge ingredients) and other
+          const recRecipes = [];
+          const otherRecipes = [];
+          // Check each saved recipe
+          allSavedRecipes.forEach((recipe) => {
+            // Loop through fridge ingredients
+            if (fridgeIngredients.length !== 0) {
+              fridgeIngredients.every((fridgeIng) => {
+                console.log('hi');
+                // Loop through recipe ingredients - if there's a match, push this recipe to the recommended recipes array
+                // Otherwise, push this recipe to the other recipes array
+                let matchFound = false;
+                recipe.ingredients.every((recipeIng) => {
+                  if (fridgeIng.id === recipeIng.id) {
+                    recRecipes.push(recipe);
+                    matchFound = true;
+                    return false;
                   }
-                  });
-              } else {
+                });
+                if (!matchFound) {
                   otherRecipes.push(recipe);
-              }
-            });
-            res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes });
-          } else {
-            res.json({ recRecipes: [], otherRecipes: [] });
-          }
-        } catch (err) {
-          console.log(err);
+                }
+              });
+            } else {
+              otherRecipes.push(recipe);
+            }
+          });
+          res.json({ recRecipes: recRecipes, otherRecipes: otherRecipes });
+        } else {
+          res.json({ recRecipes: [], otherRecipes: [] });
         }
+      } catch (err) {
+        console.log(err);
       }
+    }
     getRecipes(require('./testRecipes.json'), require('./testFridge.json'));
-});
+  }
+);
 
 // POST route for choose from saved recipes page
-app.post('/choosesavedrecipes', 
-passport.authenticate("jwt", { session: false }), 
-(req, res) => {
-  // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
-  async function chooseRecipe() {
-    const mealPlan = await MealPlan.findOne({ user: req.user._id });
-    const meal = await Day.findOne({ mealPlan: mealPlan._id, dayOfWeek: req.user.dayOfWeek });
-    meal[req.user.timeOfDay] = req.body.id;
-    await meal.save();
+app.post(
+  '/choosesavedrecipes',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
+    async function chooseRecipe() {
+      const mealPlan = await MealPlan.findOne({ user: req.user._id });
+      const meal = await Day.findOne({
+        mealPlan: mealPlan._id,
+        dayOfWeek: req.user.dayOfWeek,
+      });
+      meal[req.user.timeOfDay] = req.body.id;
+      await meal.save();
+    }
+    chooseRecipe();
   }
-  chooseRecipe();
-});
+);
 
 // GET route for account page
-app.get('/account', 
-    passport.authenticate('jwt', { session: false }),
-    (req, res) => {
-        res.json({
-            username: req.user.username, 
-            email: req.user.email, 
-            weeklyBudget: req.user.weeklyBudget})
-});
+app.get(
+  '/account',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    res.json({
+      username: req.user.username,
+      email: req.user.email,
+      weeklyBudget: req.user.weeklyBudget,
+    });
+  }
+);
 
 // POST route for account page
-app.post('/account', 
-    passport.authenticate('jwt', { session: false }),
-    async (req, res) => {
-        // Change this user's budget
-        // Make sure budget is a number
-        if (req.body.budget && !isNaN(req.body.budget)) {
-            req.user.weeklyBudget = req.body.budget;
-            await req.user.save();
-            res.json({weeklyBudget: req.user.weeklyBudget});
-            console.log(req.user.weeklyBudget);
-        } else {
-            // Invalid input
-            res.status(400);
-            res.json({ msg: 'invalid input' });
-        }
-});
+app.post(
+  '/account',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    // Change this user's budget
+    // Make sure budget is a number
+    if (req.body.budget && !isNaN(req.body.budget)) {
+      req.user.weeklyBudget = req.body.budget;
+      await req.user.save();
+      res.json({ weeklyBudget: req.user.weeklyBudget });
+      console.log(req.user.weeklyBudget);
+    } else {
+      // Invalid input
+      res.status(400);
+      res.json({ msg: 'invalid input' });
+    }
+  }
+);
 
 // GET route for my fridge page
 app.get(
@@ -559,18 +599,40 @@ app.post(
     // Adds an ingredient into the user's fridge in the database
     if (req.body.postType === 'add') {
       try {
-        const ingredientId = await apiCall.getIngredientByName(req.body.name);
-        const ingredient = new Ingredient({
-          user: req.user._id,
-          type: 'fridge',
-          id: ingredientId.id,
-          quantity: req.body.quantity,
-        });
-        await ingredient.save();
         let response = await User.findOne({ username: req.user.username });
-        response.fridge.push(ingredient);
-        response.save();
-        res.send(req.body);
+        const ingredientId = await apiCall.getIngredientByName(req.body.name);
+        if (ingredientId === -1) {
+          res.send('error');
+        } else {
+          const promises = response.fridge.map(async (ingredient) => {
+            const ing = await Ingredient.findOne({
+              user: req.user._id,
+              _id: ingredient,
+            });
+            if (ing != null) {
+              if (ing.id === ingredientId.id) {
+                return 'error';
+              }
+            }
+            return 'noerror';
+          });
+          Promise.all(promises).then(async (dupeChecking) => {
+            if (dupeChecking.includes('error')) {
+              res.send('error');
+            } else {
+              const ingredient = new Ingredient({
+                user: req.user._id,
+                type: 'fridge',
+                id: ingredientId.id,
+                quantity: req.body.quantity,
+              });
+              await ingredient.save();
+              response.fridge.push(ingredient);
+              response.save();
+              res.send('noerror');
+            }
+          });
+        }
       } catch (err) {
         console.log(err);
       }
@@ -591,6 +653,15 @@ app.post(
       } catch (err) {
         console.log(err);
       }
+    } else if (req.body.postType === 'removeAll') {
+      try {
+        const test = await User.findOneAndUpdate(
+          { username: req.user.username },
+          { $set: { fridge: [] } }
+        );
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 );
@@ -602,18 +673,40 @@ app.post(
     // Adds an ingredient into the user's grocery list in the database
     if (req.body.postType === 'add') {
       try {
-        const ingredientId = await apiCall.getIngredientByName(req.body.name);
-        const ingredient = new Ingredient({
-          user: req.user._id,
-          type: 'grocery',
-          id: ingredientId.id,
-          quantity: req.body.quantity,
-        });
-        await ingredient.save();
         let response = await User.findOne({ username: req.user.username });
-        response.groceryList.push(ingredient);
-        response.save();
-        res.send(req.body);
+        const ingredientId = await apiCall.getIngredientByName(req.body.name);
+        if (ingredientId === -1) {
+          res.send('error');
+        } else {
+          const promises = response.groceryList.map(async (ingredient) => {
+            const ing = await Ingredient.findOne({
+              user: req.user._id,
+              _id: ingredient,
+            });
+            if (ing != null) {
+              if (ing.id === ingredientId.id) {
+                return 'error';
+              }
+            }
+            return 'noerror';
+          });
+          Promise.all(promises).then(async (dupeChecking) => {
+            if (dupeChecking.includes('error')) {
+              res.send('error');
+            } else {
+              const ingredient = new Ingredient({
+                user: req.user._id,
+                type: 'grocery',
+                id: ingredientId.id,
+                quantity: req.body.quantity,
+              });
+              await ingredient.save();
+              response.groceryList.push(ingredient);
+              response.save();
+              res.send('noerror');
+            }
+          });
+        }
       } catch (err) {
         console.log(err);
       }
@@ -630,6 +723,15 @@ app.post(
         const test = await User.findOneAndUpdate(
           { username: req.user.username },
           { $pull: { groceryList: deletedIng._id } }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (req.body.postType === 'removeAll') {
+      try {
+        const test = await User.findOneAndUpdate(
+          { username: req.user.username },
+          { $set: { groceryList: [] } }
         );
       } catch (err) {
         console.log(err);

@@ -6,7 +6,8 @@ import axios from 'axios';
 const buttonStyle = {
   height: 30,
   marginTop: '18px',
-  left: '75%'
+  left: '75%',
+  border: 1.4
 }
 
 function GroceryListItem({id, name, quantity}){
@@ -36,7 +37,7 @@ function GroceryListItem({id, name, quantity}){
       <div className="groceryListItemDiv">
         <p className="groceryListItemName">{name}</p>
         <p className="groceryListItemQuantity">{quantity}</p>
-        <Button sx={buttonStyle} variant="contained" onClick={removeFromCart}>Remove</Button>
+        <Button sx={buttonStyle} variant="outlined" onClick={removeFromCart}>Remove</Button>
       </div>
   );
 }

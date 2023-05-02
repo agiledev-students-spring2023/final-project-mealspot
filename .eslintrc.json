@@ -21,6 +21,8 @@
       "no-param-reassign": "off",
       "no-return-await": "off",
       "no-shadow": "off",
-      "array-callback-return": "off"
+      "array-callback-return": "off",
+      "no-await-in-loop": "off",
+      "no-plusplus": "off"
     }
   }
