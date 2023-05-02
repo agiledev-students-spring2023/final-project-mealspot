@@ -27,6 +27,8 @@ const boxStyle = {
 }
 const Fridge = () => {
     const [{myFridge}, dispatch] = useStateValue();
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
     const [inputs, setInputs] = useState({
         id: 0,
         name: "",
@@ -39,20 +41,43 @@ const Fridge = () => {
     const jwtToken = localStorage.getItem("token")
     const authToken = 'jwt ' + jwtToken + ''
     const url = process.env.REACT_APP_SERVER_HOSTNAME + '/fridge';
-    const addToFridge = () => {
+    const addToFridge = async () => {
         // tell StateManager to add it to the cart
+        try{
+        const response = await axios.post(url, {
+            save: true,
+            postType: 'add',
+            name: inputs.name,
+            quantity: inputs.quantity,
+        }, {headers: { Authorization: authToken }})
+        if(response.data === "noerror"){
+            dispatch({
+                type: "ADD_TO_FRIDGE",
+                item: {
+                    id: +new Date(),
+                    name: inputs.name,
+                    quantity: inputs.quantity
+                }
+            });
+            setError(false);
+        }
+        else if(response.data === "error"){
+            setError(true);
+        }
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
+    const removeAll = () => {
         dispatch({
-            type: "ADD_TO_FRIDGE",
-            item: {
-                id: +new Date(),
-                name: inputs.name,
-                quantity: inputs.quantity
-            }
-        });
+            type: "CLEAR_FRIDGE"
+        })
         try{
         axios.post(url, {
             save: true,
-            postType: 'add',
+            postType: 'removeAll',
             name: inputs.name,
             quantity: inputs.quantity,
         }, {headers: { Authorization: authToken }})
@@ -61,6 +86,7 @@ const Fridge = () => {
             console.log(err)
         }
     }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         addToFridge();
@@ -79,24 +105,21 @@ const Fridge = () => {
             console.log("user not logged in")
             navigate('/login')
         }
+
         async function getFridgeIngredients(){
             try{
                 const response = await axios(url, {headers: { Authorization: authToken }});
-                dispatch({
-                    type: "CLEAR_FRIDGE"
-                })
+                const items = [];
                 response.data.forEach((ingredient) => {
                     if(ingredient != null){
-                    dispatch({
-                        type: "ADD_TO_FRIDGE",
-                        item: {
-                            id: +new Date(),
-                            name: ingredient.ingredientName,
-                            quantity: ingredient.quantity
-                        }
-                    });
-                }
+                        items.push({id: +new Date(), name: ingredient.ingredientName, quantity: ingredient.quantity})
+                    }
                 })
+                dispatch({
+                    type: "SET_FRIDGE",
+                    item: items
+                })
+                setIsLoading(false);
             }
             catch(err){
                 console.log(err)
@@ -108,6 +131,7 @@ const Fridge = () => {
     return (
         <div className="myFridgeDiv">
             <h1>My Fridge</h1>
+            {isLoading ? <h3>Fetching your fridge items...</h3> : <>
             {myFridge.length === 0 ? <h3>You currently have no items in your fridge.</h3> : <div className="myFridgeHeader"><p className="myFridgeName">Item:</p><p className="myFridgeQuantity">Quantity: </p></div>}
             {myFridge.map(item => (
             <FridgeItem
@@ -117,8 +141,10 @@ const Fridge = () => {
               quantity={item.quantity}
             />
           ))}
+           {error && <h4 className="error">There was an error adding your most recent item to the fridge. The item may already be in the fridge or its name is not recognizable.</h4>}
            <br/>
             <Button sx={border} variant="outlined" onClick={handleOpen}>Add Item</Button>
+            {myFridge.length > 0 && <Button sx={border} variant="outlined" onClick={removeAll}>Remove All</Button>}
             <Modal
             open={open}
             onClose={handleClose}
@@ -139,6 +165,7 @@ const Fridge = () => {
                 </form>
             </Box>
             </Modal>
+            </>}
         </div>
     );
 }

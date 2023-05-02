@@ -6,7 +6,8 @@ import './FridgeItem.css';
 const buttonStyle = {
   height: 30,
   marginTop: '18px',
-  left: '75%'
+  left: '75%',
+  border: 1.4
 }
 
 function FridgeItem({id, name, quantity}){
@@ -36,7 +37,7 @@ function FridgeItem({id, name, quantity}){
         <div className="fridgeItemDiv">
             <p className="fridgeItemName">{name}</p>
             <p className="fridgeItemQuantity">{quantity}</p>
-            <Button sx={buttonStyle} variant="contained" onClick={removeFromFridge}>Remove</Button>
+            <Button sx={buttonStyle} variant="outlined" onClick={removeFromFridge}>Remove</Button>
         </div>
     );
 }

@@ -35,7 +35,7 @@ const reducer = (state, action) => {
                 // return the new cart
                 return { ...state, groceryList: newGroceryList }
             }
-        case "CLEAR_GROCERYLIST":
+        case "CLEAR_GROCERY_LIST":
             {
                 return {
                     ...state, groceryList: []
@@ -53,6 +53,18 @@ const reducer = (state, action) => {
                 ...state, myFridge: [...state.myFridge, action.item]
             };
         }
+        case "SET_FRIDGE":
+            {
+                return {
+                    ...state, myFridge: action.item
+                }
+            }
+        case "SET_GROCERY_LIST":
+            {
+                return {
+                    ...state, myFridge: action.item
+                }
+            }
         case "REMOVE_FROM_FRIDGE":
             {
                 // copy the cart to a new cart
