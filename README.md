@@ -1,5 +1,9 @@
 # Project Repository
 
+## Link to Project
+
+https://mealspot-2hy46.ondigitalocean.app/ 
+
 ## About Mealspot
 
 Mealspot is an application for planning and budgeting meals for the frugally-minded individual. By tracking costs of each individual meal and grocery item in a single convenient location, Mealspot provides a fast and easy way for people to budget efficiently. Not only does it allow for budget tracking, it also provides a place for users to store grocery lists as a reminder, and it also provides a place to discover and explore new meals in the Mealspot database.
