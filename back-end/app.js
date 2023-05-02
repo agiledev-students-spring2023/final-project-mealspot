@@ -56,7 +56,10 @@ mongoose
   .catch((err) => console.log(err));
 
 // GET route for recipe homepage
-app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get(
+  '/', 
+  passport.authenticate("jwt", { session: false }), 
+  (req, res) => {
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
         let meal;
@@ -84,35 +87,6 @@ app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
               mealPlan[i] = meal._id;
               await mealPlan.save();
           }
-      }
-      spent = spent.toFixed(2);
-
-        // Access the 'breakfast', 'lunch', and 'dinner' field in the DaySchema
-        meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
-        if(meal.breakfast !== null)
-        {
-            recipes[0] = await apiCall.getRecipeByID(meal.breakfast);
-        }
-        else
-        {
-            recipes[0] = null;
-        }
-        if(meal.lunch !== null)
-        {
-            recipes[1] = await apiCall.getRecipeByID(meal.lunch);
-        }
-        else
-        {
-            recipes[1] = null;
-        }
-        if(meal.dinner !== null)
-        {
-            recipes[2] = await apiCall.getRecipeByID(meal.dinner);
-        }
-        else
-        {
-            recipes[2] = null;
-        }
       }
       spent = spent.toFixed(2);
 
