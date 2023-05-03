@@ -108,7 +108,7 @@ const Account = (props) => {
                   id="outlined-adornment-amount"
                   startAdornment={<InputAdornment position="start">$</InputAdornment>}
                   label="Amount"
-                  onChange={e => setNewBudget(e.target.value)}
+                  onChange={e => setNewBudget(e.target.value)} //user changing the budget in account to be reflected in their meal plan
                 />
                 <br/>
                 <Button sx={border} variant="outlined" type="submit">Submit</Button>
