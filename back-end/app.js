@@ -56,13 +56,13 @@ mongoose
   .catch((err) => console.log(err));
 
 // GET route for recipe homepage
-app.get(
-  '/', 
-  passport.authenticate("jwt", { session: false }), 
-  (req, res) => {
+app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
-        let meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
+      let meal = await Day.findOne({
+        mealPlan: mealPlanId,
+        dayOfWeek: dayOfWeek,
+      });
       let recipes = [null, null, null];
       const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
       // Get total cost of meals
@@ -70,8 +70,14 @@ app.get(
       spent = spent.toFixed(2);
 
       // check if Day schema at current dayOfWeek is instantiated
-      if(!meal) {
-        meal = await new Day({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek, breakfast: null, lunch: null, dinner: null }).save();
+      if (!meal) {
+        meal = await new Day({
+          mealPlan: mealPlanId,
+          dayOfWeek: dayOfWeek,
+          breakfast: null,
+          lunch: null,
+          dinner: null,
+        }).save();
         mealPlan[dayOfWeek] = meal._id;
         await mealPlan.save();
       }
@@ -456,10 +462,9 @@ app.post(
         mealPlan: mealPlan._id,
         dayOfWeek: req.user.dayOfWeek,
       });
-      if(!meal[req.user.timeOfDay]) {
+      if (!meal[req.user.timeOfDay]) {
         req.user.totalSpent += Number(req.body.price);
-      }
-      else {
+      } else {
         let prevPrice = await apiCall.getRecipeByID(meal[req.user.timeOfDay]);
         prevPrice = prevPrice.price;
         req.user.totalSpent -= Number(prevPrice);
@@ -631,7 +636,7 @@ app.post(
             _id: ingredient,
             type: 'fridge'
           });
-          });
+        });
         const test = await User.findOneAndUpdate(
           { username: req.user.username },
           { $set: { fridge: [] } }
@@ -708,22 +713,20 @@ app.post(
       try {
         let response = await User.findOne({ username: req.user.username });
         response.groceryList.map(async (ingredient) => {
-        const ing = await Ingredient.findOneAndDelete({
-          user: req.user._id,
-          _id: ingredient,
-          type: 'grocery'
-        });
+          const ing = await Ingredient.findOneAndDelete({
+            user: req.user._id,
+            _id: ingredient,
+            type: 'grocery',
+          });
         });
         const test = await User.findOneAndUpdate(
           { username: req.user.username },
           { $set: { groceryList: [] } }
         );
-
       } catch (err) {
         console.log(err);
       }
-    }
-    else if(req.body.postType == 'moveAll'){
+    } else if (req.body.postType == 'moveAll') {
       let response = await User.findOne({ username: req.user.username });
       const promises = response.groceryList.map(async (ingredient) => {
         const ing = await Ingredient.findOne({
@@ -739,12 +742,13 @@ app.post(
           const ingr = await Ingredient.findOne({
             user: req.user._id,
             id: ingredient.id,
-            type: 'fridge'
-          })
-          if(ingr != null){
-            await Ingredient.findOneAndUpdate({user: req.user._id, id: ingredient.id, type: 'fridge'}, {$set: {quantity: ingredient.quantity + ingr.quantity}})
-          }
-          else{
+            type: 'fridge',
+          });
+          if (ingr != null) {
+            await Ingredient.findOneAndUpdate(
+              { user: req.user._id, id: ingredient.id, type: 'fridge' },
+              { $set: { quantity: ingredient.quantity + ingr.quantity } })
+          } else {
             const newIngredient = new Ingredient({
               user: req.user._id,
               type: 'fridge',
@@ -755,10 +759,14 @@ app.post(
             response.fridge.push(newIngredient);
           }
           counter++;
-          if(counter === ingredients.length){
+          if (counter === ingredients.length) {
             await response.save()
           }
-          await Ingredient.findOneAndDelete({user: req.user._id, type: 'grocery', id: ingredient.id})
+          await Ingredient.findOneAndDelete({
+            user: req.user._id,
+            type: 'grocery',
+            id: ingredient.id,
+          });
         });
         await User.findOneAndUpdate(
           { username: req.user.username },
