@@ -624,6 +624,14 @@ app.post(
       }
     } else if (req.body.postType === 'removeAll') {
       try {
+        let response = await User.findOne({ username: req.user.username });
+        response.fridge.map(async (ingredient) => {
+          const ing = await Ingredient.findOneAndDelete({
+            user: req.user._id,
+            _id: ingredient,
+            type: 'fridge'
+          });
+          });
         const test = await User.findOneAndUpdate(
           { username: req.user.username },
           { $set: { fridge: [] } }
@@ -698,13 +706,61 @@ app.post(
       }
     } else if (req.body.postType === 'removeAll') {
       try {
+        let response = await User.findOne({ username: req.user.username });
+        response.groceryList.map(async (ingredient) => {
+        const ing = await Ingredient.findOneAndDelete({
+          user: req.user._id,
+          _id: ingredient,
+          type: 'grocery'
+        });
+        });
         const test = await User.findOneAndUpdate(
           { username: req.user.username },
           { $set: { groceryList: [] } }
         );
+
       } catch (err) {
         console.log(err);
       }
+    }
+    else if(req.body.postType == 'moveAll'){
+      let response = await User.findOne({ username: req.user.username });
+      const promises = response.groceryList.map(async (ingredient) => {
+        const ing = await Ingredient.findOne({
+          user: req.user._id,
+          _id: ingredient,
+          type: 'grocery'
+        });
+        return ing;
+      });
+      Promise.all(promises).then((ingredients) => {
+        ingredients.map(async (ingredient) => {
+          const ingr = await Ingredient.findOne({
+            user: req.user._id,
+            id: ingredient.id,
+            type: 'fridge'
+          })
+          if(ingr != null){
+            await Ingredient.findOneAndUpdate({user: req.user._id, id: ingredient.id, type: 'fridge'}, {$set: {quantity: ingredient.quantity + ingr.quantity}})
+          }
+          else{
+            const newIngredient = new Ingredient({
+              user: req.user._id,
+              type: 'fridge',
+              id: ingredient.id,
+              quantity: ingredient.quantity,
+            });
+            await newIngredient.save();
+            response.fridge.push(newIngredient);
+            response.save()
+          }
+          await User.findOneAndUpdate(
+            { username: req.user.username },
+            { $set: { groceryList: [] } }
+          );
+        })
+        
+      });
     }
   }
 );
