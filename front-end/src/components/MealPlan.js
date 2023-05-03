@@ -29,19 +29,26 @@ const RecipeInfo = (props) => {
 
     console.log(props)
     // On the first render, make an API call to the backend, to fetch the recipe data from the database
-    let initialRender = true;
 
     useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (!token) {
+            console.log("user not logged in")
+            navigate('/login')
+        }  
         async function getRecipes(url) {
             try {
                 // for authentication purposes    
                 const jwtToken = localStorage.getItem("token")
                 const authToken = 'jwt ' + jwtToken + ''           
-                const response = await axios(url, {headers: { Authorization: authToken }})
-                console.log(response)
-                setRecipes(response.data.recipes)
+                let response = await axios(url, {headers: { Authorization: authToken }})
                 setBudget(response.data.budget)
                 setSpent(response.data.spent)
+                response = await axios.post(url, {
+                    day: day,
+                }, {headers: { Authorization: authToken }})
+                console.log(response)
+                setRecipes(response.data.recipes)
                 setDay(response.data.dayOfWeek)
                 setLoading(false);
                 props.setInfoLoading(false);
@@ -49,39 +56,8 @@ const RecipeInfo = (props) => {
                 console.log(err)
             }
         }
-        if (!initialRender) {
-            console.log(initialRender + '1')
+        if(day !== null) {
             getRecipes(props.apiLink);
-          } else {
-            initialRender = false;
-            console.log(initialRender + '2')
-          }
-    }, [props.apiLink])
-    
-    //setting day
-    useEffect(() => {
-        const token = localStorage.getItem("token")
-        if (!token) {
-            console.log("user not logged in")
-            navigate('/login')
-        }  
-        async function getRecipesAgain(url) {
-            try {
-                // for authentication purposes
-                const jwtToken = localStorage.getItem("token")
-                const authToken = 'jwt ' + jwtToken + ''
-                const response = await axios.post(url, {
-                    day: day,
-                }, {headers: { Authorization: authToken }})
-                setDay(response.data.dayOfWeek)
-                setRecipes(response.data.recipes)
-                console.log(isLoading)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        if (initialRender && day !== null) {
-            getRecipesAgain(props.apiLink);
         }
     }, [day, props.apiLink])
 
@@ -199,6 +175,8 @@ const RecipeInfo = (props) => {
                 meal="Breakfast"
                 src={recipes[0] !== null ? recipes[0].image : ''}
                 recipeName={recipes[0] !== null ? recipes[0].recipeName : ''}
+                ingredients={recipes[0] !== null ? recipes[0].ingredients : ''}
+                instructions={recipes[0] !== null ? recipes[0].instructions : ''}
                 cost={totalPMorn}
                 onClick={editClickBreak}
             />
@@ -207,6 +185,8 @@ const RecipeInfo = (props) => {
                 meal="Lunch"
                 src={recipes[1] !== null ? recipes[1].image : ''}
                 recipeName={recipes[1] !== null ? recipes[1].recipeName : ''}
+                ingredients={recipes[1] !== null ? recipes[1].ingredients : ''}
+                instructions={recipes[1] !== null ? recipes[1].instructions : ''}
                 cost={totalPAft}
                 onClick={editClickLunch}
             />
@@ -215,6 +195,8 @@ const RecipeInfo = (props) => {
                 meal="Dinner"
                 src={recipes[2] !== null ? recipes[2].image : ''}
                 recipeName={recipes[2] !== null ? recipes[2].recipeName : ''}
+                ingredients={recipes[2] !== null ? recipes[2].ingredients : ''}
+                instructions={recipes[2] !== null ? recipes[2].instructions : ''}
                 cost={totalPEve}
                 onClick={editClickDinner}
             />

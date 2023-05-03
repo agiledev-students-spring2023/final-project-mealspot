@@ -34,11 +34,20 @@ function FridgeItem({id, name, quantity}){
     }
 
     return (
-        <div className="fridgeItemDiv">
-            <p className="fridgeItemName">{name}</p>
-            <p className="fridgeItemQuantity">{quantity}</p>
-            <Button sx={buttonStyle} variant="outlined" onClick={removeFromFridge}>Remove</Button>
-        </div>
+      <>
+      {Math.floor(name.length/11) > 0 ?
+      <div style={{'margin-bottom': Math.floor(name.length/10-1)*16}} className="fridgeItemDiv">
+        <p className="fridgeItemName">{name}</p>
+        <p style={{'margin-top': 12+Math.floor(name.length/10)*16}} className="fridgeItemQuantity">{quantity}</p>
+        <Button style={{'margin-top': 12+Math.floor(name.length/10)*16}} sx={buttonStyle} variant="outlined" onClick={removeFromFridge}>Remove</Button>
+      </div>
+      :
+      <div className="fridgeItemDiv">
+        <p className="fridgeItemName">{name}</p>
+        <p className="fridgeItemQuantity">{quantity}</p>
+        <Button sx={buttonStyle} variant="outlined" onClick={removeFromFridge}>Remove</Button>
+      </div>}
+      </>
     );
 }
 

@@ -11,13 +11,13 @@
     font-size: 1.2rem;
     left: 5%;
     word-wrap: break-word;
-    max-width: 25%;
+    max-width: 28%;
 }
 
 .fridgeItemQuantity {
     position: absolute;
     font-size: 1.2rem;
-    left: 40%;
+    left: 49.5%;
     word-wrap: break-word;
     max-width: 25%;
 }

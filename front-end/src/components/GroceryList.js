@@ -54,7 +54,7 @@ const GroceryList = () => {
             }, {headers: { Authorization: authToken }})
             if(response.data === "noerror"){
                 dispatch({
-                    type: "ADD_TO_GROCERYLIST",
+                    type: "ADD_TO_GROCERY_LIST",
                     item: {
                         id: +new Date(),
                         name: inputs.name,
@@ -102,6 +102,22 @@ const GroceryList = () => {
             }
     }
 
+    const moveAll = () => {
+        try{
+            dispatch({
+                type: "CLEAR_GROCERY_LIST"
+            })
+            axios.post(url, {
+                save: true,
+                postType: 'moveAll',
+            }, {headers: { Authorization: authToken }})
+
+            }
+            catch(err){
+                console.log(err)
+            }
+    }
+
     useEffect(() => {
         if (!jwtToken) {
             console.log("user not logged in")
@@ -110,15 +126,20 @@ const GroceryList = () => {
         async function getGroceryListIngredients(){
             try{
                 const response = await axios(url, {headers: { Authorization: authToken }});
-                const items = [];
+                dispatch({
+                    type: "CLEAR_GROCERY_LIST"
+                })
                 response.data.forEach((ingredient) => {
                     if(ingredient != null){
-                        items.push({id: +new Date(), name: ingredient.ingredientName, quantity: ingredient.quantity})
+                        dispatch({
+                            type: "ADD_TO_GROCERY_LIST",
+                            item: {
+                                id: +new Date(), 
+                                name: ingredient.ingredientName, 
+                                quantity: ingredient.quantity
+                            }
+                        })
                     }
-                })
-                dispatch({
-                    type: "SET_GROCERY_LIST",
-                    item: items
                 })
                 setIsLoading(false);
             }
@@ -145,6 +166,7 @@ const GroceryList = () => {
            {error && <h4 className="error">There was an error adding your most recent item to the grocery list. The item may already be in the grocery list or its name is not recognizable.</h4>}
            <br/>
             <Button sx={border} variant="outlined" onClick={handleOpen}>Add Item</Button>
+            {groceryList.length > 0 && <Button sx={border} variant="outlined" onClick={moveAll}>Move All Items To Fridge</Button>}
             {groceryList.length > 0 && <Button sx={border} variant="outlined" onClick={removeAll}>Remove All</Button>}
             <Modal
             open={open}
