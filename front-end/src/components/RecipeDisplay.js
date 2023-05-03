@@ -116,6 +116,7 @@ const RecipeDisplay = (props) => {
         />
       </div>
       <div className="recipes">{filterRecipes(searchQuery)}</div>
+      <p className="disclaimer">Prices are listed per serving</p>
     </>
   );
 };
