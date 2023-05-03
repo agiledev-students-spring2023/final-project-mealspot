@@ -34,11 +34,12 @@ const ChooseSavedRecipes = () => {
      }, [apiLink]);
  
      // Return the final component, consisting of page header and the array of recipe cards
+     //backbutton exits edit page and returns user to mealplan page 
      if (isLoading) {
         return (
             <div> 
                 <div>
-                    <Link to="/" className="backButton">
+                    <Link to="/" className="backButton"> 
                         <IconContext.Provider value={{ className: "backIcon" }}>
                             <div><BsXCircleFill /></div>
                         </IconContext.Provider>
