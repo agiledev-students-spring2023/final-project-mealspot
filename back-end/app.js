@@ -215,8 +215,8 @@ app.get(
     }
 
     const numRec = '4';
-    const numOther = '6';
-    const numSearchResults = '6';
+    const numOther = '10';
+    const numSearchResults = '10';
 
     // Default recipe display: user hasn't used the search bar
     if (!req.query.searchQuery) {
