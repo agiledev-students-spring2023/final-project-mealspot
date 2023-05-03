@@ -176,6 +176,8 @@ const RecipeInfo = (props) => {
                 meal="Breakfast"
                 src={recipes[0] !== null ? recipes[0].image : ''}
                 recipeName={recipes[0] !== null ? recipes[0].recipeName : ''}
+                ingredients={recipes[0] !== null ? recipes[0].ingredients : ''}
+                instructions={recipes[0] !== null ? recipes[0].instructions : ''}
                 cost={totalPMorn}
                 onClick={editClickBreak}
             />
@@ -184,6 +186,8 @@ const RecipeInfo = (props) => {
                 meal="Lunch"
                 src={recipes[1] !== null ? recipes[1].image : ''}
                 recipeName={recipes[1] !== null ? recipes[1].recipeName : ''}
+                ingredients={recipes[1] !== null ? recipes[1].ingredients : ''}
+                instructions={recipes[1] !== null ? recipes[1].instructions : ''}
                 cost={totalPAft}
                 onClick={editClickLunch}
             />
@@ -192,6 +196,8 @@ const RecipeInfo = (props) => {
                 meal="Dinner"
                 src={recipes[2] !== null ? recipes[2].image : ''}
                 recipeName={recipes[2] !== null ? recipes[2].recipeName : ''}
+                ingredients={recipes[2] !== null ? recipes[2].ingredients : ''}
+                instructions={recipes[2] !== null ? recipes[2].instructions : ''}
                 cost={totalPEve}
                 onClick={editClickDinner}
             />
