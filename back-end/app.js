@@ -451,14 +451,22 @@ app.post(
   (req, res) => {
     // This route should do a database interaction where the id of the recipe that was clicked on gets added to the user's meal plan in the database
     async function chooseRecipe() {
-      req.user.totalSpent += Number(req.body.price);
-      req.user.totalSpent = req.user.totalSpent.toFixed(2);
-      await req.user.save();
       const mealPlan = await MealPlan.findOne({ user: req.user._id });
       const meal = await Day.findOne({
         mealPlan: mealPlan._id,
         dayOfWeek: req.user.dayOfWeek,
       });
+      if(!meal[req.user.timeOfDay]) {
+        req.user.totalSpent += Number(req.body.price);
+      }
+      else {
+        let prevPrice = await apiCall.getRecipeByID(meal[req.user.timeOfDay]);
+        prevPrice = prevPrice.price;
+        req.user.totalSpent -= Number(prevPrice);
+        req.user.totalSpent += Number(req.body.price);
+      }
+      req.user.totalSpent = req.user.totalSpent.toFixed(2);
+      await req.user.save();
       meal[req.user.timeOfDay] = req.body.id;
       await meal.save();
     }
