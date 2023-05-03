@@ -63,11 +63,11 @@ app.get(
   async function getRecipes(userId, budget, mealPlanId, dayOfWeek) {
     try {
         let meal = await Day.findOne({ mealPlan: mealPlanId, dayOfWeek: dayOfWeek });
-        let recipes = [null, null, null];
-        const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
-        // Get total cost of meals
-        let spent = req.user.totalSpent;
-        spent = spent.toFixed(2);
+      let recipes = [null, null, null];
+      const mealPlan = await MealPlan.findOne({ _id: mealPlanId });
+      // Get total cost of meals
+      let spent = req.user.totalSpent;
+      spent = spent.toFixed(2);
 
       // check if Day schema at current dayOfWeek is instantiated
       if(!meal) {
