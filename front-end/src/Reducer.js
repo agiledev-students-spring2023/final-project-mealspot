@@ -11,13 +11,13 @@ export const initialState = {
 // update the cart based on the specified action
 const reducer = (state, action) => {
     switch (action.type) {
-        case "ADD_TO_GROCERYLIST":
+        case "ADD_TO_GROCERY_LIST":
             {
                 return {
                     ...state, groceryList: [...state.groceryList, action.item]
                 };
             }
-        case "REMOVE_FROM_GROCERYLIST":
+        case "REMOVE_FROM_GROCERY_LIST":
             {
                 // copy the cart to a new cart
                 let newGroceryList = [...state.groceryList];

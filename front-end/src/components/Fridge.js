@@ -109,15 +109,20 @@ const Fridge = () => {
         async function getFridgeIngredients(){
             try{
                 const response = await axios(url, {headers: { Authorization: authToken }});
-                const items = [];
+                dispatch({
+                    type: "CLEAR_FRIDGE"
+                })
                 response.data.forEach((ingredient) => {
                     if(ingredient != null){
-                        items.push({id: +new Date(), name: ingredient.ingredientName, quantity: ingredient.quantity})
+                        dispatch({
+                            type: "ADD_TO_FRIDGE",
+                            item: {
+                                id: +new Date(), 
+                                name: ingredient.ingredientName, 
+                                quantity: ingredient.quantity
+                            }
+                        })
                     }
-                })
-                dispatch({
-                    type: "SET_FRIDGE",
-                    item: items
                 })
                 setIsLoading(false);
             }

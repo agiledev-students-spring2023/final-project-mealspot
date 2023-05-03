@@ -54,7 +54,7 @@ const GroceryList = () => {
             }, {headers: { Authorization: authToken }})
             if(response.data === "noerror"){
                 dispatch({
-                    type: "ADD_TO_GROCERYLIST",
+                    type: "ADD_TO_GROCERY_LIST",
                     item: {
                         id: +new Date(),
                         name: inputs.name,
@@ -126,15 +126,20 @@ const GroceryList = () => {
         async function getGroceryListIngredients(){
             try{
                 const response = await axios(url, {headers: { Authorization: authToken }});
-                const items = [];
+                dispatch({
+                    type: "CLEAR_GROCERY_LIST"
+                })
                 response.data.forEach((ingredient) => {
                     if(ingredient != null){
-                        items.push({id: +new Date(), name: ingredient.ingredientName, quantity: ingredient.quantity})
+                        dispatch({
+                            type: "ADD_TO_GROCERY_LIST",
+                            item: {
+                                id: +new Date(), 
+                                name: ingredient.ingredientName, 
+                                quantity: ingredient.quantity
+                            }
+                        })
                     }
-                })
-                dispatch({
-                    type: "SET_GROCERY_LIST",
-                    item: items
                 })
                 setIsLoading(false);
             }
