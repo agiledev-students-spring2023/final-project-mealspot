@@ -733,7 +733,8 @@ app.post(
         });
         return ing;
       });
-      Promise.all(promises).then((ingredients) => {
+      Promise.all(promises).then(async (ingredients) => {
+        let counter = 0;
         ingredients.map(async (ingredient) => {
           const ingr = await Ingredient.findOne({
             user: req.user._id,
@@ -752,14 +753,17 @@ app.post(
             });
             await newIngredient.save();
             response.fridge.push(newIngredient);
-            response.save()
           }
-          await User.findOneAndUpdate(
-            { username: req.user.username },
-            { $set: { groceryList: [] } }
-          );
-        })
-        
+          counter++;
+          if(counter === ingredients.length){
+            await response.save()
+          }
+          await Ingredient.findOneAndDelete({user: req.user._id, type: 'grocery', id: ingredient.id})
+        });
+        await User.findOneAndUpdate(
+          { username: req.user.username },
+          { $set: { groceryList: [] } }
+        );
       });
     }
   }
