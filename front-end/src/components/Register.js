@@ -32,7 +32,9 @@ const Register = () => {
         username: info[0][1],
         email: info[1][1],
         password: info[2][1],
-        weeklyBudget: 0,
+        weeklyBudget: 100,
+        totalSpent: 0,
+        dayOfWeek: 1,
       })
       .then(function (response) {
         console.log(response);
