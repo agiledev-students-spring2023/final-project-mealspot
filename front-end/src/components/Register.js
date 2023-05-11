@@ -33,7 +33,7 @@ const Register = () => {
         email: info[1][1],
         password: info[2][1],
         weeklyBudget: 100,
-        totalSpent: 0,
+        totalSpent: 0.0,
         dayOfWeek: 1,
       })
       .then(function (response) {
