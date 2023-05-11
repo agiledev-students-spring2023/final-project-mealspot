@@ -1,0 +1,35 @@
+.myFridgeHeader {
+    position: relative;
+    height: auto;
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 3rem;
+}
+
+.myFridgeName {
+    position: absolute;
+    left: 5%;
+    text-decoration: underline;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.myFridgeQuantity {
+    position: absolute;
+    left: 40%;
+    text-decoration: underline;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.myFridgeDiv {
+    display: flex;
+    flex-direction: column;
+    height: 83vh;
+    overflow: scroll;
+}
+
+.error{
+    color: red;
+}

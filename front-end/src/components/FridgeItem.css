@@ -1,0 +1,23 @@
+.fridgeItemDiv {
+    position: relative;
+    height: auto;
+    width: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.fridgeItemName {
+    position: absolute;
+    font-size: 1.2rem;
+    left: 5%;
+    word-wrap: break-word;
+    max-width: 28%;
+}
+
+.fridgeItemQuantity {
+    position: absolute;
+    font-size: 1.2rem;
+    left: 49.5%;
+    word-wrap: break-word;
+    max-width: 25%;
+}

@@ -1,0 +1,17 @@
+.recipes {
+    display: flex;
+    flex-wrap: wrap;
+    width: vw;
+    height: auto;
+    margin-left: 8px;
+    margin-bottom: 75px;
+}
+
+.titleText {
+    flex: 0 0 100%;
+}
+
+.disclaimer{
+    margin-top: -50px;
+    margin-bottom: 75px;
+}

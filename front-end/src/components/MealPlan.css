@@ -1,0 +1,77 @@
+* {
+    box-sizing: border-box;
+}
+
+.select {
+    margin-left: 15px;
+    width: 92%;
+    font-size: 1.2em;
+}
+
+.tracker-text {
+    font-size: 22px;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+    padding-left: 15px;
+}
+
+.progress-area {
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.progress {
+    background-color: #d8d8d8;
+    border-radius: 15px;
+    position: relative;
+    margin: 5px 0;
+    height: 30px;
+    width: 93%;
+    overflow: hidden;
+}
+
+.progress-done-under {
+    background: linear-gradient(to left, #708af2, #72d5ff);
+    box-shadow: 0 3px 3px -5px #709ef2, 0 2px 5px #70a0f2;
+    border-radius: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 0;
+    opacity: 0;
+    transition: 1s ease 0.3s;
+}
+
+.progress-done-over {
+    background: linear-gradient(to left, #f43b3b, #f98181);
+    box-shadow: 0 3px 3px -5px #f54c4c, 0 2px 5px #f74747;
+    border-radius: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 0;
+    opacity: 0;
+    transition: 1s ease 0.3s;
+}
+
+.progress-text {
+    font-size: 14px;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+    padding-left: 15px;
+    padding-bottom: 15px;
+}
+
+.meals {
+    padding-bottom: 60px;
+}

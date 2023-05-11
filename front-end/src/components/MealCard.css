@@ -1,0 +1,61 @@
+.mealCard {
+    display: flex;
+    flex-direction: row;
+    width: 92%;
+    margin: 15px;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    text-align: left;
+}
+
+.content {
+    display: flex;
+    position: relative;
+    width: 100%;
+    flex-direction: row;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.defaultText {
+    font-size: 1.2em;
+    margin-left: 15px;
+}
+
+.mealTitle {
+    font-size: 1.5em;
+    text-align: left;
+    width: 85%;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 3px;
+}
+
+.recipeImage {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.recipeTitle {
+    font-size: 1.2em;
+    margin-left: 10px;
+    margin-top: 0;
+}
+
+.recipeCost {
+    position: absolute;
+    font-size: 1.7em;
+    bottom: -25px;
+    right: 10px;
+}
+
+.editLink {
+    margin-top: 10px;
+}
+
+.editIcon {
+    font-size: 2em;
+    color: gray;
+}

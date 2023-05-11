@@ -1,0 +1,41 @@
+[{
+    "id":1,
+    "recipeName":"Chocolate cake",
+    "image":"http://dummyimage.com/100x100.png/dddddd/000000",
+    "saved":true,
+    "ingredients":[
+        {"id": 9, "ingredientString":"1 cup flour", "ingredientName": "Flour"},
+        {"id": 10, "ingredientString":"0.5 cup cocoa", "ingredientName": "Cocoa"},
+        {"id": 11, "ingredientString":"1 cup sugar", "ingredientName": "Sugar"},
+        {"id": 12, "ingredientString":"2 eggs", "ingredientName": "Eggs"}
+    ],
+    "instructions":"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.",
+    "price": 5.43
+},
+{
+    "id":2,
+    "recipeName":"Taco",
+    "image":"http://dummyimage.com/100x100.png/ff4444/ffffff",
+    "saved":true,
+    "ingredients":[
+        {"id": 100, "ingredientString":"1 tortilla", "ingredientName": "Tortilla"},
+        {"id": 20, "ingredientString":"0.25 pound beef", "ingredientName": "Beef"},
+        {"id": 21, "ingredientString":"0.5 cup cheese", "ingredientName": "Cheese"}
+    ],
+    "instructions":"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",
+    "price": 3.22
+},
+{
+    "id":3,
+    "recipeName":"Burrito",
+    "image":"http://dummyimage.com/100x100.png/cc0000/ffffff",
+    "saved":true,
+    "ingredients":[
+        {"id": 100, "ingredientString":"1 tortilla", "ingredientName": "Tortilla"},
+        {"id": 22, "ingredientString":"0.25 pound chicken", "ingredientName": "Chicken"},
+        {"id": 23, "ingredientString":"1 cup rice", "ingredientName": "Rice"}
+    ],
+    "instructions":"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.",
+    "price": 4.19
+}
+]

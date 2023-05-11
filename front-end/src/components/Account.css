@@ -1,0 +1,29 @@
+.account {
+    border-radius: 10px;
+    font-size: 1.4em;
+    text-align: left;
+    max-width: 480px;
+	width: 95%;
+	height: auto;
+    display: block;
+    margin-top:50px;
+    margin-bottom: 20px;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+}
+
+.titleText {
+    text-align: left;
+}
+
+.button {
+    text-decoration: underline;
+    text-align: center;
+}
+
+.profileAttribute {
+    word-wrap: break-word;
+}
